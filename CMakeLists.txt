@@ -1,9 +1,8 @@
-project(greycat.java)
+project(greycat.bindins.java)
 
 find_package(JNI QUIET)
 if (JNI_FOUND)
     set(GC_BIND_JAVA true PARENT_SCOPE)
-    include_directories(${JNI_INCLUDE_DIRS})
     set(JNI_SOURCES
             native/jblob.c
             native/jtensor.c
