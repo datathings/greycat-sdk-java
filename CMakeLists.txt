@@ -1,4 +1,4 @@
-project(greycat.bindins.java)
+project(greycat.binding.java)
 
 find_package(JNI QUIET)
 if (JNI_FOUND)
