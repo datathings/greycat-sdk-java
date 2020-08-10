@@ -41,7 +41,7 @@ public final class GraphImpl implements Graph {
     private static void load_lib(boolean useCuda) throws IOException {
         String vmName = System.getProperty("java.vm.name");
         if (vmName.toLowerCase().equals("dalvik")) {
-            System.loadLibrary("greycat.jni");
+            System.loadLibrary("greycat-java");
         } else {
             String os_name = System.getProperty("os.name").toLowerCase().trim();
             String os_arch = System.getProperty("os.arch").toLowerCase().trim();
@@ -65,7 +65,7 @@ public final class GraphImpl implements Graph {
             } else {
                 target = "unknown";
             }
-            String cl_path = "lib/" + target + "/libgreycat.jni.so";
+            String cl_path = "lib/" + target + "/libgreycat-java.so";
             File targetFile = File.createTempFile("greycat_", ".so", null);
             InputStream is_lib = GraphImpl.class.getClassLoader().getResourceAsStream(cl_path);
             if (is_lib == null) {

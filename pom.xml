@@ -17,6 +17,15 @@
     </properties>
 
     <build>
+        <resources>
+            <resource>
+                <directory>lib</directory>
+                <targetPath>lib</targetPath>
+            </resource>
+            <resource>
+                <directory>test-java-resources</directory>
+            </resource>
+        </resources>
         <testResources>
             <testResource>
                 <directory>src/test/java</directory>
