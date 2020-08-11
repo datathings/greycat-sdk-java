@@ -4,8 +4,8 @@
 
 #include <jni.h>
 
-#include <greycat/runtime/gdate.h>
 #include <greycat/runtime/gstring.h>
+#include <greycat/runtime/gtime.h>
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_DateImpl_nToLocale(JNIEnv *env, jclass class, jlong value) {
     char buffer[GC_DATE_STR_LEN + 1];

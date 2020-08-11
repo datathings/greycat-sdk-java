@@ -22,6 +22,9 @@ if (JNI_FOUND)
     target_include_directories(greycat-java PRIVATE ${GC_CORE_INCLUDES} ${JNI_INCLUDE_DIRS})
     target_link_libraries(greycat-java greycat)
     set_target_properties(greycat-java PROPERTIES NO_SONAME ON SUFFIX ".so")
+
+    # TODO copy to local dir for dev only
+
     install(TARGETS greycat-java DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 else ()
     message(STATUS "no jni library: java binding disabled")

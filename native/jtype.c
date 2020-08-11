@@ -51,8 +51,8 @@ jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gslot_t slot, gptype_t slot_typ
         jtype_factory_t *factory = graph->std_types.p_geocode->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.i64);
     }
-    case gc_sbi_slot_type_date: {
-        jtype_factory_t *factory = graph->std_types.p_date->extra;
+    case gc_sbi_slot_type_time: {
+        jtype_factory_t *factory = graph->std_types.p_time->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.i64);
     }
     case gc_sbi_slot_type_ref: {
@@ -187,7 +187,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nSetClass(JNIEnv *env, jcla
     case g_u64:
     case g_i64:
     case g_Geocode:
-    case g_Date:
+    case g_Time:
     case g_Duration:
     case g_Ref:
         factory->constructor_mid = (*env)->GetMethodID(env, factory->clazz, "<init>", "(J)V");
