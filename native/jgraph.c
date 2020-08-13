@@ -46,6 +46,7 @@ JNIEXPORT jlong JNICALL Java_io_greycat_impl_GraphImpl_nDeclareType(JNIEnv *env,
         type = ggraph__create_fixed_node_type((ggraph_t *) (intptr_t) ptr);
     }
     type->create = NULL;//pure abstract
+    type->compute_size = NULL;
     type->key = key;
     return (jlong)(intptr_t) type;
 }
