@@ -38,22 +38,90 @@ public final class GraphImpl implements Graph {
 
     private static native int nDeclareMeta(final long ptr, final String name);
 
+    private enum GreyCatTarget {
+        x64_cuda_11("x64-cuda-11"),
+        x64_cuda_10_2("x64-cuda-10-2"),
+        x64_libc("x64-libc"),
+        arm64_v8a_bionic("arm64_v8a_bionic");
+
+        private final String prefix;
+
+        GreyCatTarget(String envUrl) {
+            this.prefix = envUrl;
+        }
+
+        public String getPrefix() {
+            return prefix;
+        }
+    }
+
+    private static boolean load_native(GreyCatTarget target) {
+        if (target.equals(GreyCatTarget.arm64_v8a_bionic)) {
+            try {
+                System.loadLibrary("greycat-java");
+                return true;
+            } catch (Throwable e) {
+                return false;
+            }
+        } else {
+            String cl_path = "lib/" + target.getPrefix() + "/libgreycat-java.so";
+            File targetFile;
+            try {
+                targetFile = File.createTempFile("greycat_", ".so", null);
+                InputStream is_lib = GraphImpl.class.getClassLoader().getResourceAsStream(cl_path);
+                if (is_lib == null) {
+                    is_lib = ClassLoader.getSystemResourceAsStream(cl_path);
+                    if (is_lib == null) {
+                        Thread.currentThread().getContextClassLoader().getResourceAsStream(cl_path);
+                    }
+                }
+                if (is_lib != null) {
+                    try {
+                        OutputStream out = new FileOutputStream(targetFile);
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = is_lib.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+                        out.close();
+                        is_lib.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    System.load(targetFile.getAbsolutePath());
+                    if (!targetFile.delete()) {
+                        System.err.println("internal error!");
+                    }
+                    return true;
+                }
+            } catch (IOException e) {
+                //nothing
+            }
+        }
+        return false;
+    }
+
     private static void load_lib(boolean useCuda) throws IOException {
         String vmName = System.getProperty("java.vm.name");
         if (vmName.toLowerCase().equals("dalvik")) {
-            System.loadLibrary("greycat-java");
+            if (load_native(GreyCatTarget.arm64_v8a_bionic)) {
+                return;
+            }
         } else {
             String os_name = System.getProperty("os.name").toLowerCase().trim();
             String os_arch = System.getProperty("os.arch").toLowerCase().trim();
-            String target = "unknown";
             if (os_name.equals("mac os x")) {
-                target = "mac-x64";
+                //not supported yet
             } else if (os_name.startsWith("linux")) {
                 if (os_arch.equals("x86_64") || os_arch.equals("amd64")) {
-                    if (useCuda) {
-                        target = "x64-cuda-11";
-                    } else {
-                        target = "x64-libc";
+                    if (load_native(GreyCatTarget.x64_cuda_11)) {
+                        return;
+                    }
+                    if (load_native(GreyCatTarget.x64_cuda_10_2)) {
+                        return;
+                    }
+                    if (load_native(GreyCatTarget.x64_libc)) {
+                        return;
                     }
                 } /*else if (os_arch.startsWith("arm64") || os_arch.equals("aarch64")) {
                     target = "aarch64-libc";
@@ -61,39 +129,8 @@ public final class GraphImpl implements Graph {
                     target = "armv7-libc";
                 } */
             }
-            String cl_path = "lib/" + target + "/libgreycat-java.so";
-            File targetFile = File.createTempFile("greycat_", ".so", null);
-            InputStream is_lib = GraphImpl.class.getClassLoader().getResourceAsStream(cl_path);
-            if (is_lib == null) {
-                is_lib = ClassLoader.getSystemResourceAsStream(cl_path);
-                if (is_lib == null) {
-                    Thread.currentThread().getContextClassLoader().getResourceAsStream(cl_path);
-                }
-            }
-            if (is_lib == null) {
-                System.err.println("os.name=" + os_name);
-                System.err.println("os.arch=" + os_arch);
-                System.err.println("target=" + target);
-                System.err.println("path=" + cl_path);
-                throw new RuntimeException("GreyCat Native Library not found!");
-            }
-            try {
-                OutputStream out = new FileOutputStream(targetFile);
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = is_lib.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                out.close();
-                is_lib.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            System.load(targetFile.getAbsolutePath());
-            if (!targetFile.delete()) {
-                System.err.println("internal error!");
-            }
         }
+        throw new RuntimeException("GreyCat runtime can not be loaded!");
     }
 
     static private boolean is_loaded = false;
