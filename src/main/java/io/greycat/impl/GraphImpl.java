@@ -66,6 +66,9 @@ public final class GraphImpl implements Graph {
             InputStream is_lib = GraphImpl.class.getClassLoader().getResourceAsStream(cl_path);
             if (is_lib == null) {
                 is_lib = ClassLoader.getSystemResourceAsStream(cl_path);
+                if (is_lib == null) {
+                    Thread.currentThread().getContextClassLoader().getResourceAsStream(cl_path);
+                }
             }
             if (is_lib == null) {
                 System.err.println("os.name=" + os_name);
