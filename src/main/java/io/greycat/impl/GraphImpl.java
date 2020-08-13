@@ -45,25 +45,21 @@ public final class GraphImpl implements Graph {
         } else {
             String os_name = System.getProperty("os.name").toLowerCase().trim();
             String os_arch = System.getProperty("os.arch").toLowerCase().trim();
-            String target;
+            String target = "unknown";
             if (os_name.equals("mac os x")) {
                 target = "mac-x64";
             } else if (os_name.startsWith("linux")) {
                 if (os_arch.equals("x86_64") || os_arch.equals("amd64")) {
                     if (useCuda) {
-                        target = "linux-x64-cuda";
+                        target = "x64-cuda-11";
                     } else {
-                        target = "linux-x64";
+                        target = "x64-libc";
                     }
-                } else if (os_arch.startsWith("arm64") || os_arch.equals("aarch64")) {
-                    target = "linux-arm64";
+                } /*else if (os_arch.startsWith("arm64") || os_arch.equals("aarch64")) {
+                    target = "aarch64-libc";
                 } else if (os_arch.startsWith("armv7")) {
-                    target = "linux-armv7";
-                } else {
-                    target = "unknown";
-                }
-            } else {
-                target = "unknown";
+                    target = "armv7-libc";
+                } */
             }
             String cl_path = "lib/" + target + "/libgreycat-java.so";
             File targetFile = File.createTempFile("greycat_", ".so", null);
