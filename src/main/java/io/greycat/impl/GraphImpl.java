@@ -42,7 +42,9 @@ public final class GraphImpl implements Graph {
         x64_cuda_11("x64-cuda-11"),
         x64_cuda_10_2("x64-cuda-10-2"),
         x64_libc("x64-libc"),
-        arm64_v8a_bionic("arm64_v8a_bionic");
+        arm64_v8a_bionic("arm64_v8a_bionic"),
+        aarch64_libc("aarch64-libc"),
+        armv7_eabihf_libc("armv7-eabihf-libc");
 
         private final String prefix;
 
@@ -123,11 +125,15 @@ public final class GraphImpl implements Graph {
                     if (load_native(GreyCatTarget.x64_libc)) {
                         return;
                     }
-                } /*else if (os_arch.startsWith("arm64") || os_arch.equals("aarch64")) {
-                    target = "aarch64-libc";
-                } else if (os_arch.startsWith("armv7")) {
-                    target = "armv7-libc";
-                } */
+                } else if (os_arch.startsWith("arm64") || os_arch.equals("aarch64")) {
+                    if (load_native(GreyCatTarget.aarch64_libc)) {
+                        return;
+                    }
+                } else if (os_arch.startsWith("armv7") || os_arch.equals("armv7l")) {
+                    if (load_native(GreyCatTarget.armv7_eabihf_libc)) {
+                        return;
+                    }
+                }
             }
         }
         throw new RuntimeException("GreyCat runtime can not be loaded!");
