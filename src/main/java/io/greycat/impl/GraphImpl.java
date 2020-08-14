@@ -104,7 +104,7 @@ public final class GraphImpl implements Graph {
         return false;
     }
 
-    private static void load_lib(boolean useCuda) throws IOException {
+    private static void load_lib() throws RuntimeException {
         String vmName = System.getProperty("java.vm.name");
         if (vmName.toLowerCase().equals("dalvik")) {
             if (load_native(GreyCatTarget.arm64_v8a_bionic)) {
@@ -155,16 +155,16 @@ public final class GraphImpl implements Graph {
         }
     }
 
-    public GraphImpl(final long cacheSize, final long bufferSize, final boolean useMeta, final boolean useCuda) {
+    public GraphImpl(final long cacheSize, final long bufferSize) {
         if (!is_loaded) {
             try {
-                load_lib(useCuda);
+                load_lib();
                 is_loaded = true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        native_ptr = nCreate(cacheSize, bufferSize, useMeta, this);
+        native_ptr = nCreate(cacheSize, bufferSize, true, this);
 
 //        declare_mapping("i8", char.class);
 //        declare_mapping("i16", Short.class);
