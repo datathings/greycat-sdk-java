@@ -23,7 +23,7 @@ void jcontext__error_handler(gctx_t *ctx) {
     gstackframe_t frames[stack_len];
     gctx__stackframes(ctx, frames, &stack_len, stack_len);
 
-    gstring_t *g_stack = ggraph__create_string(ctx->header.type->graph);
+    gstring_t *g_stack = ggraph__create_string((ggraph_t *) ctx->header.type->graph);
     gctx__stacktrace(frames, stack_len, g_stack);
     gstring__close(g_stack);
     jstring stack = (*env)->NewStringUTF(env, g_stack->buffer);
@@ -48,7 +48,7 @@ void jcontext__error_handler(gctx_t *ctx) {
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_ContextImpl_nDeclare(JNIEnv *env, jclass class, jlong ptr, jint key, jobject value) {
     gctx_t *self = (gctx_t *) (intptr_t) ptr;
-    ggraph_t *graph = self->header.type->graph;
+    ggraph_t *graph = (ggraph_t *) self->header.type->graph;
 
     gslot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
@@ -73,7 +73,7 @@ JNIEXPORT jlong JNICALL Java_io_greycat_impl_ContextImpl_nOrdinal(JNIEnv *env, j
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_ContextImpl_nSetResult(JNIEnv *env, jclass class, jlong ptr, jobject value) {
     gctx_t *ctx = (gctx_t *) (intptr_t) ptr;
-    ggraph_t *graph = ctx->header.type->graph;
+    ggraph_t *graph = (ggraph_t *) ctx->header.type->graph;
     gslot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gctx__set_result(ctx, slot, slot_type);

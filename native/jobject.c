@@ -11,7 +11,7 @@ JNIEXPORT jlong JNICALL Java_io_greycat_impl_ObjectImpl_nType(JNIEnv *env, jclas
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_ObjectImpl_nToString(JNIEnv *env, jclass class, jlong ptr) {
     gobject_t *obj = (gobject_t *) (intptr_t) ptr;
-    gstring_t *buffer = ggraph__create_string(obj->type->graph);
+    gstring_t *buffer = ggraph__create_string((ggraph_t *) obj->type->graph);
     obj->type->to_json(obj, (gobject_t *) buffer, false);
     gstring__close(buffer);
     jstring result = (jstring)(*env)->NewStringUTF(env, buffer->buffer);
@@ -27,7 +27,7 @@ extern gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gslot_t 
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_ObjectImpl_nSet(JNIEnv *env, jclass class, jlong ptr, jint key, jobject value) {
     gobject_t *self = (gobject_t *) (intptr_t) ptr;
-    ggraph_t *graph = self->type->graph;
+    ggraph_t *graph = (ggraph_t *) self->type->graph;
     gslot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     if (self->type->key == g_Ctx) {
@@ -44,7 +44,7 @@ extern jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gslot_t slot, gptype_t s
 
 JNIEXPORT jobject JNICALL Java_io_greycat_impl_ObjectImpl_nGet(JNIEnv *env, jclass class, jlong ptr, jint key) {
     gobject_t *self = (gobject_t *) (intptr_t) ptr;
-    ggraph_t *graph = self->type->graph;
+    ggraph_t *graph = (ggraph_t *) self->type->graph;
     gslot_t slot;
     gptype_t slot_type;
     if (self->type->key == g_Ctx) {

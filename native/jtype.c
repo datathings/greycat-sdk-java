@@ -157,7 +157,7 @@ JNIEXPORT jint JNICALL Java_io_greycat_impl_TypeImpl_nKey(JNIEnv *env, jclass cl
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_TypeImpl_nName(JNIEnv *env, jclass class, jlong ptr) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    gstring_t *meta = ggraph__meta(self->graph, self->key);
+    gstring_t *meta = ggraph__meta((ggraph_t *) self->graph, self->key);
     if (meta == NULL) {
         return NULL;
     } else {
@@ -167,9 +167,9 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_TypeImpl_nName(JNIEnv *env, jclas
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nSetName(JNIEnv *env, jclass class, jlong ptr, jint name_key, jstring name) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    if (!ggraph__is_meta(self->graph, name_key)) {
+    if (!ggraph__is_meta((ggraph_t *) self->graph, name_key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, name, 0);
-        ggraph__declare_meta(self->graph, name_key, nativeString);
+        ggraph__declare_meta((ggraph_t *) self->graph, name_key, nativeString);
         (*env)->ReleaseStringUTFChars(env, name, nativeString);
     }
     self->key = name_key;
@@ -221,9 +221,9 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nSetClass(JNIEnv *env, jcla
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareAttribute(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName, jint type) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    if (keyName != NULL && !ggraph__is_meta(self->graph, key)) {
+    if (keyName != NULL && !ggraph__is_meta((ggraph_t *) self->graph, key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, keyName, 0);
-        ggraph__declare_meta(self->graph, key, nativeString);
+        ggraph__declare_meta((ggraph_t *) self->graph, key, nativeString);
         (*env)->ReleaseStringUTFChars(env, keyName, nativeString);
     }
     gtype__declare_attribute(self, (int32_t) key, type);
@@ -232,13 +232,13 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareAttribute(JNIEnv *e
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareStatic(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName, jobject value) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
 
-    if (keyName != NULL && !ggraph__is_meta(self->graph, key)) {
+    if (keyName != NULL && !ggraph__is_meta((ggraph_t *) self->graph, key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, keyName, 0);
-        ggraph__declare_meta(self->graph, key, nativeString);
+        ggraph__declare_meta((ggraph_t *) self->graph, key, nativeString);
         (*env)->ReleaseStringUTFChars(env, keyName, nativeString);
     }
 
-    ggraph_t *graph = self->graph;
+    ggraph_t *graph = (ggraph_t *) self->graph;
     gslot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gtype__declare_static(self, key, slot, slot_type);
@@ -251,12 +251,12 @@ extern void jfunction__pipe_body(gfunction_t *self, JNIEnv *env, jobject body);
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareFunction(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName, jobject func_body) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    if (keyName != NULL && !ggraph__is_meta(self->graph, key)) {
+    if (keyName != NULL && !ggraph__is_meta((ggraph_t *) self->graph, key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, keyName, 0);
-        ggraph__declare_meta(self->graph, key, nativeString);
+        ggraph__declare_meta((ggraph_t *) self->graph, key, nativeString);
         (*env)->ReleaseStringUTFChars(env, keyName, nativeString);
     }
-    gfunction_t *anonymous = ggraph__create_function(self->graph);
+    gfunction_t *anonymous = ggraph__create_function((ggraph_t *) self->graph);
     jfunction__pipe_body(anonymous, env, func_body);
     gtype__declare_function(self, key, anonymous);
     gobject__un_mark((gobject_t *) anonymous);
@@ -272,5 +272,5 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nSeal(JNIEnv *env, jclass c
     if (self->flags.is_sealed) {
         return;
     }
-    ggraph__declare_type(self->graph, self);
+    ggraph__declare_type((ggraph_t *) self->graph, self);
 }
