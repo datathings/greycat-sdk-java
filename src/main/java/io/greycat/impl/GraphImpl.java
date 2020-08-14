@@ -44,7 +44,8 @@ public final class GraphImpl implements Graph {
         x64_libc("x64-libc"),
         arm64_v8a_bionic("arm64_v8a_bionic"),
         aarch64_libc("aarch64-libc"),
-        armv7_eabihf_libc("armv7-eabihf-libc");
+        armv7_eabihf_libc("armv7-eabihf-libc"),
+        x64_mac("x64-mac");
 
         private final String prefix;
 
@@ -113,7 +114,9 @@ public final class GraphImpl implements Graph {
             String os_name = System.getProperty("os.name").toLowerCase().trim();
             String os_arch = System.getProperty("os.arch").toLowerCase().trim();
             if (os_name.equals("mac os x")) {
-                //not supported yet
+                if (load_native(GreyCatTarget.x64_mac)) {
+                    return;
+                }
             } else if (os_name.startsWith("linux")) {
                 if (os_arch.equals("x86_64") || os_arch.equals("amd64")) {
                     if (load_native(GreyCatTarget.x64_cuda_11)) {
