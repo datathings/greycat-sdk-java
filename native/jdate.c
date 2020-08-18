@@ -29,11 +29,11 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_DateImpl_nToString(JNIEnv *env, j
 #else
 
     int64_t timestamp = (int64_t) value;
-    const time_t epoch = timestamp / 1000;
+    const time_t epoch = timestamp / 1000000;
     struct tm epoch_tm;
     gmtime_r(&epoch, &epoch_tm);
 
-    const uint32_t rest = timestamp % 1000;
+    const uint32_t rest = timestamp % 1000000;
     if (rest == 0) {
         uint32_t len = (uint32_t) snprintf(NULL, 0, GDATE_ISO_FMT_Z, epoch_tm.tm_year + 1900, epoch_tm.tm_mon, epoch_tm.tm_mday, epoch_tm.tm_hour,
                                            epoch_tm.tm_min, epoch_tm.tm_sec);
