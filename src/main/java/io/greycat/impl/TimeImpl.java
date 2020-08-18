@@ -1,8 +1,8 @@
 package io.greycat.impl;
 
-import io.greycat.Date;
+import io.greycat.Time;
 
-public class DateImpl implements Date {
+public class TimeImpl implements Time {
 
     private long value;
 
@@ -10,7 +10,7 @@ public class DateImpl implements Date {
 
     private static native String nToString(final long value);
 
-    public DateImpl(final long value) {
+    public TimeImpl(final long value) {
         this.value = value;
     }
 

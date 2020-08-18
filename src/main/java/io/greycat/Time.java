@@ -1,6 +1,6 @@
 package io.greycat;
 
-public interface Date {
+public interface Time {
 
     long toTimestamp();
 

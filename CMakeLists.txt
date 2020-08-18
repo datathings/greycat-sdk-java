@@ -9,7 +9,7 @@ if (JNI_FOUND)
             native/jduration.c
             native/jreference.c
             native/jgeocode.c
-            native/jdate.c
+            native/jtime.c
             native/jarray.c
             native/jctx.c
             native/jfunction.c

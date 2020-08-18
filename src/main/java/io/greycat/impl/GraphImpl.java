@@ -183,9 +183,8 @@ public final class GraphImpl implements Graph {
 
         declare_mapping("bool", Boolean.class);
         declare_mapping("Geocode", GeoCodeImpl.class);
-        declare_mapping("Date", DateImpl.class);
+        declare_mapping("Time", TimeImpl.class);
         declare_mapping("Ref", ReferenceImpl.class);
-        declare_mapping("Duration", DurationImpl.class);
         declare_mapping("Enum", EnumCallImpl.class);
         declare_mapping("String", String.class);
         declare_mapping("Object", ObjectImpl.class);

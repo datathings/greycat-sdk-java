@@ -7,7 +7,7 @@
 #include <greycat/runtime/gstring.h>
 #include <greycat/runtime/gtime.h>
 
-JNIEXPORT jstring JNICALL Java_io_greycat_impl_DateImpl_nToLocale(JNIEnv *env, jclass class, jlong value) {
+JNIEXPORT jstring JNICALL Java_io_greycat_impl_TimeImpl_nToLocale(JNIEnv *env, jclass class, jlong value) {
     char buffer[GC_DATE_STR_LEN + 1];
 #if defined _WIN32 || defined __CYGWIN__
     // TODO
@@ -22,7 +22,7 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_DateImpl_nToLocale(JNIEnv *env, j
     return (*env)->NewStringUTF(env, buffer);
 }
 
-JNIEXPORT jstring JNICALL Java_io_greycat_impl_DateImpl_nToString(JNIEnv *env, jclass class, jlong value) {
+JNIEXPORT jstring JNICALL Java_io_greycat_impl_TimeImpl_nToString(JNIEnv *env, jclass class, jlong value) {
 
 #if defined _WIN32 || defined __CYGWIN__
     // TODO
