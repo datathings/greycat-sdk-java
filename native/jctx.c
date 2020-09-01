@@ -7,7 +7,7 @@
 
 extern gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gslot_t *slot);
 
-void jcontext__error_handler(gctx_t *ctx) {
+void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
     JNIEnv *env = ctx->ext.env;
     jobject jctx = ctx->ext.companion;
 
@@ -16,16 +16,12 @@ void jcontext__error_handler(gctx_t *ctx) {
     //    jmethodID error_ctr = (*env)->GetMethodID(env, error_cls, "<init>",
     //    "(Ljava/lang/String;Ljava/lang/String;)V");
 
-    jstring reason = (*env)->NewStringUTF(env, ctx->error->buffer);
-
-    size_t stack_len = 0;
-    gctx__stackframes(ctx, NULL, &stack_len, 0);
-    gstackframe_t frames[stack_len];
-    gctx__stackframes(ctx, frames, &stack_len, stack_len);
+    jstring reason = (*env)->NewStringUTF(env, err->msg == NULL ? "" : err->msg->buffer);
 
     gstring_t *g_stack = ggraph__create_string((ggraph_t *) ctx->header.type->graph);
-    gctx__stacktrace(frames, stack_len, g_stack);
+    gc_rt_error__stack_to_string(err, g_stack);
     gstring__close(g_stack);
+
     jstring stack = (*env)->NewStringUTF(env, g_stack->buffer);
     // release gstring_t stacktrace
     gobject__un_mark((gobject_t *) g_stack);
