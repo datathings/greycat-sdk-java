@@ -2,10 +2,9 @@
 
 #include <jni.h>
 
-#include <greycat/runtime/geo/ggeo_code.h>
-#include <greycat/runtime/geo/ggeo_code_common.h>
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GeoCodeImpl_nToString(JNIEnv *env, jclass class, jlong value) {
+    /*
     uint64_t code = (uint64_t) value;
     if (code != GEOCODE_INVALID_CODE) {
         uint64_t precision = RAW_PRECISION(code);
@@ -38,4 +37,6 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_GeoCodeImpl_nToString(JNIEnv *env
     } else {
         return NULL;
     }
+     */
+    return (*env)->NewStringUTF(env, "");//TODO
 }

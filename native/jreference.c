@@ -3,7 +3,8 @@
 
 #include <jni.h>
 
-#include <greycat/runtime/geo/ggeo_code.h>
+#include <greycat/memory/gref.h>
+#include <greycat/sbi/type.h>
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_ReferenceImpl_nToString(JNIEnv *env, jclass class, jlong value) {
     gref_t ref;
