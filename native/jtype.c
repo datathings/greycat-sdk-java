@@ -182,7 +182,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nSetClass(JNIEnv *env, jcla
         break;
     case g_u64:
     case g_i64:
-    case g_Geo:
+    case g_GeoPoint:
     case g_Time:
     case g_Ref:
         factory->constructor_mid = (*env)->GetMethodID(env, factory->clazz, "<init>", "(J)V");
