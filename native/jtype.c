@@ -15,7 +15,7 @@ typedef struct jtype_factory {
     jfieldID value_id;
 } jtype_factory_t;
 
-jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gslot_t slot, gptype_t slot_type) {
+jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slot_type) {
     switch (slot_type) {
     case gc_sbi_slot_type_null:
         return NULL;
@@ -87,7 +87,7 @@ jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gslot_t slot, gptype_t slot_typ
     }
 }
 
-gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gslot_t *slot) {
+gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gc_rt_slot_t *slot) {
     if (value != NULL) {
         if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.p_long->extra)->clazz)) {
             slot->i64 = (*env)->GetLongField(env, value, ((jtype_factory_t *) graph->std_types.p_long->extra)->value_id);
@@ -234,7 +234,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareStatic(JNIEnv *env,
     }
 
     ggraph_t *graph = (ggraph_t *) self->graph;
-    gslot_t slot;
+    gc_rt_slot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gtype__declare_static(self, key, slot, slot_type);
     if (slot_type == gc_sbi_slot_type_object) {

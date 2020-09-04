@@ -23,12 +23,12 @@ JNIEXPORT jobject JNICALL Java_io_greycat_impl_ObjectImpl_nGraph(JNIEnv *env, jc
     return (jobject)((ggraph_t *) ((gobject_t *) (intptr_t) ptr)->type->graph)->ext.companion;
 }
 
-extern gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gslot_t *slot);
+extern gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gc_rt_slot_t *slot);
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_ObjectImpl_nSet(JNIEnv *env, jclass class, jlong ptr, jint key, jobject value) {
     gobject_t *self = (gobject_t *) (intptr_t) ptr;
     ggraph_t *graph = (ggraph_t *) self->type->graph;
-    gslot_t slot;
+    gc_rt_slot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     if (self->type->key == g_Ctx) {
         gctx__set_slot((gctx_t *) self, key, slot, slot_type);
@@ -40,12 +40,12 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_ObjectImpl_nSet(JNIEnv *env, jclass 
     }
 }
 
-extern jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gslot_t slot, gptype_t slot_type);
+extern jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slot_type);
 
 JNIEXPORT jobject JNICALL Java_io_greycat_impl_ObjectImpl_nGet(JNIEnv *env, jclass class, jlong ptr, jint key) {
     gobject_t *self = (gobject_t *) (intptr_t) ptr;
     ggraph_t *graph = (ggraph_t *) self->type->graph;
-    gslot_t slot;
+    gc_rt_slot_t slot;
     gptype_t slot_type;
     if (self->type->key == g_Ctx) {
         slot = gctx__get((gctx_t *) self, key, &slot_type);

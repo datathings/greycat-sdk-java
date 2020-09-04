@@ -5,7 +5,7 @@
 #include <greycat/function/gctx.h>
 #include <greycat/ggraph.h>
 
-extern gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gslot_t *slot);
+extern gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gc_rt_slot_t *slot);
 
 void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
     JNIEnv *env = ctx->ext.env;
@@ -46,7 +46,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_ContextImpl_nDeclare(JNIEnv *env, jc
     gctx_t *self = (gctx_t *) (intptr_t) ptr;
     ggraph_t *graph = (ggraph_t *) self->header.type->graph;
 
-    gslot_t slot;
+    gc_rt_slot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
 
     gctx__declare_slot(self, key, slot, slot_type);
@@ -70,7 +70,7 @@ JNIEXPORT jlong JNICALL Java_io_greycat_impl_ContextImpl_nOrdinal(JNIEnv *env, j
 JNIEXPORT void JNICALL Java_io_greycat_impl_ContextImpl_nSetResult(JNIEnv *env, jclass class, jlong ptr, jobject value) {
     gctx_t *ctx = (gctx_t *) (intptr_t) ptr;
     ggraph_t *graph = (ggraph_t *) ctx->header.type->graph;
-    gslot_t slot;
+    gc_rt_slot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gctx__set_result(ctx, slot, slot_type);
     if (slot_type == gc_sbi_slot_type_object) {

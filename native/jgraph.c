@@ -59,10 +59,10 @@ JNIEXPORT jlong JNICALL Java_io_greycat_impl_GraphImpl_nNewFunction(JNIEnv *env,
     return (jlong)(intptr_t) ggraph__create_function((ggraph_t *) (intptr_t) ptr);
 }
 
-extern jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gslot_t slot, gptype_t slot_type);
+extern jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slot_type);
 
 JNIEXPORT jobject JNICALL Java_io_greycat_impl_GraphImpl_nNewObject(JNIEnv *env, jclass class, jlong ptr, jint type_key) {
-    gslot_t slot = {.object = ggraph__create_object((ggraph_t *) (intptr_t) ptr, type_key)};
+    gc_rt_slot_t slot = {.object = ggraph__create_object((ggraph_t *) (intptr_t) ptr, type_key)};
     if (slot.object == NULL) {
         return NULL;
     }

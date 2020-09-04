@@ -4,7 +4,7 @@
 #include <greycat/runtime/gtype.h>
 #include <greycat/runtime/struct/gtensor.h>
 
-extern jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gslot_t slot, gptype_t slot_type);
+extern jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slot_type);
 
 JNIEXPORT jint JNICALL Java_io_greycat_impl_TensorImpl_nSize(JNIEnv *env, jclass class, jlong ptr) {
   return ((gtensor_t *) (intptr_t) ptr)->descriptor.size;
@@ -67,6 +67,6 @@ JNIEXPORT jobject JNICALL Java_io_greycat_impl_TensorImpl_nGet
     }
     (*env)->ReleaseIntArrayElements(env, offsets, raw, 0);
     gtensor_t *this = (gtensor_t *) (intptr_t) ptr;
-    gslot_t slot = gtensor__get_value(this, offset);
+    gc_rt_slot_t slot = gtensor__get_value(this, offset);
     return jtype__g2j(env, (ggraph_t *) this->header.type->graph, slot, this->descriptor.data_type);
 }
