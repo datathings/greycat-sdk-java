@@ -4,8 +4,8 @@
 #include <greycat/function/gfunction.h>
 #include <greycat/function/gfunction_ops.h>
 #include <greycat/ggraph.h>
-#include <greycat/glog.h>
 #include <greycat/language/gcl_parser.h>
+#include <greycat/log.h>
 #include <greycat/runtime/gstring.h>
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_FunctionImpl_nGetName(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName) {

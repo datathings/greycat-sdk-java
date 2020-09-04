@@ -4,8 +4,8 @@
 
 #include <greycat/galloc.h>
 #include <greycat/ggraph.h>
-#include <greycat/glog.h>
 #include <greycat/gplugin.h>
+#include <greycat/log.h>
 
 /*
 static void jni_gplugin__start(gplugin_t *self, ggraph_t *graph) {

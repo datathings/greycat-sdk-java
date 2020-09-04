@@ -1,8 +1,8 @@
 #include <jni.h>
 
-#include <greycat/glog.h>
-#include <greycat/runtime/struct/gtensor.h>
+#include <greycat/log.h>
 #include <greycat/runtime/gtype.h>
+#include <greycat/runtime/struct/gtensor.h>
 
 extern jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gslot_t slot, gptype_t slot_type);
 

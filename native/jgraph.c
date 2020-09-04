@@ -3,7 +3,7 @@
 #include <jni.h>
 
 #include <greycat/ggraph.h>
-#include <greycat/glog.h>
+#include <greycat/log.h>
 #include <greycat/runtime/gstring.h>
 #include <greycat/runtime/gtype.h>
 
