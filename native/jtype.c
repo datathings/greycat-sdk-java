@@ -6,8 +6,8 @@
 #include <greycat/galloc.h>
 #include <greycat/ggraph.h>
 #include <greycat/log.h>
-#include <greycat/runtime/gstring.h>
-#include <greycat/runtime/gtype.h>
+#include <greycat/rt/gtype.h>
+#include <greycat/rt/string.h>
 
 typedef struct jtype_factory {
     jclass clazz;
@@ -65,7 +65,7 @@ jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slo
     }
     case gc_sbi_slot_type_object: {
         if (slot.object->type->key == g_String) {
-            return (*env)->NewStringUTF(env, ((gstring_t *) slot.object)->buffer);
+            return (*env)->NewStringUTF(env, ((gc_rt_string_t *) slot.object)->buffer);
         } else {
             jtype_factory_t *factory = slot.object->type->extra;
             if (factory == NULL) {
@@ -76,7 +76,7 @@ jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slo
     }
     default: {
         int32_t insupported_type = gptype__to(slot_type);
-        gstring_t *unsupported_name = ggraph__meta(graph, insupported_type);
+        gc_rt_string_t *unsupported_name = ggraph__meta(graph, insupported_type);
         if (unsupported_name == NULL) {
             gerror("not implemented yet: %.*s", unsupported_name->size, unsupported_name->buffer);
         } else {
@@ -103,15 +103,15 @@ gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gc_rt_slot_t *s
             return gc_sbi_slot_type_bool;
         } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.string->extra)->clazz)) {
             const char *nativeString = (*env)->GetStringUTFChars(env, value, 0);
-            gstring_t *gc_str = ggraph__create_string(graph);
+            gc_rt_string_t *gc_str = ggraph__create_string(graph);
             slot->object = (gobject_t *) gc_str;
-            gstring__add_raw_string(gc_str, (char *) nativeString);
-            gstring__close(gc_str);
+            gc_rt_string__add_raw_string(gc_str, (char *) nativeString);
+            gc_rt_string__close(gc_str);
             (*env)->ReleaseStringUTFChars(env, value, nativeString);
             return gc_sbi_slot_type_object;
         } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.object->extra)->clazz)) {
             slot->object = (gobject_t *) (intptr_t)(*env)->GetLongField(env, value, ((jtype_factory_t *) graph->std_types.object->extra)->value_id);
-            gobject__mark(slot->object);
+            gc_rt_object__mark(slot->object);
             return gc_sbi_slot_type_object;
         } else {
 
@@ -153,7 +153,7 @@ JNIEXPORT jint JNICALL Java_io_greycat_impl_TypeImpl_nKey(JNIEnv *env, jclass cl
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_TypeImpl_nName(JNIEnv *env, jclass class, jlong ptr) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    gstring_t *meta = ggraph__meta((ggraph_t *) self->graph, self->key);
+    gc_rt_string_t *meta = ggraph__meta((ggraph_t *) self->graph, self->key);
     if (meta == NULL) {
         return NULL;
     } else {
@@ -238,7 +238,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareStatic(JNIEnv *env,
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gtype__declare_static(self, key, slot, slot_type);
     if (slot_type == gc_sbi_slot_type_object) {
-        gobject__un_mark(slot.object);
+        gc_rt_object__un_mark(slot.object);
     }
 }
 
@@ -254,7 +254,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareFunction(JNIEnv *en
     gfunction_t *anonymous = ggraph__create_function((ggraph_t *) self->graph);
     jfunction__pipe_body(anonymous, env, func_body);
     gtype__declare_function(self, key, anonymous);
-    gobject__un_mark((gobject_t *) anonymous);
+    gc_rt_object__un_mark((gobject_t *) anonymous);
 }
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nIsOpen(JNIEnv *env, jclass class, jlong ptr) {

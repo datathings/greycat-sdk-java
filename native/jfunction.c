@@ -6,12 +6,12 @@
 #include <greycat/ggraph.h>
 #include <greycat/language/gcl_parser.h>
 #include <greycat/log.h>
-#include <greycat/runtime/gstring.h>
+#include <greycat/rt/string.h>
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_FunctionImpl_nGetName(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName) {
     gfunction_t *self = (gfunction_t *) (intptr_t) ptr;
     ggraph_t *graph = (ggraph_t *) self->header.type->graph;
-    gstring_t *meta = ggraph__meta(graph, self->key);
+    gc_rt_string_t *meta = ggraph__meta(graph, self->key);
     if (meta == NULL) {
         return NULL;
     }
@@ -100,5 +100,5 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_FunctionImpl_nExecute(JNIEnv *env, j
     gfunction__add_call_function_direct(wrapped_fn, func, (gfunction_op_src_t){.line = 0, .offset = 0});
     jfunction__pipe_body(wrapped_fn, env, callback);
     gctx__execute((gctx_t *) (intptr_t) ctx_ptr, wrapped_fn);
-    gobject__un_mark((gobject_t *) wrapped_fn);
+    gc_rt_object__un_mark((gobject_t *) wrapped_fn);
 }

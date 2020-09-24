@@ -1,8 +1,8 @@
 #include <jni.h>
 
 #include <greycat/common/gcommon.h>
-#include <greycat/runtime/array.h>
-#include <greycat/runtime/gtype.h>
+#include <greycat/rt/array.h>
+#include <greycat/rt/gtype.h>
 
 JNIEXPORT jint JNICALL Java_io_greycat_impl_ArrayImpl_nSize(JNIEnv *env, jclass class, jlong ptr) { return ((gc_rt_array_t *) (intptr_t) ptr)->size; }
 
@@ -17,7 +17,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_ArrayImpl_nAdd(JNIEnv *env, jclass c
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gc_rt_array__add_slot(self, slot, slot_type);
     if (slot_type == gc_sbi_slot_type_object) {
-        gobject__un_mark(slot.object);
+        gc_rt_object__un_mark(slot.object);
     }
 }
 
@@ -28,7 +28,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_ArrayImpl_nSet(JNIEnv *env, jclass c
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gc_rt_array__set_slot(self, (uint32_t) offset, slot, slot_type);
     if (slot_type == gc_sbi_slot_type_object) {
-        gobject__un_mark(slot.object);
+        gc_rt_object__un_mark(slot.object);
     }
 }
 

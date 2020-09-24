@@ -1,6 +1,6 @@
 #include <jni.h>
 
-#include <greycat/runtime/blob.h>
+#include <greycat/rt/blob.h>
 
 JNIEXPORT jint JNICALL Java_io_greycat_impl_BlobImpl_nSize(JNIEnv *env, jclass class, jlong ptr) { return ((gc_rt_blob_t *) (intptr_t) ptr)->size; }
 

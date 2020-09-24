@@ -4,8 +4,8 @@
 
 #include <greycat/ggraph.h>
 #include <greycat/log.h>
-#include <greycat/runtime/gstring.h>
-#include <greycat/runtime/gtype.h>
+#include <greycat/rt/gtype.h>
+#include <greycat/rt/string.h>
 
 extern const char *gc_core_version();
 
@@ -97,31 +97,31 @@ Java_io_greycat_impl_GraphImpl_nAddPlugin(JNIEnv *env, jclass class, jlong ptr, 
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nExportTypes(JNIEnv *env, jclass class, jlong ptr) {
     ggraph_t *self = (ggraph_t *) (intptr_t) ptr;
-    gstring_t *buffer = ggraph__create_string(self);
+    gc_rt_string_t *buffer = ggraph__create_string(self);
     ggraph_export_types((ggraph_t *) (intptr_t) ptr, buffer);
-    gstring__close(buffer);
+    gc_rt_string__close(buffer);
     jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
-    gobject__un_mark((gobject_t *) buffer);
+    gc_rt_object__un_mark((gobject_t *) buffer);
     return jstrBuf;
 }
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nVersion(JNIEnv *env, jclass class, jlong ptr) {
     ggraph_t *self = (ggraph_t *) (intptr_t) ptr;
-    gstring_t *buffer = ggraph__create_string(self);
-    gstring__add_raw_string(buffer, (char *) gc_core_version());
-    gstring__close(buffer);
+    gc_rt_string_t *buffer = ggraph__create_string(self);
+    gc_rt_string__add_raw_string(buffer, (char *) gc_core_version());
+    gc_rt_string__close(buffer);
     jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
-    gobject__un_mark((gobject_t *) buffer);
+    gc_rt_object__un_mark((gobject_t *) buffer);
     return jstrBuf;
 }
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nFullVersion(JNIEnv *env, jclass class, jlong ptr) {
     ggraph_t *self = (ggraph_t *) (intptr_t) ptr;
-    gstring_t *buffer = ggraph__create_string(self);
-    gstring__add_raw_string(buffer, (char *) gc_core_version());
-    gstring__close(buffer);
+    gc_rt_string_t *buffer = ggraph__create_string(self);
+    gc_rt_string__add_raw_string(buffer, (char *) gc_core_version());
+    gc_rt_string__close(buffer);
     jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
-    gobject__un_mark((gobject_t *) buffer);
+    gc_rt_object__un_mark((gobject_t *) buffer);
     return jstrBuf;
 }
 

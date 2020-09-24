@@ -18,13 +18,13 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
 
     jstring reason = (*env)->NewStringUTF(env, err->msg == NULL ? "" : err->msg->buffer);
 
-    gstring_t *g_stack = ggraph__create_string((ggraph_t *) ctx->header.type->graph);
+    gc_rt_string_t *g_stack = ggraph__create_string((ggraph_t *) ctx->header.type->graph);
     gc_rt_error__stack_to_string(err, g_stack);
-    gstring__close(g_stack);
+    gc_rt_string__close(g_stack);
 
     jstring stack = (*env)->NewStringUTF(env, g_stack->buffer);
     // release gstring_t stacktrace
-    gobject__un_mark((gobject_t *) g_stack);
+    gc_rt_object__un_mark((gobject_t *) g_stack);
     //    jobject error = (*env)->NewObject(env, error_cls, error_ctr, reason, stack);
 
     // retrieve "errorHandler" field on "ContextImpl" and apply with "error"
@@ -38,7 +38,7 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
     //    (*env)->DeleteLocalRef(env, error);
 
     // release gctx error
-    gobject__un_mark((gobject_t *) ctx->error);
+    gc_rt_object__un_mark((gobject_t *) ctx->error);
     ctx->error = NULL;
 }
 
@@ -51,7 +51,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_ContextImpl_nDeclare(JNIEnv *env, jc
 
     gctx__declare_slot(self, key, slot, slot_type);
     if (slot_type == gc_sbi_slot_type_object) {
-        gobject__un_mark(slot.object);
+        gc_rt_object__un_mark(slot.object);
     }
 }
 
@@ -74,6 +74,6 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_ContextImpl_nSetResult(JNIEnv *env, 
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gctx__set_result(ctx, slot, slot_type);
     if (slot_type == gc_sbi_slot_type_object) {
-        gobject__un_mark(slot.object);
+        gc_rt_object__un_mark(slot.object);
     }
 }
