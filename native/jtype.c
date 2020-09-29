@@ -6,8 +6,8 @@
 #include <greycat/galloc.h>
 #include <greycat/ggraph.h>
 #include <greycat/log.h>
-#include <greycat/rt/gtype.h>
 #include <greycat/rt/string.h>
+#include <greycat/rt/type.h>
 
 typedef struct jtype_factory {
     jclass clazz;
@@ -221,7 +221,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareAttribute(JNIEnv *e
         ggraph__declare_meta((ggraph_t *) self->graph, key, nativeString);
         (*env)->ReleaseStringUTFChars(env, keyName, nativeString);
     }
-    gtype__declare_attribute(self, (int32_t) key, type);
+    gc_rt_type__declare_attribute(self, (int32_t) key, type);
 }
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareStatic(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName, jobject value) {
@@ -236,7 +236,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareStatic(JNIEnv *env,
     ggraph_t *graph = (ggraph_t *) self->graph;
     gc_rt_slot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
-    gtype__declare_static(self, key, slot, slot_type);
+    gc_rt_type__declare_static(self, key, slot, slot_type);
     if (slot_type == gc_sbi_slot_type_object) {
         gc_rt_object__un_mark(slot.object);
     }
@@ -253,7 +253,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareFunction(JNIEnv *en
     }
     gfunction_t *anonymous = ggraph__create_function((ggraph_t *) self->graph);
     jfunction__pipe_body(anonymous, env, func_body);
-    gtype__declare_function(self, key, anonymous);
+    gc_rt_type__declare_function(self, key, anonymous);
     gc_rt_object__un_mark((gobject_t *) anonymous);
 }
 

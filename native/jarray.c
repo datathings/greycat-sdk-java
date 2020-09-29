@@ -2,7 +2,7 @@
 
 #include <greycat/common/gcommon.h>
 #include <greycat/rt/array.h>
-#include <greycat/rt/gtype.h>
+#include <greycat/rt/type.h>
 
 JNIEXPORT jint JNICALL Java_io_greycat_impl_ArrayImpl_nSize(JNIEnv *env, jclass class, jlong ptr) { return ((gc_rt_array_t *) (intptr_t) ptr)->size; }
 

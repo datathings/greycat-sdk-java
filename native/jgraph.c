@@ -4,8 +4,8 @@
 
 #include <greycat/ggraph.h>
 #include <greycat/log.h>
-#include <greycat/rt/gtype.h>
 #include <greycat/rt/string.h>
+#include <greycat/rt/type.h>
 
 extern const char *gc_core_version();
 
