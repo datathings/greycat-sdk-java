@@ -24,27 +24,27 @@ jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slo
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.b);
     }
     case gc_sbi_slot_type_f64: {
-        jtype_factory_t *factory = graph->std_types.p_double->extra;
+        jtype_factory_t *factory = graph->std_types.p_f64->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.f64);
     }
     case gc_sbi_slot_type_f32: {
-        jtype_factory_t *factory = graph->std_types.p_float->extra;
+        jtype_factory_t *factory = graph->std_types.p_f32->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.f32);
     }
     case gc_sbi_slot_type_u32: {
-        jtype_factory_t *factory = graph->std_types.p_uint->extra;
+        jtype_factory_t *factory = graph->std_types.p_u32->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.u32);
     }
     case gc_sbi_slot_type_u64: {
-        jtype_factory_t *factory = graph->std_types.p_ulong->extra;
+        jtype_factory_t *factory = graph->std_types.p_u64->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.u64);
     }
     case gc_sbi_slot_type_i32: {
-        jtype_factory_t *factory = graph->std_types.p_int->extra;
+        jtype_factory_t *factory = graph->std_types.p_i32->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.i32);
     }
     case gc_sbi_slot_type_i64: {
-        jtype_factory_t *factory = graph->std_types.p_long->extra;
+        jtype_factory_t *factory = graph->std_types.p_i64->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.i64);
     }
     case gc_sbi_slot_type_geo: {
@@ -56,11 +56,11 @@ jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slo
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.i64);
     }
     case gc_sbi_slot_type_ref: {
-        jtype_factory_t *factory = graph->std_types.p_reference->extra;
+        jtype_factory_t *factory = graph->std_types.p_ref->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.i64);
     }
     case gc_sbi_slot_type_enum: {
-        jtype_factory_t *factory = graph->std_types.p_enum_call->extra;
+        jtype_factory_t *factory = graph->std_types.p_enum->extra;
         return (*env)->NewObject(env, factory->clazz, factory->constructor_mid, slot.ti32.left, slot.ti32.right, graph);
     }
     case gc_sbi_slot_type_object: {
@@ -89,14 +89,14 @@ jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slo
 
 gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gc_rt_slot_t *slot) {
     if (value != NULL) {
-        if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.p_long->extra)->clazz)) {
-            slot->i64 = (*env)->GetLongField(env, value, ((jtype_factory_t *) graph->std_types.p_long->extra)->value_id);
+        if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.p_i64->extra)->clazz)) {
+            slot->i64 = (*env)->GetLongField(env, value, ((jtype_factory_t *) graph->std_types.p_i64->extra)->value_id);
             return gc_sbi_slot_type_i64;
-        } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.p_double->extra)->clazz)) {
-            slot->f64 = (*env)->GetDoubleField(env, value, ((jtype_factory_t *) graph->std_types.p_double->extra)->value_id);
+        } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.p_f64->extra)->clazz)) {
+            slot->f64 = (*env)->GetDoubleField(env, value, ((jtype_factory_t *) graph->std_types.p_f64->extra)->value_id);
             return gc_sbi_slot_type_f64;
-        } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.p_int->extra)->clazz)) {
-            slot->i32 = (*env)->GetIntField(env, value, ((jtype_factory_t *) graph->std_types.p_int->extra)->value_id);
+        } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.p_i32->extra)->clazz)) {
+            slot->i32 = (*env)->GetIntField(env, value, ((jtype_factory_t *) graph->std_types.p_i32->extra)->value_id);
             return gc_sbi_slot_type_i32;
         } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.p_bool->extra)->clazz)) {
             slot->b = (*env)->GetBooleanField(env, value, ((jtype_factory_t *) graph->std_types.p_bool->extra)->value_id);
