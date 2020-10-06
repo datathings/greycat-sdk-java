@@ -3,8 +3,8 @@
 #include <jni.h>
 
 #include <greycat/galloc.h>
-#include <greycat/ggraph.h>
 #include <greycat/gplugin.h>
+#include <greycat/graph.h>
 #include <greycat/log.h>
 
 /*
