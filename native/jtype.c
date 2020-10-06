@@ -76,7 +76,7 @@ jobject jtype__g2j(JNIEnv *env, ggraph_t *graph, gc_rt_slot_t slot, gptype_t slo
     }
     default: {
         int32_t insupported_type = gptype__to(slot_type);
-        gc_rt_string_t *unsupported_name = ggraph__meta(graph, insupported_type);
+        gc_rt_string_t *unsupported_name = gc_graph__meta(graph, insupported_type);
         if (unsupported_name == NULL) {
             gerror("not implemented yet: %.*s", unsupported_name->size, unsupported_name->buffer);
         } else {
@@ -103,7 +103,7 @@ gptype_t jtype__j2g(JNIEnv *env, ggraph_t *graph, jobject value, gc_rt_slot_t *s
             return gc_sbi_slot_type_bool;
         } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.string->extra)->clazz)) {
             const char *nativeString = (*env)->GetStringUTFChars(env, value, 0);
-            gc_rt_string_t *gc_str = ggraph__create_string(graph);
+            gc_rt_string_t *gc_str = gc_graph__create_string(graph);
             slot->object = (gobject_t *) gc_str;
             gc_rt_string__add_raw_string(gc_str, (char *) nativeString);
             gc_rt_string__close(gc_str);
@@ -153,7 +153,7 @@ JNIEXPORT jint JNICALL Java_io_greycat_impl_TypeImpl_nKey(JNIEnv *env, jclass cl
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_TypeImpl_nName(JNIEnv *env, jclass class, jlong ptr) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    gc_rt_string_t *meta = ggraph__meta((ggraph_t *) self->graph, self->key);
+    gc_rt_string_t *meta = gc_graph__meta((ggraph_t *) self->graph, self->key);
     if (meta == NULL) {
         return NULL;
     } else {
@@ -163,9 +163,9 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_TypeImpl_nName(JNIEnv *env, jclas
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nSetName(JNIEnv *env, jclass class, jlong ptr, jint name_key, jstring name) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    if (!ggraph__is_meta((ggraph_t *) self->graph, name_key)) {
+    if (!gc_graph__is_meta((ggraph_t *) self->graph, name_key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, name, 0);
-        ggraph__declare_meta((ggraph_t *) self->graph, name_key, nativeString);
+        gc_graph__declare_meta((ggraph_t *) self->graph, name_key, nativeString);
         (*env)->ReleaseStringUTFChars(env, name, nativeString);
     }
     self->key = name_key;
@@ -216,9 +216,9 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nSetClass(JNIEnv *env, jcla
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareAttribute(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName, jint type) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    if (keyName != NULL && !ggraph__is_meta((ggraph_t *) self->graph, key)) {
+    if (keyName != NULL && !gc_graph__is_meta((ggraph_t *) self->graph, key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, keyName, 0);
-        ggraph__declare_meta((ggraph_t *) self->graph, key, nativeString);
+        gc_graph__declare_meta((ggraph_t *) self->graph, key, nativeString);
         (*env)->ReleaseStringUTFChars(env, keyName, nativeString);
     }
     gc_rt_type__declare_attribute(self, (int32_t) key, type);
@@ -227,9 +227,9 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareAttribute(JNIEnv *e
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareStatic(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName, jobject value) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
 
-    if (keyName != NULL && !ggraph__is_meta((ggraph_t *) self->graph, key)) {
+    if (keyName != NULL && !gc_graph__is_meta((ggraph_t *) self->graph, key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, keyName, 0);
-        ggraph__declare_meta((ggraph_t *) self->graph, key, nativeString);
+        gc_graph__declare_meta((ggraph_t *) self->graph, key, nativeString);
         (*env)->ReleaseStringUTFChars(env, keyName, nativeString);
     }
 
@@ -246,12 +246,12 @@ extern void jfunction__pipe_body(gfunction_t *self, JNIEnv *env, jobject body);
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareFunction(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName, jobject func_body) {
     gtype_t *self = (gtype_t *) (intptr_t) ptr;
-    if (keyName != NULL && !ggraph__is_meta((ggraph_t *) self->graph, key)) {
+    if (keyName != NULL && !gc_graph__is_meta((ggraph_t *) self->graph, key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, keyName, 0);
-        ggraph__declare_meta((ggraph_t *) self->graph, key, nativeString);
+        gc_graph__declare_meta((ggraph_t *) self->graph, key, nativeString);
         (*env)->ReleaseStringUTFChars(env, keyName, nativeString);
     }
-    gfunction_t *anonymous = ggraph__create_function((ggraph_t *) self->graph);
+    gfunction_t *anonymous = gc_graph__create_function((ggraph_t *) self->graph);
     jfunction__pipe_body(anonymous, env, func_body);
     gc_rt_type__declare_function(self, key, anonymous);
     gc_rt_object__un_mark((gobject_t *) anonymous);
@@ -267,5 +267,5 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nSeal(JNIEnv *env, jclass c
     if (self->flags.is_sealed) {
         return;
     }
-    ggraph__declare_type((ggraph_t *) self->graph, self);
+    gc_graph__declare_type((ggraph_t *) self->graph, self);
 }

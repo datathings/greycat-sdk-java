@@ -18,7 +18,7 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
 
     jstring reason = (*env)->NewStringUTF(env, err->msg == NULL ? "" : err->msg->buffer);
 
-    gc_rt_string_t *g_stack = ggraph__create_string((ggraph_t *) ctx->header.type->graph);
+    gc_rt_string_t *g_stack = gc_graph__create_string((ggraph_t *) ctx->header.type->graph);
     gc_rt_error__stack_to_string(err, g_stack);
     gc_rt_string__close(g_stack);
 

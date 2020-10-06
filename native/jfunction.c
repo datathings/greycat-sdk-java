@@ -11,7 +11,7 @@
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_FunctionImpl_nGetName(JNIEnv *env, jclass class, jlong ptr, jint key, jstring keyName) {
     gfunction_t *self = (gfunction_t *) (intptr_t) ptr;
     ggraph_t *graph = (ggraph_t *) self->header.type->graph;
-    gc_rt_string_t *meta = ggraph__meta(graph, self->key);
+    gc_rt_string_t *meta = gc_graph__meta(graph, self->key);
     if (meta == NULL) {
         return NULL;
     }
@@ -39,14 +39,14 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_FunctionImpl_nPipe(
     gfunction_t *self = (gfunction_t *) (intptr_t) ptr;
     ggraph_t *graph = (ggraph_t *) self->header.type->graph;
 
-    if (src_name != NULL && !ggraph__is_meta(graph, src_key)) {
+    if (src_name != NULL && !gc_graph__is_meta(graph, src_key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, src_name, 0);
-        ggraph__declare_meta(graph, src_key, nativeString);
+        gc_graph__declare_meta(graph, src_key, nativeString);
         (*env)->ReleaseStringUTFChars(env, src_name, nativeString);
     }
-    if (func_name != NULL && !ggraph__is_meta(graph, sub_key)) {
+    if (func_name != NULL && !gc_graph__is_meta(graph, sub_key)) {
         const char *nativeString = (*env)->GetStringUTFChars(env, func_name, 0);
-        ggraph__declare_meta(graph, sub_key, nativeString);
+        gc_graph__declare_meta(graph, sub_key, nativeString);
         (*env)->ReleaseStringUTFChars(env, func_name, nativeString);
     }
     gfunction__add_open_scope(self, src);
@@ -91,12 +91,12 @@ JNIEXPORT jboolean JNICALL Java_io_greycat_impl_FunctionImpl_nParse(JNIEnv *env,
 
 JNIEXPORT jlong JNICALL Java_io_greycat_impl_FunctionImpl_nNewContext(JNIEnv *env, jclass class, jlong function_ptr) {
     gfunction_t *function = (gfunction_t *) (intptr_t) function_ptr;
-    return (jlong)(intptr_t) ggraph__create_context((ggraph_t *) function->header.type->graph);
+    return (jlong)(intptr_t) gc_graph__create_context((ggraph_t *) function->header.type->graph);
 }
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_FunctionImpl_nExecute(JNIEnv *env, jclass class, jlong ctx_ptr, jlong function_ptr, jobject callback) {
     gfunction_t *func = (gfunction_t *) (intptr_t) function_ptr;
-    gfunction_t *wrapped_fn = ggraph__create_function((ggraph_t *) func->header.type->graph);
+    gfunction_t *wrapped_fn = gc_graph__create_function((ggraph_t *) func->header.type->graph);
     gfunction__add_call_function_direct(wrapped_fn, func, (gfunction_op_src_t){.line = 0, .offset = 0});
     jfunction__pipe_body(wrapped_fn, env, callback);
     gctx__execute((gctx_t *) (intptr_t) ctx_ptr, wrapped_fn);
