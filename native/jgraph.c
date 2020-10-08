@@ -4,6 +4,7 @@
 
 #include <greycat/graph.h>
 #include <greycat/log.h>
+#include <greycat/rt/buffer.h>
 #include <greycat/rt/string.h>
 #include <greycat/rt/type.h>
 
@@ -99,7 +100,7 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nExportTypes(JNIEnv *en
     gc_graph_t *self = (gc_graph_t *) (intptr_t) ptr;
     gc_rt_string_t *buffer = gc_graph__create_string(self);
     gc_graph_export_types((gc_graph_t *) (intptr_t) ptr, buffer);
-    gc_rt_string__close(buffer);
+    gc_rt_buffer__close(buffer);
     jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
     gc_rt_object__un_mark((gobject_t *) buffer);
     return jstrBuf;
@@ -108,8 +109,8 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nExportTypes(JNIEnv *en
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nVersion(JNIEnv *env, jclass class, jlong ptr) {
     gc_graph_t *self = (gc_graph_t *) (intptr_t) ptr;
     gc_rt_string_t *buffer = gc_graph__create_string(self);
-    gc_rt_string__add_raw_string(buffer, (char *) gc_core_version());
-    gc_rt_string__close(buffer);
+    gc_rt_buffer__add_raw_string(buffer, (char *) gc_core_version());
+    gc_rt_buffer__close(buffer);
     jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
     gc_rt_object__un_mark((gobject_t *) buffer);
     return jstrBuf;
@@ -118,8 +119,8 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nVersion(JNIEnv *env, j
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nFullVersion(JNIEnv *env, jclass class, jlong ptr) {
     gc_graph_t *self = (gc_graph_t *) (intptr_t) ptr;
     gc_rt_string_t *buffer = gc_graph__create_string(self);
-    gc_rt_string__add_raw_string(buffer, (char *) gc_core_version());
-    gc_rt_string__close(buffer);
+    gc_rt_buffer__add_raw_string(buffer, (char *) gc_core_version());
+    gc_rt_buffer__close(buffer);
     jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
     gc_rt_object__un_mark((gobject_t *) buffer);
     return jstrBuf;

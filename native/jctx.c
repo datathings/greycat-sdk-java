@@ -4,6 +4,7 @@
 
 #include <greycat/function/gctx.h>
 #include <greycat/graph.h>
+#include <greycat/rt/buffer.h>
 
 extern gptype_t jtype__j2g(JNIEnv *env, gc_graph_t *graph, jobject value, gc_rt_slot_t *slot);
 
@@ -18,9 +19,9 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
 
     jstring reason = (*env)->NewStringUTF(env, err->msg == NULL ? "" : err->msg->buffer);
 
-    gc_rt_string_t *g_stack = gc_graph__create_string((gc_graph_t *) ctx->header.type->graph);
+    gc_rt_buffer_t *g_stack = (gc_rt_buffer_t*)gc_graph__create_object((gc_graph_t *) ctx->header.type->graph, g_Buffer);
     gc_rt_error__stack_to_string(err, g_stack);
-    gc_rt_string__close(g_stack);
+    gc_rt_buffer__close(g_stack);
 
     jstring stack = (*env)->NewStringUTF(env, g_stack->buffer);
     // release gstring_t stacktrace

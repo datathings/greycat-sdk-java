@@ -105,8 +105,8 @@ gptype_t jtype__j2g(JNIEnv *env, gc_graph_t *graph, jobject value, gc_rt_slot_t 
             const char *nativeString = (*env)->GetStringUTFChars(env, value, 0);
             gc_rt_string_t *gc_str = gc_graph__create_string(graph);
             slot->object = (gobject_t *) gc_str;
-            gc_rt_string__add_raw_string(gc_str, (char *) nativeString);
-            gc_rt_string__close(gc_str);
+            gc_rt_buffer__add_raw_string(gc_str, (char *) nativeString);
+            gc_rt_buffer__close(gc_str);
             (*env)->ReleaseStringUTFChars(env, value, nativeString);
             return gc_sbi_slot_type_object;
         } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.object->extra)->clazz)) {
