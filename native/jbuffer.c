@@ -13,7 +13,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_BlobImpl_nPrepare(JNIEnv *env, jclas
 JNIEXPORT char JNICALL Java_io_greycat_impl_BlobImpl_nGet(JNIEnv *env, jclass class, jlong ptr, jint offset) {
     gc_rt_buffer_t *buffer = (gc_rt_buffer_t *) (intptr_t) ptr;
     if (offset < (jint) buffer->size) {
-        return buffer->buffer[offset];
+        return buffer->data[offset];
     }
     return '\0';
 }

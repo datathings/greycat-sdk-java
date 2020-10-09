@@ -101,7 +101,7 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nExportTypes(JNIEnv *en
     gc_rt_buffer_t *buffer = (gc_rt_buffer_t *) gc_graph__create_object(self, g_Buffer);
     gc_graph_export_types((gc_graph_t *) (intptr_t) ptr, buffer);
     gc_rt_buffer__close(buffer);
-    jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
+    jstring jstrBuf = (*env)->NewStringUTF(env, buffer->data);
     gc_rt_object__un_mark((gc_rt_object_t *) buffer);
     return jstrBuf;
 }

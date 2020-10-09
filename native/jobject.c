@@ -14,7 +14,7 @@ JNIEXPORT jstring JNICALL Java_io_greycat_impl_ObjectImpl_nToString(JNIEnv *env,
     gc_rt_buffer_t *buffer = (gc_rt_buffer_t *) gc_graph__create_object((gc_graph_t *) obj->type->graph, g_Buffer);
     obj->type->to_json(obj, (gc_rt_object_t *) buffer, false);
     gc_rt_buffer__close(buffer);
-    jstring result = (jstring)(*env)->NewStringUTF(env, buffer->buffer);
+    jstring result = (jstring)(*env)->NewStringUTF(env, buffer->data);
     gc_rt_object__un_mark((gc_rt_object_t *) buffer);
     return result;
 }

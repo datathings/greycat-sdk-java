@@ -17,13 +17,13 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
     //    jmethodID error_ctr = (*env)->GetMethodID(env, error_cls, "<init>",
     //    "(Ljava/lang/String;Ljava/lang/String;)V");
 
-    jstring reason = (*env)->NewStringUTF(env, err->msg == NULL ? "" : err->msg->buffer);
+    jstring reason = (*env)->NewStringUTF(env, err->msg == NULL ? "" : err->msg->data);
 
     gc_rt_buffer_t *g_stack = (gc_rt_buffer_t*)gc_graph__create_object((gc_graph_t *) ctx->header.type->graph, g_Buffer);
     gc_rt_error__stack_to_string(err, g_stack);
     gc_rt_buffer__close(g_stack);
 
-    jstring stack = (*env)->NewStringUTF(env, g_stack->buffer);
+    jstring stack = (*env)->NewStringUTF(env, g_stack->data);
     // release gstring_t stacktrace
     gc_rt_object__un_mark((gc_rt_object_t *) g_stack);
     //    jobject error = (*env)->NewObject(env, error_cls, error_ctr, reason, stack);
