@@ -103,14 +103,12 @@ gptype_t jtype__j2g(JNIEnv *env, gc_graph_t *graph, jobject value, gc_rt_slot_t 
             return gc_sbi_slot_type_bool;
         } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.string->extra)->clazz)) {
             const char *nativeString = (*env)->GetStringUTFChars(env, value, 0);
-            gc_rt_string_t *gc_str = gc_graph__create_string(graph);
-            slot->object = (gobject_t *) gc_str;
-            gc_rt_buffer__add_raw_string(gc_str, (char *) nativeString);
-            gc_rt_buffer__close(gc_str);
+            gc_rt_string_t *gc_str = gc_rt_string__create_from(graph, (char *) nativeString, strlen(nativeString));
+            slot->object = (gc_rt_object_t *) gc_str;
             (*env)->ReleaseStringUTFChars(env, value, nativeString);
             return gc_sbi_slot_type_object;
         } else if ((*env)->IsInstanceOf(env, value, ((jtype_factory_t *) graph->std_types.object->extra)->clazz)) {
-            slot->object = (gobject_t *) (intptr_t)(*env)->GetLongField(env, value, ((jtype_factory_t *) graph->std_types.object->extra)->value_id);
+            slot->object = (gc_rt_object_t *) (intptr_t)(*env)->GetLongField(env, value, ((jtype_factory_t *) graph->std_types.object->extra)->value_id);
             gc_rt_object__mark(slot->object);
             return gc_sbi_slot_type_object;
         } else {
@@ -254,7 +252,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nDeclareFunction(JNIEnv *en
     gfunction_t *anonymous = gc_graph__create_function((gc_graph_t *) self->graph);
     jfunction__pipe_body(anonymous, env, func_body);
     gc_rt_type__declare_function(self, key, anonymous);
-    gc_rt_object__un_mark((gobject_t *) anonymous);
+    gc_rt_object__un_mark((gc_rt_object_t *) anonymous);
 }
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_TypeImpl_nIsOpen(JNIEnv *env, jclass class, jlong ptr) {

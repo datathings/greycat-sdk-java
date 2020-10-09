@@ -3,30 +3,30 @@
 #include <greycat/graph.h>
 #include <greycat/rt/string.h>
 
-JNIEXPORT void JNICALL Java_io_greycat_impl_ObjectImpl_nUnMark(JNIEnv *env, jclass class, jlong ptr) { gc_rt_object__un_mark((gobject_t *) (intptr_t) ptr); }
+JNIEXPORT void JNICALL Java_io_greycat_impl_ObjectImpl_nUnMark(JNIEnv *env, jclass class, jlong ptr) { gc_rt_object__un_mark((gc_rt_object_t *) (intptr_t) ptr); }
 
 JNIEXPORT jlong JNICALL Java_io_greycat_impl_ObjectImpl_nType(JNIEnv *env, jclass class, jlong ptr) {
-    return (jlong)(intptr_t)((gobject_t *) (intptr_t) ptr)->type;
+    return (jlong)(intptr_t)((gc_rt_object_t *) (intptr_t) ptr)->type;
 }
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_ObjectImpl_nToString(JNIEnv *env, jclass class, jlong ptr) {
-    gobject_t *obj = (gobject_t *) (intptr_t) ptr;
-    gc_rt_string_t *buffer = gc_graph__create_string((gc_graph_t *) obj->type->graph);
-    obj->type->to_json(obj, (gobject_t *) buffer, false);
+    gc_rt_object_t *obj = (gc_rt_object_t *) (intptr_t) ptr;
+    gc_rt_buffer_t *buffer = (gc_rt_buffer_t *) gc_graph__create_object((gc_graph_t *) obj->type->graph, g_Buffer);
+    obj->type->to_json(obj, (gc_rt_object_t *) buffer, false);
     gc_rt_buffer__close(buffer);
     jstring result = (jstring)(*env)->NewStringUTF(env, buffer->buffer);
-    gc_rt_object__un_mark((gobject_t *) buffer);
+    gc_rt_object__un_mark((gc_rt_object_t *) buffer);
     return result;
 }
 
 JNIEXPORT jobject JNICALL Java_io_greycat_impl_ObjectImpl_nGraph(JNIEnv *env, jclass class, jlong ptr) {
-    return (jobject)((gc_graph_t *) ((gobject_t *) (intptr_t) ptr)->type->graph)->ext.companion;
+    return (jobject)((gc_graph_t *) ((gc_rt_object_t *) (intptr_t) ptr)->type->graph)->ext.companion;
 }
 
 extern gptype_t jtype__j2g(JNIEnv *env, gc_graph_t *graph, jobject value, gc_rt_slot_t *slot);
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_ObjectImpl_nSet(JNIEnv *env, jclass class, jlong ptr, jint key, jobject value) {
-    gobject_t *self = (gobject_t *) (intptr_t) ptr;
+    gc_rt_object_t *self = (gc_rt_object_t *) (intptr_t) ptr;
     gc_graph_t *graph = (gc_graph_t *) self->type->graph;
     gc_rt_slot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
@@ -43,7 +43,7 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_ObjectImpl_nSet(JNIEnv *env, jclass 
 extern jobject jtype__g2j(JNIEnv *env, gc_graph_t *graph, gc_rt_slot_t slot, gptype_t slot_type);
 
 JNIEXPORT jobject JNICALL Java_io_greycat_impl_ObjectImpl_nGet(JNIEnv *env, jclass class, jlong ptr, jint key) {
-    gobject_t *self = (gobject_t *) (intptr_t) ptr;
+    gc_rt_object_t *self = (gc_rt_object_t *) (intptr_t) ptr;
     gc_graph_t *graph = (gc_graph_t *) self->type->graph;
     gc_rt_slot_t slot;
     gptype_t slot_type;

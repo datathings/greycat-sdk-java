@@ -25,7 +25,7 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
 
     jstring stack = (*env)->NewStringUTF(env, g_stack->buffer);
     // release gstring_t stacktrace
-    gc_rt_object__un_mark((gobject_t *) g_stack);
+    gc_rt_object__un_mark((gc_rt_object_t *) g_stack);
     //    jobject error = (*env)->NewObject(env, error_cls, error_ctr, reason, stack);
 
     // retrieve "errorHandler" field on "ContextImpl" and apply with "error"
@@ -39,7 +39,7 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
     //    (*env)->DeleteLocalRef(env, error);
 
     // release gctx error
-    gc_rt_object__un_mark((gobject_t *) ctx->error);
+    gc_rt_object__un_mark((gc_rt_object_t *) ctx->error);
     ctx->error = NULL;
 }
 

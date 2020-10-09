@@ -7,6 +7,8 @@
 #include <greycat/rt/string.h>
 #include <greycat/rt/time.h>
 
+#define GC_DATE_STR_LEN 24
+
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_TimeImpl_nToLocale(JNIEnv *env, jclass class, jlong value) {
     char buffer[GC_DATE_STR_LEN + 1];
 #if defined _WIN32 || defined __CYGWIN__

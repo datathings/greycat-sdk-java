@@ -100,5 +100,5 @@ JNIEXPORT void JNICALL Java_io_greycat_impl_FunctionImpl_nExecute(JNIEnv *env, j
     gfunction__add_call_function_direct(wrapped_fn, func, (gfunction_op_src_t){.line = 0, .offset = 0});
     jfunction__pipe_body(wrapped_fn, env, callback);
     gctx__execute((gctx_t *) (intptr_t) ctx_ptr, wrapped_fn);
-    gc_rt_object__un_mark((gobject_t *) wrapped_fn);
+    gc_rt_object__un_mark((gc_rt_object_t *) wrapped_fn);
 }

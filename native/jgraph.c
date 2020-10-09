@@ -98,32 +98,20 @@ Java_io_greycat_impl_GraphImpl_nAddPlugin(JNIEnv *env, jclass class, jlong ptr, 
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nExportTypes(JNIEnv *env, jclass class, jlong ptr) {
     gc_graph_t *self = (gc_graph_t *) (intptr_t) ptr;
-    gc_rt_string_t *buffer = gc_graph__create_string(self);
+    gc_rt_buffer_t *buffer = (gc_rt_buffer_t *) gc_graph__create_object(self, g_Buffer);
     gc_graph_export_types((gc_graph_t *) (intptr_t) ptr, buffer);
     gc_rt_buffer__close(buffer);
     jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
-    gc_rt_object__un_mark((gobject_t *) buffer);
+    gc_rt_object__un_mark((gc_rt_object_t *) buffer);
     return jstrBuf;
 }
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nVersion(JNIEnv *env, jclass class, jlong ptr) {
-    gc_graph_t *self = (gc_graph_t *) (intptr_t) ptr;
-    gc_rt_string_t *buffer = gc_graph__create_string(self);
-    gc_rt_buffer__add_raw_string(buffer, (char *) gc_core_version());
-    gc_rt_buffer__close(buffer);
-    jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
-    gc_rt_object__un_mark((gobject_t *) buffer);
-    return jstrBuf;
+    return (*env)->NewStringUTF(env, (char *) gc_core_version());
 }
 
 JNIEXPORT jstring JNICALL Java_io_greycat_impl_GraphImpl_nFullVersion(JNIEnv *env, jclass class, jlong ptr) {
-    gc_graph_t *self = (gc_graph_t *) (intptr_t) ptr;
-    gc_rt_string_t *buffer = gc_graph__create_string(self);
-    gc_rt_buffer__add_raw_string(buffer, (char *) gc_core_version());
-    gc_rt_buffer__close(buffer);
-    jstring jstrBuf = (*env)->NewStringUTF(env, buffer->buffer);
-    gc_rt_object__un_mark((gobject_t *) buffer);
-    return jstrBuf;
+    return (*env)->NewStringUTF(env, (char *) gc_core_version());
 }
 
 JNIEXPORT jboolean JNICALL Java_io_greycat_impl_GraphImpl_nIsMeta(JNIEnv *env, jclass class, jlong ptr, jint key) {
