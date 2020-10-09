@@ -3,7 +3,7 @@ project(greycat.binding.java)
 find_package(JNI QUIET)
 if (JNI_FOUND)
     set(JNI_SOURCES
-            native/jblob.c
+            native/jbuffer.c
             native/jtensor.c
             native/jenumcall.c
             native/jduration.c
