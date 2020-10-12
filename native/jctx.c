@@ -19,7 +19,7 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
 
     jstring reason = (*env)->NewStringUTF(env, err->msg == NULL ? "" : err->msg->data);
 
-    gc_rt_buffer_t *g_stack = (gc_rt_buffer_t*)gc_graph__create_object((gc_graph_t *) ctx->header.type->graph, g_Buffer);
+    gc_rt_buffer_t *g_stack = (gc_rt_buffer_t *) gc_graph__create_object((gc_graph_t *) ctx->graph, g_Buffer);
     gc_rt_error__stack_to_string(err, g_stack);
     gc_rt_buffer__close(g_stack);
 
@@ -45,7 +45,7 @@ void jcontext__error_handler(gctx_t *ctx, gc_rt_error_t *err) {
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_ContextImpl_nDeclare(JNIEnv *env, jclass class, jlong ptr, jint key, jobject value) {
     gctx_t *self = (gctx_t *) (intptr_t) ptr;
-    gc_graph_t *graph = (gc_graph_t *) self->header.type->graph;
+    gc_graph_t *graph = (gc_graph_t *) self->graph;
 
     gc_rt_slot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
@@ -70,7 +70,7 @@ JNIEXPORT jlong JNICALL Java_io_greycat_impl_ContextImpl_nOrdinal(JNIEnv *env, j
 
 JNIEXPORT void JNICALL Java_io_greycat_impl_ContextImpl_nSetResult(JNIEnv *env, jclass class, jlong ptr, jobject value) {
     gctx_t *ctx = (gctx_t *) (intptr_t) ptr;
-    gc_graph_t *graph = (gc_graph_t *) ctx->header.type->graph;
+    gc_graph_t *graph = (gc_graph_t *) ctx->graph;
     gc_rt_slot_t slot;
     gptype_t slot_type = jtype__j2g(env, graph, value, &slot);
     gctx__set_result(ctx, slot, slot_type);
