@@ -2,9 +2,11 @@ project(greycat.binding.java)
 
 # See https://stackoverflow.com/questions/51047978/cmake-could-not-find-jni
 set(JAVA_AWT_LIBRARY NotNeeded)
-set(JAVA_JVM_LIBRARY NotNeeded)
-set(JAVA_INCLUDE_PATH2 NotNeeded)
 set(JAVA_AWT_INCLUDE_PATH NotNeeded)
+
+#set(JAVA_JVM_LIBRARY NotNeeded)
+#set(JAVA_INCLUDE_PATH2 NotNeeded)
+
 
 find_package(JNI QUIET)
 
