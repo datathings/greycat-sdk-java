@@ -1,5 +1,6 @@
 #include <inttypes.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include <jni.h>
 
