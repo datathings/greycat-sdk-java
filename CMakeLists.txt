@@ -6,7 +6,6 @@ set(JAVA_AWT_INCLUDE_PATH NotNeeded)
 if(NOT ANDROID)
     #jni is available by default on android
     find_package(JNI QUIET)
-    include_directories(${JNI_INCLUDE_DIRS})
 else()
     set(JNI_FOUND true)
 endif()
