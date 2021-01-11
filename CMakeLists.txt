@@ -1,13 +1,15 @@
 project(greycat.binding.java)
 
-# See https://stackoverflow.com/questions/51047978/cmake-could-not-find-jni
 set(JAVA_AWT_LIBRARY NotNeeded)
 set(JAVA_AWT_INCLUDE_PATH NotNeeded)
-set(JAVA_JVM_LIBRARY NotNeeded)
-#set(JAVA_INCLUDE_PATH2 NotNeeded)
 
-
-find_package(JNI QUIET)
+if(NOT ANDROID)
+    #jni is available by default on android
+    find_package(JNI QUIET)
+    include_directories(${JNI_INCLUDE_DIRS})
+else()
+    set(JNI_FOUND true)
+endif()
 
 if (JNI_FOUND)
     set(JNI_SOURCES
