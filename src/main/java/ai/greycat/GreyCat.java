@@ -715,6 +715,9 @@ public final class GreyCat {
         }
         Stream buf = new Stream(greycat, new BufferedInputStream(connection.getInputStream()));
         java.lang.Object result = buf.read();
+        if (buf.is.available() > 0) {
+            throw new IOException("Remaining unread bytes");
+        }
         buf.close();
         return result;
     }
