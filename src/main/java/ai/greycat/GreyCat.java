@@ -2,13 +2,14 @@ package ai.greycat;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class GreyCat {
-
     public static final class Stream {
         private final byte[] tmp = new byte[8];
         private InputStream is;
@@ -539,6 +540,32 @@ public final class GreyCat {
         }
 
     }
+
+    public final static class Files {
+
+        public static java.lang.Object get(GreyCat greycat, String path) throws IOException {
+            String url = greycat.runtime_url +
+                    "/files/" +
+                    path;
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/octet-stream");
+            connection.setRequestProperty("Content-Type", "application/octet-stream");
+            int status = connection.getResponseCode();
+            if (200 > status || 300 <= status) {
+                Stream stream = new Stream(greycat, connection.getErrorStream());
+                java.lang.Object result = stream.read();
+                stream.close();
+                throw new IOException(result.toString());
+            }
+            Stream buf = new Stream(greycat, new BufferedInputStream(connection.getInputStream()));
+            java.lang.Object result = buf.read();
+            buf.close();
+            return result;
+        }
+
+    }
+
 
     private final String[] symbols;
     private final java.util.Map<String, Integer> symbols_off_by_value = new HashMap<>();

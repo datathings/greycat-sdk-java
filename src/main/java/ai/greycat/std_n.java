@@ -11,7 +11,6 @@ class std_n {
     public static final class core {
 
         protected static class nodeTimeCursor extends GreyCat.Object {
-
             protected nodeTimeCursor(GreyCat.Type type) {
                 super(type, null);
                 throw new RuntimeException("unsupported");
@@ -707,7 +706,6 @@ class std_n {
         }
 
         protected static class Buffer extends GreyCat.Object {
-
             public byte[] data;
 
             protected Buffer(GreyCat.Type type) {
@@ -724,6 +722,28 @@ class std_n {
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 util.Buffer buf = (Buffer) type.factory.build(type);
+                buf.data = stream.read_i8_array(stream.read_i32());
+                return buf;
+            }
+        }
+
+        protected static class ByteArray extends GreyCat.Object {
+            public byte[] data;
+
+            protected ByteArray(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.OBJECT);
+                stream.write_i32(type.offset);
+                stream.write_i32(data.length);
+                stream.write_i8_array(data, 0, data.length);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                util.ByteArray buf = (ByteArray) type.factory.build(type);
                 buf.data = stream.read_i8_array(stream.read_i32());
                 return buf;
             }
