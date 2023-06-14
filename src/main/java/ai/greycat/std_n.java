@@ -636,15 +636,15 @@ class std_n {
                 switch (tensorType) {
                     case 0:
                     case 2:
-                        size *= 4;
+                        bin_size *= 4;
                         break;
                     case 1:
                     case 3:
                     case 4:
-                        size *= 8;
+                        bin_size *= 8;
                         break;
                     case 5:
-                        size *= 16;
+                        bin_size *= 16;
                         break;
                     default:
                         throw new IllegalArgumentException("" + tensorType);
@@ -793,13 +793,13 @@ class std_n {
                 g.max = stream.read_f64();
                 g.minBound = stream.read_f64();
                 g.maxBound = stream.read_f64();
-                return type.factory.build(type, stream.read_f64(), stream.read_f64(), stream.read_f64(), stream.read_f64());
+                return g;
             }
 
         }
 
         protected static class GaussianProfile extends GreyCat.Object {
-            public int size;
+//            public int size;
             public byte[] data;
 
             protected GaussianProfile(GreyCat.Type type) {
@@ -810,15 +810,15 @@ class std_n {
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
                 stream.write_i32(type.offset);
-                stream.write_i32(size);
+//                stream.write_i32(size);
                 stream.write_i32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 util.GaussianProfile g = (GaussianProfile) type.factory.build(type);
-                g.size = stream.read_i32();
-                g.data = stream.read_i8_array(g.size);
+                int size = stream.read_i32();
+                g.data = stream.read_i8_array(size);
                 return g;
             }
 

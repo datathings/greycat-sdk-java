@@ -159,6 +159,7 @@ class algebra_n {
                 stream.write_i32(bestDim);
                 stream.write_i32(selectedDim);
                 stream.write_f64(threshold);
+                stream.write_object(eigenVectors);
                 stream.write_object(eigenValues);
                 stream.write_object(avg);
                 stream.write_object(std);
