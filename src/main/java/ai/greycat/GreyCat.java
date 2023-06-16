@@ -2,14 +2,16 @@ package ai.greycat;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class GreyCat {
+
+    public static final short abi_major = 1;
+    public static final short abi_minor = 0;
+
     public static final class Stream {
         private final byte[] tmp = new byte[8];
         private InputStream is;
@@ -82,6 +84,13 @@ public final class GreyCat {
 
         java.lang.Object read_null() {
             return null;
+        }
+
+        int read_i16() throws IOException {
+            if (is.read(tmp, 0, 2) == -1) {
+                throw new IOException();
+            }
+            return (tmp[1] << 8) + (tmp[0]);
         }
 
         int read_i32() throws IOException {
@@ -217,7 +226,7 @@ public final class GreyCat {
             PRIMITIVE_LOADERS[PrimitiveType.OBJECT] = Stream::read_object;
             PRIMITIVE_LOADERS[PrimitiveType.BLOCK] = error_loader;
             PRIMITIVE_LOADERS[PrimitiveType.BLOCK_REF] = error_loader;
-            PRIMITIVE_LOADERS[PrimitiveType.FUNCTION_REF] = error_loader;
+            PRIMITIVE_LOADERS[PrimitiveType.FUNCTION] = error_loader;
             PRIMITIVE_LOADERS[PrimitiveType.UNDEFINED] = error_loader;
             PRIMITIVE_LOADERS[PrimitiveType.STRING_LIT] = Stream::read_string_lit;
         }
@@ -239,6 +248,16 @@ public final class GreyCat {
             throw new IllegalArgumentException("invalid primitive type");
         }
 
+    }
+
+    public static final class Function {
+        public final int offset;
+        public final String name;
+
+        public Function(int offset, String name) {
+            this.offset = offset;
+            this.name = name;
+        }
     }
 
     public static final class Type {
@@ -454,14 +473,15 @@ public final class GreyCat {
         static final byte GEO = 10;
         static final byte TIME = 11;
         static final byte DURATION = 12;
-        static final byte ENUM = 13;
-        static final byte OBJECT = 14;
-        static final byte BLOCK = 15;
-        static final byte BLOCK_REF = 16;
-        static final byte FUNCTION_REF = 17;
-        static final byte UNDEFINED = 18;
-        static final byte STRING_LIT = 19;
-        static final byte SIZE = 20;
+        static final byte CUBIC = 13;
+        static final byte ENUM = 14;
+        static final byte OBJECT = 15;
+        static final byte BLOCK = 16;
+        static final byte BLOCK_REF = 17;
+        static final byte FUNCTION = 18;
+        static final byte UNDEFINED = 19;
+        static final byte STRING_LIT = 20;
+        static final byte SIZE = 21;
     }
 
     public static class Object {
@@ -570,10 +590,10 @@ public final class GreyCat {
     private final String[] symbols;
     private final java.util.Map<String, Integer> symbols_off_by_value = new HashMap<>();
     public final Type[] types;
-
+    public final Type[] functions;
     public final Map<String, Library> libs_by_name;
-
     public final java.util.Map<String, Type> types_by_name = new HashMap<>();
+    public final java.util.Map<String, Function> functions_by_name = new HashMap<>();
     private final String runtime_url;
     public final int type_offset_core_string;
     public final int type_offset_core_duration;
@@ -602,7 +622,22 @@ public final class GreyCat {
         }
         this.runtime_url = url;
         final Stream abiStream = getRemoteAbi(url);
+
+        // step 0: verify abi version
+        int abi_major = abiStream.read_i16();
+        if (abi_major != GreyCat.abi_major) {
+            throw new RuntimeException("wrong protocol major");
+        }
+        int abi_minor = abiStream.read_i16();
+        if (abi_minor != GreyCat.abi_minor) {
+            throw new RuntimeException("wrong protocol major");
+        }
+
+        int abi_version = abiStream.read_i32();
+        long crc = abiStream.read_i64();
+
         // step 1: create all symbols
+        final long symbolsBytes = abiStream.read_i64();
         final int symbolsCount = abiStream.read_i32();
         symbols = new String[symbolsCount + 1];
         symbols[0] = null;
@@ -612,13 +647,16 @@ public final class GreyCat {
             symbols_off_by_value.put(symbol, offset);
         }
         // step 2: create all types
+        final long typesBytes = abiStream.read_i64();
         final int typesSize = abiStream.read_i32();
         types = new Type[typesSize];
+        final int attributesSize = abiStream.read_i32();
         StringBuilder builder = new StringBuilder();
         for (i = 0; i < typesSize; i++) {
             /* build type qualified name */
             final String moduleName = symbols[abiStream.read_i32()];
             final String typeName = symbols[abiStream.read_i32()];
+            final String libName = symbols[abiStream.read_i32()];
             builder.setLength(0);
             if (moduleName != null) {
                 builder.append(moduleName);
@@ -654,6 +692,14 @@ public final class GreyCat {
             }
             types[i] = abiType;
         }
+        // step 3: create all functions
+        final long functionsBytes = abiStream.read_i64();
+        final int functionSizes = abiStream.read_i32();
+        functions = new Type[functionSizes];
+
+
+
+
         /* pre-resolve String type avoid runtime over-head */
         Type tmp = types_by_name.get("core.String");
         if (tmp == null) {
