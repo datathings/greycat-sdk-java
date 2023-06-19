@@ -12,6 +12,37 @@ public final class GreyCat {
     public static final short abi_major = 1;
     public static final short abi_minor = 0;
 
+    public static final class GCBReader {
+
+        private GCBReader(Stream stream) {
+            this.stream = stream;
+        }
+
+        private final Stream stream;
+
+        public static GCBReader open(GreyCat greycat, String path) throws IOException {
+            Stream s = new Stream(greycat, new BufferedInputStream(new FileInputStream(path)));
+            int abi_major = s.read_i16();
+            if (abi_major != GreyCat.abi_major) {
+                throw new RuntimeException("wrong ABI protocol major version");
+            }
+            int abi_minor = s.read_i16();
+            if (abi_minor != GreyCat.abi_minor) {
+                throw new RuntimeException("wrong ABI protocol minor version");
+            }
+            int abi_version = s.read_i32();
+            if(abi_version > greycat.abi_version){
+                throw new RuntimeException("greater abi version, please reload this handler");
+            }
+            return new GCBReader(s);
+        }
+
+        public java.lang.Object read() throws IOException {
+            return stream.read();
+        }
+
+    }
+
     public static final class Stream {
         private final byte[] tmp = new byte[8];
         private InputStream is;
@@ -476,12 +507,24 @@ public final class GreyCat {
         static final byte CUBIC = 13;
         static final byte ENUM = 14;
         static final byte OBJECT = 15;
-        static final byte BLOCK = 16;
-        static final byte BLOCK_REF = 17;
-        static final byte FUNCTION = 18;
-        static final byte UNDEFINED = 19;
-        static final byte STRING_LIT = 20;
-        static final byte SIZE = 21;
+
+        /* todo */
+//    gc_type_tu2 = 16,
+//    gc_type_tu3 = 17,
+//    gc_type_tu4 = 18,
+//    gc_type_tu8 = 19,
+//    gc_type_tu10 = 20,
+//    gc_type_tf2 = 21,
+//    gc_type_tf3 = 22,
+//    gc_type_tf4 = 23,
+        /* todo */
+
+        static final byte BLOCK = 24;
+        static final byte BLOCK_REF = 25;
+        static final byte FUNCTION = 26;
+        static final byte UNDEFINED = 27;
+        static final byte STRING_LIT = 28;
+        static final byte SIZE = 29;
     }
 
     public static class Object {
@@ -605,6 +648,10 @@ public final class GreyCat {
     public final int type_offset_core_node;
     public final int type_offset_core_node_geo;
 
+    private boolean rpc_ready = false;
+
+    private final int abi_version;
+
     public GreyCat(String url, Library... libraries) throws Exception {
         libs_by_name = new HashMap<>();
         std std = new std();
@@ -621,7 +668,7 @@ public final class GreyCat {
             lib.configure(loaders, factories);
         }
         this.runtime_url = url;
-        final Stream abiStream = getRemoteAbi(url);
+        final Stream abiStream = getAbi(url);
 
         // step 0: verify abi version
         int abi_major = abiStream.read_i16();
@@ -633,7 +680,7 @@ public final class GreyCat {
             throw new RuntimeException("wrong protocol major");
         }
 
-        int abi_version = abiStream.read_i32();
+        this.abi_version = abiStream.read_i32();
         long crc = abiStream.read_i64();
 
         // step 1: create all symbols
@@ -753,6 +800,9 @@ public final class GreyCat {
     }
 
     public static java.lang.Object call(GreyCat greycat, String fqn, java.lang.Object... parameters) throws IOException {
+        if (!greycat.rpc_ready) {
+            throw new RuntimeException("Remote Call are not available on this GreyCat handle");
+        }
         StringBuilder url = new StringBuilder();
         url.append(greycat.runtime_url);
         url.append('/');
@@ -841,7 +891,31 @@ public final class GreyCat {
             }
             throw new RuntimeException(builder.toString());
         }
+        this.rpc_ready = true;
         return new Stream(this, connection.getInputStream());
+    }
+
+    private Stream getLocalAbi(String runtime_url) throws IOException {
+        StringBuilder b = new StringBuilder();
+        if (!runtime_url.startsWith("file")) {
+            b.append("file://");
+        }
+        b.append(runtime_url);
+        b.append(File.separator);
+        b.append("gcdata");
+        b.append(File.separator);
+        b.append("store");
+        b.append(File.separator);
+        b.append("abi");
+        return new Stream(this, new FileInputStream(new URL(b.toString()).getFile()));
+    }
+
+    private Stream getAbi(String runtime_url) throws IOException {
+        if (runtime_url.startsWith("http") || runtime_url.startsWith("https")) {
+            return getRemoteAbi(runtime_url);
+        } else {
+            return getLocalAbi(runtime_url);
+        }
     }
 
 }
