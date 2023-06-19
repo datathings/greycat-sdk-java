@@ -31,7 +31,7 @@ public final class GreyCat {
                 throw new RuntimeException("wrong ABI protocol minor version");
             }
             int abi_version = s.read_i32();
-            if(abi_version > greycat.abi_version){
+            if (abi_version > greycat.abi_version) {
                 throw new RuntimeException("greater abi version, please reload this handler");
             }
             return new GCBReader(s);
@@ -626,14 +626,11 @@ public final class GreyCat {
             buf.close();
             return result;
         }
-
     }
-
 
     private final String[] symbols;
     private final java.util.Map<String, Integer> symbols_off_by_value = new HashMap<>();
     public final Type[] types;
-    public final Type[] functions;
     public final Map<String, Library> libs_by_name;
     public final java.util.Map<String, Type> types_by_name = new HashMap<>();
     public final java.util.Map<String, Function> functions_by_name = new HashMap<>();
@@ -707,9 +704,9 @@ public final class GreyCat {
             builder.setLength(0);
             if (moduleName != null) {
                 builder.append(moduleName);
-                builder.append(".");
-                builder.append(typeName);
+                builder.append("::");
             }
+            builder.append(typeName);
             final String fqn = builder.toString();
             int attributesLen = abiStream.read_i32();
             abiStream.read_i32();/* unused field */
@@ -742,53 +739,81 @@ public final class GreyCat {
         // step 3: create all functions
         final long functionsBytes = abiStream.read_i64();
         final int functionSizes = abiStream.read_i32();
-        functions = new Type[functionSizes];
+        for (i = 0; i < functionSizes; i++) {
+            int offset = abiStream.read_i32();
+            /* build type qualified name */
+            final String moduleName = symbols[abiStream.read_i32()];
+            final String typeName = symbols[abiStream.read_i32()];
+            final String functionName = symbols[abiStream.read_i32()];
+            final String libName = symbols[abiStream.read_i32()];
+            builder.setLength(0);
+            if (moduleName != null) {
+                builder.append(moduleName);
+                builder.append("::");
+            }
+            if (moduleName != null) {
+                builder.append(typeName);
+                builder.append("::");
+            }
+            builder.append(functionName);
+            final String fqn = builder.toString();
 
+            int nb_params = abiStream.read_i32();
+            for (int j = 0; j < nb_params; j++) {
+                abiStream.read_i8();
+                abiStream.read_i32();
+                abiStream.read_i32();
+            }
+            abiStream.read_i32();
+            abiStream.read_i8();
+            abiStream.read_i8();
 
-
+            Function fn = new Function(offset, fqn);
+            functions_by_name.put(fqn, fn);
+        }
 
         /* pre-resolve String type avoid runtime over-head */
-        Type tmp = types_by_name.get("core.String");
+        Type tmp = types_by_name.get("core::String");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_string = tmp.offset;
-        tmp = types_by_name.get("core.duration");
+        tmp = types_by_name.get("core::duration");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_duration = tmp.offset;
-        tmp = types_by_name.get("core.time");
+        tmp = types_by_name.get("core::time");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_time = tmp.offset;
-        tmp = types_by_name.get("core.geo");
+        tmp = types_by_name.get("core::geo");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_geo = tmp.offset;
-        tmp = types_by_name.get("core.nodeList");
+        tmp = types_by_name.get("core::nodeList");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_list = tmp.offset;
-        tmp = types_by_name.get("core.nodeIndex");
+        tmp = types_by_name.get("core::nodeIndex");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_index = tmp.offset;
-        tmp = types_by_name.get("core.nodeTime");
+        tmp = types_by_name.get("core::nodeTime");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_time = tmp.offset;
-        tmp = types_by_name.get("core.nodeGeo");
+        tmp = types_by_name.get("core::nodeGeo");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_geo = tmp.offset;
-        tmp = types_by_name.get("core.node");
+        tmp = types_by_name.get("core::node");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }

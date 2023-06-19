@@ -276,7 +276,7 @@ class std_n {
         }
 
         protected static class GeoPoly extends GreyCat.Object {
-            public static final java.lang.String type_name = "core.GeoPoly";
+            public static final java.lang.String type_name = "core::GeoPoly";
 
             protected GeoPoly(GreyCat.Type type) {
                 super(type, null);
@@ -315,7 +315,7 @@ class std_n {
         }
 
         protected static class Map<T, U> extends GreyCat.Object {
-            public static final java.lang.String type_name = "core.Map";
+            public static final java.lang.String type_name = "core::Map";
 
             private final java.util.Map<Object, Object> map = new HashMap<>();
 
@@ -411,7 +411,7 @@ class std_n {
 
         protected static class nodeIndex extends GreyCat.Object {
             @SuppressWarnings("unused")
-            public static final java.lang.String type_name = "core.nodeIndex";
+            public static final java.lang.String type_name = "core::nodeIndex";
 
             public long ref;
 
@@ -1376,6 +1376,18 @@ class std_n {
         protected static class FileWriter extends GreyCat.Object {
 
             protected FileWriter(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+        }
+
+        protected static class GCBWriter extends GreyCat.Object {
+
+            protected GCBWriter(GreyCat.Type type) {
                 super(type, null);
                 throw new RuntimeException("unsupported");
             }
