@@ -261,6 +261,10 @@ public final class GreyCat {
         }
 
         java.lang.Object read() throws IOException {
+            if (this.is.available() == 0) {
+                this.is.close();
+                return null;
+            }
             return PRIMITIVE_LOADERS[read_i8()].load(this);
         }
 
