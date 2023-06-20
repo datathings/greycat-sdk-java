@@ -12,15 +12,15 @@ public final class GreyCat {
     public static final short abi_major = 1;
     public static final short abi_minor = 0;
 
-    public static final class GCBReader {
+    public static final class AbiReader {
 
-        private GCBReader(Stream stream) {
+        private AbiReader(Stream stream) {
             this.stream = stream;
         }
 
         private final Stream stream;
 
-        public static GCBReader open(GreyCat greycat, String path) throws IOException {
+        public static AbiReader open(GreyCat greycat, String path) throws IOException {
             Stream s = new Stream(greycat, new BufferedInputStream(new FileInputStream(path)));
             int abi_major = s.read_i16();
             if (abi_major != GreyCat.abi_major) {
@@ -34,7 +34,7 @@ public final class GreyCat {
             if (abi_version > greycat.abi_version) {
                 throw new RuntimeException("greater abi version, please reload this handler");
             }
-            return new GCBReader(s);
+            return new AbiReader(s);
         }
 
         public java.lang.Object read() throws IOException {
@@ -645,7 +645,7 @@ public final class GreyCat {
     public final int type_offset_core_node;
     public final int type_offset_core_node_geo;
 
-    private boolean rpc_ready = false;
+    private boolean is_remote = false;
 
     private final int abi_version;
 
@@ -825,7 +825,7 @@ public final class GreyCat {
     }
 
     public static java.lang.Object call(GreyCat greycat, String fqn, java.lang.Object... parameters) throws IOException {
-        if (!greycat.rpc_ready) {
+        if (!greycat.is_remote) {
             throw new RuntimeException("Remote Call are not available on this GreyCat handle");
         }
         StringBuilder url = new StringBuilder();
@@ -916,7 +916,7 @@ public final class GreyCat {
             }
             throw new RuntimeException(builder.toString());
         }
-        this.rpc_ready = true;
+        this.is_remote = true;
         return new Stream(this, connection.getInputStream());
     }
 

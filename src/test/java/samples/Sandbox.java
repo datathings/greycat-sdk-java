@@ -1,7 +1,6 @@
 package samples;
 
 import ai.greycat.GreyCat;
-import ai.greycat.algebra;
 import ai.greycat.std;
 
 public class Sandbox {
@@ -11,7 +10,7 @@ public class Sandbox {
         GreyCat greycat = new GreyCat("/Users/duke/dev/greycat/greycat/cmake-build-debug/bin", new std()/*, new algebra()*/);
         //GreyCat greycat = new GreyCat("http://localhost:8080", new std()/*, new algebra()*/);
 
-        GreyCat.GCBReader reader = GreyCat.GCBReader.open(greycat,"/Users/duke/dev/greycat/greycat/cmake-build-debug/bin/out.gcb");
+        GreyCat.AbiReader reader = GreyCat.AbiReader.open(greycat,"/Users/duke/dev/greycat/greycat/cmake-build-debug/bin/out.gcb");
         Object res = reader.read();
         System.out.println(res);
         System.out.println(res.getClass());
