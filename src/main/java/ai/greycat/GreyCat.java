@@ -8,9 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class GreyCat {
-
-    public static final short abi_major = 1;
-    public static final short abi_minor = 0;
+    public static final short abi_proto = 1;
 
     public static final class AbiReader {
 
@@ -23,12 +21,12 @@ public final class GreyCat {
         public static AbiReader open(GreyCat greycat, String path) throws IOException {
             Stream s = new Stream(greycat, new BufferedInputStream(new FileInputStream(path)));
             int abi_major = s.read_i16();
-            if (abi_major != GreyCat.abi_major) {
+            if (abi_major != GreyCat.abi_proto) {
                 throw new RuntimeException("wrong ABI protocol major version");
             }
-            int abi_minor = s.read_i16();
-            if (abi_minor != GreyCat.abi_minor) {
-                throw new RuntimeException("wrong ABI protocol minor version");
+            int abi_magic = s.read_i16();
+            if (abi_magic != greycat.abi_magic) {
+                throw new RuntimeException("wrong ABI magic");
             }
             int abi_version = s.read_i32();
             if (abi_version > greycat.abi_version) {
@@ -646,7 +644,7 @@ public final class GreyCat {
     public final int type_offset_core_node_geo;
 
     private boolean is_remote = false;
-
+    private final int abi_magic;
     private final int abi_version;
 
     public GreyCat(String url, Library... libraries) throws Exception {
@@ -666,17 +664,12 @@ public final class GreyCat {
         }
         this.runtime_url = url;
         final Stream abiStream = getAbi(url);
-
         // step 0: verify abi version
         int abi_major = abiStream.read_i16();
-        if (abi_major != GreyCat.abi_major) {
-            throw new RuntimeException("wrong protocol major");
+        if (abi_major != GreyCat.abi_proto) {
+            throw new RuntimeException("wrong ABI proto");
         }
-        int abi_minor = abiStream.read_i16();
-        if (abi_minor != GreyCat.abi_minor) {
-            throw new RuntimeException("wrong protocol major");
-        }
-
+        this.abi_magic = abiStream.read_i16();
         this.abi_version = abiStream.read_i32();
         long crc = abiStream.read_i64();
 
@@ -751,7 +744,7 @@ public final class GreyCat {
                 builder.append(moduleName);
                 builder.append("::");
             }
-            if (moduleName != null) {
+            if (typeName != null) {
                 builder.append(typeName);
                 builder.append("::");
             }
