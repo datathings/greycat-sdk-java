@@ -158,13 +158,11 @@ class std_n {
             }
 
             @Override
-            public final java.lang.String toString() {
-                return type.name +
-                        "{msg='" +
-                        msg +
-                        '\'' +
+            public java.lang.String toString() {
+                return type.name+"{" +
+                        "msg='" + msg + '\'' +
+                        ", value=" + value +
                         '}';
-
             }
         }
 

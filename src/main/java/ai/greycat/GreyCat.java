@@ -20,18 +20,7 @@ public final class GreyCat {
 
         public static AbiReader open(GreyCat greycat, String path) throws IOException {
             Stream s = new Stream(greycat, new BufferedInputStream(new FileInputStream(path)));
-            int abi_major = s.read_i16();
-            if (abi_major != GreyCat.abi_proto) {
-                throw new RuntimeException("wrong ABI protocol major version");
-            }
-            int abi_magic = s.read_i16();
-            if (abi_magic != greycat.abi_magic) {
-                throw new RuntimeException("wrong ABI magic");
-            }
-            int abi_version = s.read_i32();
-            if (abi_version > greycat.abi_version) {
-                throw new RuntimeException("greater abi version, please reload this handler");
-            }
+            s.readAbiHeader();
             return new AbiReader(s);
         }
 
@@ -56,6 +45,21 @@ public final class GreyCat {
         public Stream(GreyCat greycat, InputStream is) {
             this.greycat = greycat;
             this.is = is;
+        }
+
+        public void readAbiHeader() throws IOException {
+            int abi_major = this.read_i16();
+            if (abi_major != GreyCat.abi_proto) {
+                throw new RuntimeException("wrong ABI protocol major version");
+            }
+            int abi_magic = this.read_i16();
+            if (abi_magic != greycat.abi_magic) {
+                throw new RuntimeException("wrong ABI magic");
+            }
+            int abi_version = this.read_i32();
+            if (abi_version > greycat.abi_version) {
+                throw new RuntimeException("greater abi version, please reload this handler");
+            }
         }
 
         public void close() throws IOException {
@@ -854,15 +858,14 @@ public final class GreyCat {
         int status = connection.getResponseCode();
         if (200 > status || 300 <= status) {
             Stream stream = new Stream(greycat, connection.getErrorStream());
+            stream.readAbiHeader();
             java.lang.Object result = stream.read();
             stream.close();
             throw new IOException(result.toString());
         }
         Stream buf = new Stream(greycat, new BufferedInputStream(connection.getInputStream()));
+        buf.readAbiHeader();
         java.lang.Object result = buf.read();
-        if (buf.is.available() > 0) {
-            throw new IOException("Remaining unread bytes");
-        }
         buf.close();
         return result;
     }
