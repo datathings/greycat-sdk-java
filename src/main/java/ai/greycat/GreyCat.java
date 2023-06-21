@@ -135,7 +135,7 @@ public final class GreyCat {
             if (is.read(tmp, 0, 2) == -1) {
                 throw new IOException();
             }
-            return (tmp[1] << 8) + (tmp[0]);
+            return ((tmp[1] << 24) >>> 16) + ((tmp[0] << 24) >>> 24);
         }
 
         int read_i32() throws IOException {
@@ -857,6 +857,7 @@ public final class GreyCat {
             connection.setDoOutput(true);
             OutputStream os = connection.getOutputStream();
             Stream b = new Stream(greycat, new BufferedOutputStream(os));
+            b.writeAbiHeader();
             int paramOffset = 0;
             while (paramOffset < parameters.length) {
                 b.write_object(parameters[paramOffset]);
