@@ -37,6 +37,20 @@ class std_n {
                 }
                 return array;
             }
+
+            @Override
+            public java.lang.String toString() {
+                StringBuilder b = new StringBuilder();
+                b.append('[');
+                for (int i = 0; i < this.attributes.length; i++) {
+                    if (i != 0) {
+                        b.append(',');
+                    }
+                    b.append(this.attributes[i]);
+                }
+                b.append(']');
+                return b.toString();
+            }
         }
 
         protected static class Date extends GreyCat.Object {
@@ -159,7 +173,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return type.name+"{" +
+                return type.name + "{" +
                         "msg='" + msg + '\'' +
                         ", value=" + value +
                         '}';
@@ -797,7 +811,7 @@ class std_n {
         }
 
         protected static class GaussianProfile extends GreyCat.Object {
-//            public int size;
+            //            public int size;
             public byte[] data;
 
             protected GaussianProfile(GreyCat.Type type) {
