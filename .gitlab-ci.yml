@@ -16,6 +16,7 @@ before_script:
 build:
   stage: build
   script:
+    - mvn --batch-mode release:update-versions -DdevelopmentVersion=${PROJECT_VERSION_SIMPLE}
     - mvn clean package
     - mkdir dist && cp target/sdk-0.0.0.jar dist
   artifacts:
