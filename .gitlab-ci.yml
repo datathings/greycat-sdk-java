@@ -17,7 +17,7 @@ build:
   stage: build
   script:
     - mvn clean package
-    - cp target/sdk-0.0.0.jar dist
+    - mkdir dist && cp target/sdk-0.0.0.jar dist
   artifacts:
     expire_in: 1 week
     paths:
