@@ -62,6 +62,12 @@ public final class GreyCat {
             }
         }
 
+        public void writeAbiHeader() throws IOException {
+            this.write_i16(GreyCat.abi_proto);
+            this.write_i16(greycat.abi_magic);
+            this.write_i32(greycat.abi_version);
+        }
+
         public void close() throws IOException {
             if (is != null) {
                 is.close();
@@ -89,6 +95,12 @@ public final class GreyCat {
             tmp[2] = (byte) ((i >>> 16) & 0xFF);
             tmp[3] = (byte) ((i >>> 24) & 0xFF);
             os.write(tmp, 0, 4);
+        }
+
+        public void write_i16(final int i) throws IOException {
+            tmp[0] = (byte) (i & 0xFF);
+            tmp[1] = (byte) ((i >>> 8) & 0xFF);
+            os.write(tmp, 0, 2);
         }
 
         public void write_i64(final long l) throws IOException {
@@ -829,17 +841,14 @@ public final class GreyCat {
         if (!greycat.is_remote) {
             throw new RuntimeException("Remote Call are not available on this GreyCat handle");
         }
+        GreyCat.Function fn = greycat.functions_by_name.get(fqn);
+        if (fn == null) {
+            throw new RuntimeException("Function not found with name " + fqn);
+        }
         StringBuilder url = new StringBuilder();
         url.append(greycat.runtime_url);
         url.append('/');
-        int i = url.length();
         url.append(fqn);
-        while (i < url.length()) {
-            if (url.charAt(i) == '.') {
-                url.setCharAt(i, '/');
-            }
-            i++;
-        }
         HttpURLConnection connection = (HttpURLConnection) new URL(url.toString()).openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept", "application/octet-stream");
@@ -903,7 +912,7 @@ public final class GreyCat {
     }
 
     private Stream getRemoteAbi(String runtime_url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(runtime_url + "/runtime/Runtime/abi").openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL(runtime_url + "/runtime::Runtime::abi").openConnection();
         connection.setRequestMethod("POST");
         int status = connection.getResponseCode();
         if (200 > status || 300 <= status) {

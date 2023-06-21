@@ -17,7 +17,8 @@ public class Sandbox {
 //        }
 
         GreyCat greycat = new GreyCat("http://localhost:8080", new std()/*, new algebra()*/);
-        Object result = GreyCat.call(greycat, "project.hello");
+        Object result = GreyCat.call(greycat, "project::hello");
+        System.out.println(result);
         System.out.println(result.getClass());
 
 
