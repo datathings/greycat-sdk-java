@@ -19,7 +19,7 @@ build:
   script:
     - mvn versions:set -DnewVersion=${PROJECT_VERSION_SIMPLE}
     - mvn clean package
-    - mkdir -p dist dist/sdk disk/sdk/java && cp target/sdk-${PROJECT_VERSION_SIMPLE}.jar disk/sdk/java/sdk.jar
+    - mkdir -p dist dist/sdk dist/sdk/java && cp target/sdk-${PROJECT_VERSION_SIMPLE}.jar dist/sdk/java/sdk.jar
   artifacts:
     expire_in: 1 week
     paths:
