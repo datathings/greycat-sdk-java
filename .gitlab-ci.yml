@@ -8,7 +8,7 @@ stages:
 
 build:
   stage: build
-  image: oci.datathings.com/greycat/crossbuild:4.1.7-master
+  image: oci.datathings.com/greycat/build/java:1.0.3-main
   script:
     - export PROJECT_VERSION_SIMPLE=`git2version -s`
     - mvn versions:set -DnewVersion=${PROJECT_VERSION_SIMPLE}
