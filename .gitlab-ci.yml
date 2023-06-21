@@ -9,6 +9,7 @@ stages:
   - publish
 
 before_script:
+  - apt -y update && apt -y install git
   - export PROJECT_VERSION=`./git2version`
   - export PROJECT_VERSION_SIMPLE=`./git2version -s`
   - echo "${PROJECT_VERSION} / ${PROJECT_VERSION_SIMPLE}"
@@ -16,7 +17,6 @@ before_script:
 build:
   stage: build
   script:
-    - apt -y update && apt -y install git
     - mvn --batch-mode release:update-versions -DdevelopmentVersion=${PROJECT_VERSION_SIMPLE}
     - mvn clean package
     - mkdir -p dist dist/sdk disk/sdk/java && cp target/sdk-${PROJECT_VERSION_SIMPLE}.jar disk/sdk/java/sdk.jar
