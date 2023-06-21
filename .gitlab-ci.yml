@@ -1,4 +1,4 @@
-image: maven:3.8.7-openjdk-20-slim
+image: maven:3.8.7-openjdk-18-slim
 
 variables:
   GIT_STRATEGY: clone
