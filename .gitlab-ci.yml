@@ -1,4 +1,4 @@
-image: maven:3.8.7-openjdk-18-slim
+image: maven:3.8.7-openjdk-20-slim
 
 variables:
   GIT_STRATEGY: clone
@@ -18,7 +18,7 @@ build:
   script:
     - mvn --batch-mode release:update-versions -DdevelopmentVersion=${PROJECT_VERSION_SIMPLE}
     - mvn clean package
-    - mkdir dist && cp target/sdk-0.0.0.jar dist
+    - mkdir -p dist dist/sdk disk/sdk/java &&  && cp target/sdk-${PROJECT_VERSION_SIMPLE}.jar disk/sdk/java/sdk.jar
   artifacts:
     expire_in: 1 week
     paths:
