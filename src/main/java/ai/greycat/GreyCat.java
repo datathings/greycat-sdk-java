@@ -18,16 +18,16 @@ public final class GreyCat {
 
         private final Stream stream;
 
-        public static AbiReader open(GreyCat greycat, String path) throws IOException {
-            Stream s = new Stream(greycat, new BufferedInputStream(new FileInputStream(path)));
-            s.readAbiHeader();
-            return new AbiReader(s);
-        }
-
         public java.lang.Object read() throws IOException {
             return stream.read();
         }
 
+    }
+
+    public AbiReader openAbiRead(String path) throws IOException {
+        Stream s = new Stream(this, new BufferedInputStream(new FileInputStream(path)));
+        s.readAbiHeader();
+        return new AbiReader(s);
     }
 
     public static final class Stream {

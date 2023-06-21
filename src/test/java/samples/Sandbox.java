@@ -8,7 +8,7 @@ public class Sandbox {
     public static void main(String... args) throws Exception {
 
         GreyCat greycat = new GreyCat("/Users/duke/dev/greycat/greycat/cmake-build-debug/bin", new std()/*, new algebra()*/);
-        GreyCat.AbiReader reader = GreyCat.AbiReader.open(greycat, "/Users/duke/dev/greycat/greycat/cmake-build-debug/bin/out.gcb");
+        GreyCat.AbiReader reader = greycat.openAbiRead("/Users/duke/dev/greycat/greycat/cmake-build-debug/bin/out.gcb");
         Object res = reader.read();
         while (res != null) {
             System.out.println(res);
@@ -24,6 +24,13 @@ public class Sandbox {
 
 
         //GreyCat.call(greycat, "project.push", result);
+
+
+       // System.in;
+
+
     }
+
+
 }
 

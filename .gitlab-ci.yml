@@ -1,5 +1,3 @@
-image: maven:3.8.7-openjdk-18-slim
-
 variables:
   GIT_STRATEGY: clone
   GIT_DEPTH: "0"
@@ -8,15 +6,11 @@ stages:
   - build
   - publish
 
-before_script:
-  - apt -y update && apt -y install git
-  - export PROJECT_VERSION=`./git2version`
-  - export PROJECT_VERSION_SIMPLE=`./git2version -s`
-  - echo "${PROJECT_VERSION} / ${PROJECT_VERSION_SIMPLE}"
-
 build:
   stage: build
+  image: oci.datathings.com/greycat/build/java:1.0.3-main
   script:
+    - export PROJECT_VERSION_SIMPLE=`git2version -s`
     - mvn versions:set -DnewVersion=${PROJECT_VERSION_SIMPLE}
     - mvn clean package
     - mkdir -p dist dist/sdk dist/sdk/java && cp target/sdk-${PROJECT_VERSION_SIMPLE}.jar dist/sdk/java/sdk.jar
