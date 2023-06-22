@@ -1397,9 +1397,21 @@ class std_n {
             }
         }
 
-        protected static class GCBWriter extends GreyCat.Object {
+        protected static class AbiWriter extends GreyCat.Object {
 
-            protected GCBWriter(GreyCat.Type type) {
+            protected AbiWriter(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+        }
+
+        protected static class AbiReader extends GreyCat.Object {
+
+            protected AbiReader(GreyCat.Type type) {
                 super(type, null);
                 throw new RuntimeException("unsupported");
             }
