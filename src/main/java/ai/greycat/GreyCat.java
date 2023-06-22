@@ -300,11 +300,9 @@ public final class GreyCat {
     }
 
     public static final class Function {
-        public final int offset;
         public final String name;
 
-        public Function(int offset, String name) {
-            this.offset = offset;
+        public Function(String name) {
             this.name = name;
         }
     }
@@ -753,7 +751,6 @@ public final class GreyCat {
         final long functionsBytes = abiStream.read_i64();
         final int functionSizes = abiStream.read_i32();
         for (i = 0; i < functionSizes; i++) {
-            int offset = abiStream.read_i32();
             /* build type qualified name */
             final String moduleName = symbols[abiStream.read_i32()];
             final String typeName = symbols[abiStream.read_i32()];
@@ -781,7 +778,7 @@ public final class GreyCat {
             abiStream.read_i8();
             abiStream.read_i8();
 
-            Function fn = new Function(offset, fqn);
+            Function fn = new Function(fqn);
             functions_by_name.put(fqn, fn);
         }
 
