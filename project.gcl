@@ -31,24 +31,52 @@ fn write_std(out: AbiWriter) {
 fn write_core(out: AbiWriter) {
   out.write(true);
   out.write('*');
+  // 1 byte
+  out.write(0);
   out.write(1);
   out.write(-1);
-  out.write(128);
-  out.write(-128);
-  out.write(16384);
-  out.write(-16384);
-  out.write(2097152);
-  out.write(-2097152);
-  out.write(268435456);
-  out.write(-268435456);
-  out.write(34359738368);
-  out.write(-34359738368);
-  out.write(4398046511104);
-  out.write(-4398046511104);
-  out.write(562949953421312);
-  out.write(-562949953421312);
-  out.write(72057594037927936);
-  out.write(-72057594037927936);
+  out.write(63);
+  out.write(-64);
+  // 2 bytes
+  out.write(64);
+  out.write(-65);
+  out.write(8191);
+  out.write(-8192);
+  // 3 bytes
+  out.write(8192);
+  out.write(-8193);
+  out.write(1048575);
+  out.write(-1048576);
+  // 4 bytes
+  out.write(1048576);
+  out.write(-1048577);
+  out.write(134217727);
+  out.write(-134217728);
+  // 5 bytes
+  out.write(134217728);
+  out.write(-134217729);
+  out.write(17179869183);
+  out.write(-17179869184);
+  // 6 bytes
+  out.write(17179869184);
+  out.write(-17179869185);
+  out.write(2199023255551);
+  out.write(-2199023255552);
+  // 7 bytes
+  out.write(2199023255552);
+  out.write(-2199023255553);
+  out.write(281474976710655);
+  out.write(-281474976710656);
+  // 8 bytes
+  out.write(281474976710656);
+  out.write(-281474976710657);
+  out.write(36028797018963967);
+  out.write(-36028797018963968);
+  // 9 bytes
+  out.write(36028797018963968);
+  out.write(-36028797018963969);
+  out.write(9223372036854775807);
+  out.write(-9223372036854775808);
   out.write(13.37);
   out.write("Hello world");
   out.write("${"Hello world"}");
