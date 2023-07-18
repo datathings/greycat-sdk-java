@@ -3,6 +3,8 @@ package samples;
 import ai.greycat.GreyCat;
 import ai.greycat.std;
 
+import java.util.Arrays;
+
 public class Sandbox {
 
     public static void main(String... args) throws Exception {

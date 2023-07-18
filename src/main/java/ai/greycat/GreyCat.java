@@ -214,21 +214,21 @@ public final class GreyCat {
                 case 1:
                     return ((long) bytes[0]) & 0x7f;
                 case 2:
-                    return (((long) bytes[0]) & 0x3f) | (((long) bytes[1]) << 6);
+                    return (((long) bytes[0]) & 0x3f) | (Byte.toUnsignedLong(bytes[1]) << 6);
                 case 3:
-                    return (((long) bytes[0]) & 0x1f) | (((long) bytes[1]) << 5) | (((long) bytes[2]) << 13);
+                    return (((long) bytes[0]) & 0x1f) | (Byte.toUnsignedLong(bytes[1]) << 5) | (Byte.toUnsignedLong(bytes[2]) << 13);
                 case 4:
-                    return (((long) bytes[0]) & 0x0f) | (((long) bytes[1]) << 4) | (((long) bytes[2]) << 12) | (((long) bytes[3]) << 20);
+                    return (((long) bytes[0]) & 0x0f) | (Byte.toUnsignedLong(bytes[1]) << 4) | (Byte.toUnsignedLong(bytes[2]) << 12) | (Byte.toUnsignedLong(bytes[3]) << 20);
                 case 5:
-                    return (((long) bytes[0]) & 0x07) | (((long) bytes[1]) << 3) | (((long) bytes[2]) << 11) | (((long) bytes[3]) << 19) | (((long) bytes[4]) << 27);
+                    return (((long) bytes[0]) & 0x07) | (Byte.toUnsignedLong(bytes[1]) << 3) | (Byte.toUnsignedLong(bytes[2]) << 11) | (Byte.toUnsignedLong(bytes[3]) << 19) | (Byte.toUnsignedLong(bytes[4]) << 27);
                 case 6:
-                    return (((long) bytes[0]) & 0x03) | (((long) bytes[1]) << 2) | (((long) bytes[2]) << 10) | (((long) bytes[3]) << 18) | (((long) bytes[4]) << 26) | (((long) bytes[5]) << 34);
+                    return (((long) bytes[0]) & 0x03) | (Byte.toUnsignedLong(bytes[1]) << 2) | (Byte.toUnsignedLong(bytes[2]) << 10) | (Byte.toUnsignedLong(bytes[3]) << 18) | (Byte.toUnsignedLong(bytes[4]) << 26) | (Byte.toUnsignedLong(bytes[5]) << 34);
                 case 7:
-                    return (((long) bytes[0]) & 0x01) | (((long) bytes[1]) << 1) | (((long) bytes[2]) << 9) | (((long) bytes[3]) << 17) | (((long) bytes[4]) << 25) | (((long) bytes[5]) << 33) | (((long) bytes[6]) << 41);
+                    return (((long) bytes[0]) & 0x01) | (Byte.toUnsignedLong(bytes[1]) << 1) | (Byte.toUnsignedLong(bytes[2]) << 9) | (Byte.toUnsignedLong(bytes[3]) << 17) | (Byte.toUnsignedLong(bytes[4]) << 25) | (Byte.toUnsignedLong(bytes[5]) << 33) | (Byte.toUnsignedLong(bytes[6]) << 41);
                 case 8:
-                    return (((long) bytes[1])) | (((long) bytes[2]) << 8) | (((long) bytes[3]) << 16) | (((long) bytes[4]) << 24) | (((long) bytes[5]) << 32) | (((long) bytes[6]) << 40) | (((long) bytes[7] << 48));
+                    return (Byte.toUnsignedLong(bytes[1])) | (Byte.toUnsignedLong(bytes[2]) << 8) | (Byte.toUnsignedLong(bytes[3]) << 16) | (Byte.toUnsignedLong(bytes[4]) << 24) | (Byte.toUnsignedLong(bytes[5]) << 32) | (Byte.toUnsignedLong(bytes[6]) << 40) | (Byte.toUnsignedLong(bytes[7]) << 48);
                 case 9:
-                    return (((long) bytes[1])) | (((long) bytes[2]) << 8) | (((long) bytes[3]) << 16) | (((long) bytes[4]) << 24) | (((long) bytes[5]) << 32) | (((long) bytes[6]) << 40) | (((long) bytes[7] << 48)) | (((long)bytes[8]) << 56);
+                    return (Byte.toUnsignedLong(bytes[1])) | (Byte.toUnsignedLong(bytes[2]) << 8) | (Byte.toUnsignedLong(bytes[3]) << 16) | (Byte.toUnsignedLong(bytes[4]) << 24) | (Byte.toUnsignedLong(bytes[5]) << 32) | (Byte.toUnsignedLong(bytes[6]) << 40) | (Byte.toUnsignedLong(bytes[7]) << 48) | (Byte.toUnsignedLong(bytes[8]) << 56);
                 default:
                     throw new IOException("wrong state");
             }

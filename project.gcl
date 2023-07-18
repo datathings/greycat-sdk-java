@@ -31,8 +31,24 @@ fn write_std(out: AbiWriter) {
 fn write_core(out: AbiWriter) {
   out.write(true);
   out.write('*');
-  out.write(42);
-  out.write(-42);
+  out.write(1);
+  out.write(-1);
+  out.write(128);
+  out.write(-128);
+  out.write(16384);
+  out.write(-16384);
+  out.write(2097152);
+  out.write(-2097152);
+  out.write(268435456);
+  out.write(-268435456);
+  out.write(34359738368);
+  out.write(-34359738368);
+  out.write(4398046511104);
+  out.write(-4398046511104);
+  out.write(562949953421312);
+  out.write(-562949953421312);
+  out.write(72057594037927936);
+  out.write(-72057594037927936);
   out.write(13.37);
   out.write("Hello world");
   out.write("${"Hello world"}");
