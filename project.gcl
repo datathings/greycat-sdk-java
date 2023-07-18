@@ -80,7 +80,7 @@ fn write_core(out: AbiWriter) {
   out.write(13.37);
   out.write("Hello world");
   out.write("${"Hello world"}");
-  out.write(GeoBox::new(13_geo, 37_geo)); // first byte: 13
+  out.write(GeoBox::new(13_geo, 37_geo));
   out.write(nodeList<int>::new());
   out.write(TimeZone::Europe_Luxembourg);
   out.write(node<float>::new(13.37));
@@ -92,7 +92,7 @@ fn write_core(out: AbiWriter) {
   out.write(Table<node>::new(0, false));
   out.write(42_geo);
   out.write(Tensor::new());
-  out.write(GeoCircle::new(42_geo, 13.37)); // first byte: 42
+  out.write(GeoCircle::new(42_geo, 13.37));
   out.write(Date::new(2012, 12, 12, 12, 12, 12, 12, TimeZone::Europe_Luxembourg));
   out.write(Map<geo, time>::new());
   out.write(duration::new(12, DurationUnit::microseconds));
