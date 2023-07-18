@@ -159,25 +159,35 @@ public final class GreyCat {
             switch (nbytes) {
                 case 9:
                     bytes[nbytes - 8] = read_i8();
+                    // fallthrough
                 case 8:
                     bytes[nbytes - 7] = read_i8();
+                    // fallthrough
                 case 7:
                     bytes[nbytes - 6] = read_i8();
+                    // fallthrough
                 case 6:
                     bytes[nbytes - 5] = read_i8();
+                    // fallthrough
                 case 5:
                     bytes[nbytes - 4] = read_i8();
+                    // fallthrough
                 case 4:
                     bytes[nbytes - 3] = read_i8();
+                    // fallthrough
                 case 3:
                     bytes[nbytes - 2] = read_i8();
+                    // fallthrough
                 case 2:
                     bytes[nbytes - 1] = read_i8();
+                    // fallthrough
                 case 1:
                     bytes[0] = header;
+                    break;
+                default:
+                    throw new IOException("wrong state");
             }
-            long unpacked_varu64 = unpack_varu64(bytes);
-            return sign_of(unpacked_varu64);
+            return sign_of(unpack_varu64(bytes));
         }
 
         private static byte len_varu64(byte header) throws IOException {
