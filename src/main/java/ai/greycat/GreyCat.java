@@ -152,6 +152,92 @@ public final class GreyCat {
             return ((long) tmp[7] << 56) + (((long) tmp[6] << 56) >>> 8) + (((long) tmp[5] << 56) >>> 16) + (((long) tmp[4] << 56) >>> 24) + (((long) tmp[3] << 56) >>> 32) + (((long) tmp[2] << 56) >>> 40) + (((long) tmp[1] << 56) >>> 48) + (((long) tmp[0] << 56) >>> 56);
         }
 
+        long read_vi64() throws IOException {
+            byte header = read_i8();
+            byte nbytes = len_varu64(header);
+            byte[] bytes = new byte[nbytes];
+            switch (nbytes) {
+                case 9:
+                    bytes[nbytes - 8] = read_i8();
+                case 8:
+                    bytes[nbytes - 7] = read_i8();
+                case 7:
+                    bytes[nbytes - 6] = read_i8();
+                case 6:
+                    bytes[nbytes - 5] = read_i8();
+                case 5:
+                    bytes[nbytes - 4] = read_i8();
+                case 4:
+                    bytes[nbytes - 3] = read_i8();
+                case 3:
+                    bytes[nbytes - 2] = read_i8();
+                case 2:
+                    bytes[nbytes - 1] = read_i8();
+                case 1:
+                    bytes[0] = header;
+            }
+            long unpacked_varu64 = unpack_varu64(bytes);
+            return sign_of(unpacked_varu64);
+        }
+
+        private static byte len_varu64(byte header) throws IOException {
+            if ((header & 0x80) == 0) {
+                return 1;
+            }
+            if ((header & 0x40) == 0) {
+                return 2;
+            }
+            if ((header & 0x20) == 0) {
+                return 3;
+            }
+            if ((header & 0x10) == 0) {
+                return 4;
+            }
+            if ((header & 0x08) == 0) {
+                return 5;
+            }
+            if ((header & 0x04) == 0) {
+                return 6;
+            }
+            if ((header & 0x02) == 0) {
+                return 7;
+            }
+            if ((header & 0x01) == 0) {
+                return 8;
+            }
+            return 9;
+        }
+
+        private static long unpack_varu64(byte[] bytes) throws IOException {
+            byte n = (byte) bytes.length;
+            switch (n) {
+                case 1:
+                    return ((long) bytes[0]) & 0x7f;
+                case 2:
+                    return (((long) bytes[0]) & 0x3f) | (((long) bytes[1]) << 6);
+                case 3:
+                    return (((long) bytes[0]) & 0x1f) | (((long) bytes[1]) << 5) | (((long) bytes[2]) << 13);
+                case 4:
+                    return (((long) bytes[0]) & 0x0f) | (((long) bytes[1]) << 4) | (((long) bytes[2]) << 12) | (((long) bytes[3]) << 20);
+                case 5:
+                    return (((long) bytes[0]) & 0x07) | (((long) bytes[1]) << 3) | (((long) bytes[2]) << 11) | (((long) bytes[3]) << 19) | (((long) bytes[4]) << 27);
+                case 6:
+                    return (((long) bytes[0]) & 0x03) | (((long) bytes[1]) << 2) | (((long) bytes[2]) << 10) | (((long) bytes[3]) << 18) | (((long) bytes[4]) << 26) | (((long) bytes[5]) << 34);
+                case 7:
+                    return (((long) bytes[0]) & 0x01) | (((long) bytes[1]) << 1) | (((long) bytes[2]) << 9) | (((long) bytes[3]) << 17) | (((long) bytes[4]) << 25) | (((long) bytes[5]) << 33) | (((long) bytes[6]) << 41);
+                case 8:
+                    return (((long) bytes[1])) | (((long) bytes[2]) << 8) | (((long) bytes[3]) << 16) | (((long) bytes[4]) << 24) | (((long) bytes[5]) << 32) | (((long) bytes[6]) << 40) | (((long) bytes[7] << 48));
+                case 9:
+                    return (((long) bytes[1])) | (((long) bytes[2]) << 8) | (((long) bytes[3]) << 16) | (((long) bytes[4]) << 24) | (((long) bytes[5]) << 32) | (((long) bytes[6]) << 40) | (((long) bytes[7] << 48)) | (((long)bytes[8]) << 56);
+                default:
+                    throw new IOException("wrong state");
+            }
+        }
+
+        private static long sign_of(long x) {
+            return ((x >>> 1) ^ (-(x & 1)));
+        }
+
         byte[] read_i8_array(final int len) throws IOException {
             byte[] newArr = new byte[len];
             if (is.read(newArr, 0, len) == -1) {
@@ -233,7 +319,7 @@ public final class GreyCat {
             PRIMITIVE_LOADERS[PrimitiveType.NULL] = Stream::read_null;
             PRIMITIVE_LOADERS[PrimitiveType.BOOL] = Stream::read_bool;
             PRIMITIVE_LOADERS[PrimitiveType.CHAR] = Stream::read_char;
-            PRIMITIVE_LOADERS[PrimitiveType.INT] = Stream::read_i64;
+            PRIMITIVE_LOADERS[PrimitiveType.INT] = Stream::read_vi64;
             PRIMITIVE_LOADERS[PrimitiveType.FLOAT] = Stream::read_f64;
             PRIMITIVE_LOADERS[PrimitiveType.NODE] = (GreyCat.Stream stream) -> {
                 final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_node];

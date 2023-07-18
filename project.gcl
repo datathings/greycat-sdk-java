@@ -29,6 +29,12 @@ fn write_std(out: AbiWriter) {
 }
 
 fn write_core(out: AbiWriter) {
+  out.write(true);
+  out.write('*');
+  out.write(42);
+  out.write(-42);
+  out.write(13.37);
+  out.write("Hello world");
   out.write("${"Hello world"}");
   out.write(GeoBox::new(13_geo, 37_geo)); // first byte: 13
   out.write(nodeList<int>::new());
