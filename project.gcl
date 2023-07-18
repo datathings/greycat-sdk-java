@@ -16,24 +16,6 @@ fn minimal_fail() {
     out.write("${"Hello world!"}");
     out.write(GeoBox::new(13_geo, 37_geo));
     out.write(GeoCircle::new(42_geo, 13.37));
-    out.write(RuntimeInfo {
-        version: "",
-        arch: "",
-        timezone: TimeZone::Europe_Luxembourg,
-        license: License {
-          start: 13_time,
-          end: 37_time,
-          max_workers: 12,
-          max_memory: 42,
-          max_store: 0,
-        },
-        io_threads: 13,
-        bg_threads: 37,
-        fg_threads: 12,
-        mem_total: 42,
-        mem_worker: 0,
-        nb_ctx: 1,
-      });
 }
 
 fn main() {
@@ -48,7 +30,7 @@ fn write_std(out: AbiWriter) {
 
 fn write_core(out: AbiWriter) {
   out.write("${"Hello world"}");
-  // out.write(GeoBox::new(13_geo, 37_geo)); // first byte: 13
+  out.write(GeoBox::new(13_geo, 37_geo)); // first byte: 13
   out.write(nodeList<int>::new());
   out.write(TimeZone::Europe_Luxembourg);
   out.write(node<float>::new(13.37));
@@ -60,7 +42,7 @@ fn write_core(out: AbiWriter) {
   out.write(Table<node>::new(0, false));
   out.write(42_geo);
   out.write(Tensor::new());
-  // out.write(GeoCircle::new(42_geo, 13.37)); // first byte: 42
+  out.write(GeoCircle::new(42_geo, 13.37)); // first byte: 42
   out.write(Date::new(2012, 12, 12, 12, 12, 12, 12, TimeZone::Europe_Luxembourg));
   out.write(Map<geo, time>::new());
   out.write(duration::new(12, DurationUnit::microseconds));
@@ -75,57 +57,17 @@ fn write_core(out: AbiWriter) {
 }
 
 fn write_runtime(out: AbiWriter) {
-  // Task: first byte: 0
+  // out.write(Task{/*TODO*/});
   out.write(TaskStatus::cancelled);
-  // out.write(Runtime {});
-  out.write(RuntimeInfo {
-      version: "",
-      arch: "",
-      timezone: TimeZone::Europe_Luxembourg,
-      license: License {
-        start: 13_time,
-        end: 37_time,
-        max_workers: 12,
-        max_memory: 42,
-        max_store: 0,
-      },
-      io_threads: 13,
-      bg_threads: 37,
-      fg_threads: 12,
-      mem_total: 42,
-      mem_worker: 0,
-      nb_ctx: 1,
-    });
+  out.write(Runtime {});
+  // out.write(RuntimeInfo{/*TODO*/});
   out.write(SecurityFields {});
-  out.write(UserGroup {
-      id: 42,
-      name: "",
-      activated: true,
-    });
-  out.write(OpenIDConnect {
-      url: "",
-      clientId: "",
-    });
-  out.write(UserRole {
-      name: "",
-      permissions: [],
-    });
-  out.write(PeriodicTask {
-      name: "",
-      user_id: 12,
-      start: 13_time,
-      every: duration::new(37, DurationUnit::microseconds),
-    });
-  out.write(User {
-      id: 12,
-      name: "",
-      activated: false,
-      external: true,
-    });
-  out.write(UserGroupPolicy {
-      group_id: 12,
-      type: UserGroupPolicyType::execute,
-    });
+  // out.write(UserGroup{/*TODO*/});
+  // out.write(OpenIDConnect{/*TODO*/});
+  // out.write(UserRole{/*TODO*/});
+  // out.write(PeriodicTask{/*TODO*/});
+  // out.write(User{/*TODO*/});
+  // out.write(UserGroupPolicy{/*TODO*/});
   out.write(UserGroupPolicyType::read);
   out.write(License {
       start: 13_time,

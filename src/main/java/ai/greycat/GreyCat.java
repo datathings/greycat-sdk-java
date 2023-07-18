@@ -366,7 +366,7 @@ public final class GreyCat {
 
         static final Loader enum_loader = (type, stream) -> {
             final Type programType = type.greycat.types[type.mapped_type_off];
-            final int valueOffset = stream.read_i32();
+            final int valueOffset = stream.read_i16();
             final Type.Attribute abiTypeAtt = type.attributes[valueOffset];
             return programType.enum_values[abiTypeAtt.mappedAttOffset];
         };
@@ -375,13 +375,29 @@ public final class GreyCat {
             final Type programType = type.greycat.types[type.mapped_type_off];
             final java.lang.Object[] attributes = new java.lang.Object[programType.attributes.length];
             byte[] previous_nullable = stream.read_i8_array(type.nullable_nb_bytes);
+            int nullable_offset = -1;
             for (int attOffset = 0; attOffset < type.attributes.length; attOffset++) {
                 Type.Attribute att = type.attributes[attOffset];
                 java.lang.Object loadedField;
-                if (PrimitiveType.UNDEFINED == att.sbiType) {
-                    loadedField = stream.read();
-                } else {
-                    loadedField = Stream.PRIMITIVE_LOADERS[att.sbiType].load(stream);
+                if (att.nullable) {
+                    ++nullable_offset;
+                    // #define gc_object__is_not_null(bitset, offset) ((((bitset)[(offset) >> 3]) >> ((offset) & (gc_object_bitset_block_size - 1))) & 1)
+                    if (0 == (((previous_nullable[(nullable_offset) >> 3]) >> ((nullable_offset) & 7)) & 1)) {
+                        continue;
+                    }
+                }
+                switch (att.sbiType) {
+                    case PrimitiveType.OBJECT:
+                        Type fieldType = type.greycat.types[att.abiType];
+                        if (fieldType.is_native) {
+                            loadedField = fieldType.loader.load(fieldType, stream);
+                        } else {
+                            loadedField = stream.read();
+                        }
+                        break;
+                    default:
+                        loadedField = Stream.PRIMITIVE_LOADERS[att.sbiType].load(stream);
+                        break;
                 }
                 if (att.mapped) {
                     attributes[att.mappedAttOffset] = loadedField;
@@ -481,7 +497,7 @@ public final class GreyCat {
         public final void save(Stream stream) throws IOException {
             stream.write_i8(GreyCat.PrimitiveType.ENUM);
             stream.write_i32(type.offset);
-            stream.write_i32(offset);
+            stream.write_i16(offset);
         }
 
         @Override
@@ -833,7 +849,7 @@ public final class GreyCat {
         }
         GreyCat.Function fn = greycat.functions_by_name.get(fqn);
         if (fn == null) {
-            for (String name: greycat.functions_by_name.keySet()) {
+            for (String name : greycat.functions_by_name.keySet()) {
                 System.out.println(name);
             }
             throw new RuntimeException("Function not found with name " + fqn);

@@ -7,16 +7,17 @@ public class Sandbox {
 
     public static void main(String... args) throws Exception {
 
-        GreyCat greycat = new GreyCat("/Users/duke/dev/greycat/greycat/cmake-build-debug/bin", new std()/*, new algebra()*/);
-        GreyCat.AbiReader reader = greycat.openAbiRead("/Users/duke/dev/greycat/greycat/cmake-build-debug/bin/out.gcb");
+        GreyCat greycat = new GreyCat("/home/agarnier/datathings/greycat/sdk/java", new std()/*, new algebra()*/);
+        GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/out.gcb");
         Object res = reader.read();
         while (res != null) {
             System.out.println(res);
             System.out.println(res.getClass());
-            res = reader.read();
+                res = reader.read();
         }
 
 //        GreyCat greycat = new GreyCat("http://localhost:8080", new std()/*, new algebra()*/);
+//        Object res = GreyCat.call(greycat, "project::getInt()");
 //        //Object result = GreyCat.call(greycat, "project::hello");
 //        Object result = GreyCat.call(greycat, "project::hello2",100);
 //        System.out.println(result);
@@ -26,7 +27,7 @@ public class Sandbox {
         //GreyCat.call(greycat, "project.push", result);
 
 
-       // System.in;
+        // System.in;
 
 
     }
