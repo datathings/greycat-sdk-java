@@ -67,7 +67,10 @@ fn write_runtime(out: AbiWriter) {
   // out.write(UserRole{/*TODO*/});
   // out.write(PeriodicTask{/*TODO*/});
   // out.write(User{/*TODO*/});
-  // out.write(UserGroupPolicy{/*TODO*/});
+  out.write(UserGroupPolicy {
+      group_id: 12,
+      type: UserGroupPolicyType::execute,
+    });
   out.write(UserGroupPolicyType::read);
   out.write(License {
       start: 13_time,

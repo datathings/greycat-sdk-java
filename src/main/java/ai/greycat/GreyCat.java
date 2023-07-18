@@ -387,7 +387,12 @@ public final class GreyCat {
                     }
                 }
                 switch (att.sbiType) {
-                    case PrimitiveType.OBJECT:
+                    case PrimitiveType.ENUM: {
+                        Type fieldType = type.greycat.types[att.abiType];
+                        loadedField = enum_loader.load(fieldType, stream);
+                        break;
+                    }
+                    case PrimitiveType.OBJECT: {
                         Type fieldType = type.greycat.types[att.abiType];
                         if (fieldType.is_native) {
                             loadedField = fieldType.loader.load(fieldType, stream);
@@ -395,9 +400,11 @@ public final class GreyCat {
                             loadedField = stream.read();
                         }
                         break;
-                    default:
+                    }
+                    default: {
                         loadedField = Stream.PRIMITIVE_LOADERS[att.sbiType].load(stream);
                         break;
+                    }
                 }
                 if (att.mapped) {
                     attributes[att.mappedAttOffset] = loadedField;
