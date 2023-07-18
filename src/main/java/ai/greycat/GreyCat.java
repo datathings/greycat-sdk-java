@@ -281,7 +281,8 @@ public final class GreyCat {
                 this.is.close();
                 return null;
             }
-            return PRIMITIVE_LOADERS[read_i8()].load(this);
+            byte primitiveOffset = read_i8();
+            return PRIMITIVE_LOADERS[primitiveOffset].load(this);
         }
 
         java.lang.Object read_object() throws IOException {
@@ -311,8 +312,7 @@ public final class GreyCat {
 
         public static final class Attribute {
             public final String name;
-            public final String typeModuleName;
-            public final String typeName;
+            public final int abiType;
             public final int progTypeOffset;
             public final int mappedAnyOffset;
             public final int mappedAttOffset;
@@ -320,10 +320,9 @@ public final class GreyCat {
             public final boolean nullable;
             public final boolean mapped;
 
-            public Attribute(String name, String typeModuleName, String typeName, int progTypeOffset, int mappedAnyOffset, int mappedAttOffset, byte sbiType, boolean nullable, boolean mapped) {
+            public Attribute(String name, int abiType, int progTypeOffset, int mappedAnyOffset, int mappedAttOffset, byte sbiType, boolean nullable, boolean mapped) {
                 this.name = name;
-                this.typeModuleName = typeModuleName;
-                this.typeName = typeName;
+                this.abiType = abiType;
                 this.progTypeOffset = progTypeOffset;
                 this.mappedAnyOffset = mappedAnyOffset;
                 this.mappedAttOffset = mappedAttOffset;
@@ -338,7 +337,10 @@ public final class GreyCat {
         public final int mapped_type_off;
         @SuppressWarnings({"unused", "FieldCanBeLocal"})
         public final int masked_type_off;
+        public final int nullable_nb_bytes;
         public final boolean is_masked;
+
+        public final boolean is_abstract;
         public final boolean is_enum;
         public final boolean is_native;
         /**
@@ -372,9 +374,15 @@ public final class GreyCat {
         static final Loader object_loader = (type, stream) -> {
             final Type programType = type.greycat.types[type.mapped_type_off];
             final java.lang.Object[] attributes = new java.lang.Object[programType.attributes.length];
+            byte[] previous_nullable = stream.read_i8_array(type.nullable_nb_bytes);
             for (int attOffset = 0; attOffset < type.attributes.length; attOffset++) {
                 Type.Attribute att = type.attributes[attOffset];
-                java.lang.Object loadedField = stream.read();
+                java.lang.Object loadedField;
+                if (PrimitiveType.UNDEFINED == att.sbiType) {
+                    loadedField = stream.read();
+                } else {
+                    loadedField = Stream.PRIMITIVE_LOADERS[att.sbiType].load(stream);
+                }
                 if (att.mapped) {
                     attributes[att.mappedAttOffset] = loadedField;
                 }
@@ -386,12 +394,14 @@ public final class GreyCat {
             }
         };
 
-        public Type(int offset, String name, int mapped_type_off, int masked_type_off, boolean is_masked, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
+        public Type(int offset, String name, int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
             this.offset = offset;
             this.name = name;
             this.mapped_type_off = mapped_type_off;
             this.masked_type_off = masked_type_off;
+            this.nullable_nb_bytes = nullable_nb_bytes;
             this.is_masked = is_masked;
+            this.is_abstract = is_abstract;
             this.is_enum = is_enum;
             this.is_native = is_native;
             this.attributes = typeAttributes;
@@ -600,26 +610,6 @@ public final class GreyCat {
         }
     }
 
-    public final static class Task {
-        public final long task_id;
-
-        public Task(final long taskId) {
-            task_id = taskId;
-        }
-
-        @Override
-        public String toString() {
-            return "Task{" +
-                    "task_id=" + task_id +
-                    '}';
-        }
-
-        public std.runtime.TaskInfo info(GreyCat greycat) throws IOException {
-            return (std.runtime.TaskInfo) GreyCat.call(greycat, "runtime.Task.info", this.task_id);
-        }
-
-    }
-
     public final static class Files {
 
         public static java.lang.Object get(GreyCat greycat, String path) throws IOException {
@@ -724,23 +714,26 @@ public final class GreyCat {
             abiStream.read_i32();/* unused field */
             int mappedAbiTypeOffset = abiStream.read_i32();
             int maskedAbiTypeOffset = abiStream.read_i32();
+            int nullableNbBytes = abiStream.read_i32();
             boolean isNative = abiStream.read_bool();
+            boolean isAbstract = abiStream.read_bool();
             boolean isEnum = abiStream.read_bool();
             boolean isMasked = abiStream.read_bool();
             final Type.Attribute[] typeAttributes = new Type.Attribute[attributesLen];
             for (int enumOffset = 0; enumOffset < attributesLen; ++enumOffset) {
                 final String name = symbols[abiStream.read_i32()];
-                final String typeModuleName = symbols[abiStream.read_i32()];
-                final String attributeTypeName = symbols[abiStream.read_i32()];
+                final int abiType = abiStream.read_i32();
+//                final String typeModuleName = symbols[abiStream.read_i32()];
+//                final String attributeTypeName = symbols[abiStream.read_i32()];
                 final int progTypeOffset = abiStream.read_i32();
                 final int mappedAnyOffset = abiStream.read_i32();
                 final int mappedAttOffset = abiStream.read_i32();
                 final byte sbiType = abiStream.read_i8();
                 final boolean nullable = abiStream.read_bool();
                 final boolean mapped = abiStream.read_bool();
-                typeAttributes[enumOffset] = new Type.Attribute(name, typeModuleName, attributeTypeName, progTypeOffset, mappedAnyOffset, mappedAttOffset, sbiType, nullable, mapped);
+                typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset, mappedAttOffset, sbiType, nullable, mapped);
             }
-            Type abiType = new Type(i, fqn, mappedAbiTypeOffset, maskedAbiTypeOffset, isMasked, isEnum, isNative, typeAttributes, factories.get(fqn), loaders.get(fqn), this);
+            Type abiType = new Type(i, fqn, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isEnum, isNative, typeAttributes, factories.get(fqn), loaders.get(fqn), this);
             /* only the program related abi type (last version) is mapped to himself */
             if (abiType.mapped_type_off == i && fqn.length() != 0) {
                 types_by_name.put(abiType.name, abiType);
@@ -840,6 +833,9 @@ public final class GreyCat {
         }
         GreyCat.Function fn = greycat.functions_by_name.get(fqn);
         if (fn == null) {
+            for (String name: greycat.functions_by_name.keySet()) {
+                System.out.println(name);
+            }
             throw new RuntimeException("Function not found with name " + fqn);
         }
         StringBuilder url = new StringBuilder();
