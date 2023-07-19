@@ -555,7 +555,11 @@ public final class GreyCat {
                         if (fieldType.is_native) {
                             loadedField = fieldType.loader.load(fieldType, stream);
                         } else {
-                            loadedField = stream.read();
+                            if (fieldType.is_abstract || att.sbiType == PrimitiveType.UNDEFINED) {
+                                loadedField = stream.read();
+                            } else {
+                                loadedField = fieldType.loader.load(fieldType, stream);
+                            }
                         }
                         break;
                     }

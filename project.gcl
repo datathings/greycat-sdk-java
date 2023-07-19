@@ -11,11 +11,26 @@ use io;
 use runtime;
 
 fn minimal_fail() {
-    var out = AbiWriter::new("fail.gcb");
-    out.write("${"Hello world!"}");
-    out.write("${"Hello world!"}");
-    out.write(GeoBox::new(13_geo, 37_geo));
-    out.write(GeoCircle::new(42_geo, 13.37));
+  var out = AbiWriter::new("fail.gcb");
+  out.write(RuntimeInfo{
+    version: "",
+    arch: "",
+    timezone: TimeZone::Europe_Luxembourg,
+    license: License {
+        start: 13_time,
+        end: 37_time,
+        max_workers: 12,
+        max_memory: 42,
+        max_store: 0,
+      },
+    io_threads: 13,
+    bg_threads: 37,
+    fg_threads: 42,
+    mem_total: 12,
+    mem_worker: 0,
+    nb_ctx: 1,
+  });
+  out.write("${"YAY!"}");
 }
 
 fn main() {
@@ -120,16 +135,52 @@ fn write_runtime(out: AbiWriter) {
     sub_waiting: 0,
     sub_tasks_all: 1,
   });
-  // out.write(Task{/*TODO*/});
   out.write(TaskStatus::cancelled);
   out.write(Runtime {});
-  // out.write(RuntimeInfo{/*TODO*/});
+  out.write(RuntimeInfo{
+    version: "",
+    arch: "",
+    timezone: TimeZone::Europe_Luxembourg,
+    license: License {
+        start: 13_time,
+        end: 37_time,
+        max_workers: 12,
+        max_memory: 42,
+        max_store: 0,
+      },
+    io_threads: 13,
+    bg_threads: 37,
+    fg_threads: 42,
+    mem_total: 12,
+    mem_worker: 0,
+    nb_ctx: 1,
+  });
   out.write(SecurityFields {});
-  // out.write(UserGroup{/*TODO*/});
-  // out.write(OpenIDConnect{/*TODO*/});
-  // out.write(UserRole{/*TODO*/});
-  // out.write(PeriodicTask{/*TODO*/});
-  // out.write(User{/*TODO*/});
+  out.write(UserGroup{
+    id: 12,
+    name: "",
+    activated: false,
+  });
+  out.write(OpenIDConnect{
+    url: "",
+    clientId: "",
+  });
+  out.write(UserRole{
+    name: "",
+    permissions: [],
+  });
+  out.write(PeriodicTask{
+    name: "",
+    user_id: 12,
+    start: 13_time,
+    every: duration::new(37, DurationUnit::microseconds),
+  });
+  out.write(User{
+    id: 12,
+    name: "",
+    activated: false,
+    external: true,
+  });
   out.write(UserGroupPolicy {
       group_id: 12,
       type: UserGroupPolicyType::execute,
