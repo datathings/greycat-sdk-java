@@ -13,8 +13,10 @@ use math;
 use runtime;
 use util;
 
-fn minimal_fail() {
+fn fail() {
   var out = AbiWriter::new("fail.gcb");
+  out.write(ti2d::new(13, 37));
+  // out.write("${"YAY!"}");
 }
 
 fn main() {
@@ -323,6 +325,7 @@ fn write_util(out: AbiWriter) {
   out.write(SlidingWindow::new());
   out.write(Queue<SlidingWindow>::new());
   out.write(HistogramBucket::from);
+  /* wrong null for T fields
   out.write(BoxPlotF64{
       min: 0.0,
       max: 13.37,
@@ -344,4 +347,7 @@ fn write_util(out: AbiWriter) {
       std: 3.9,
       size: 42,
     });
+    */
+    // out.write(ByteArray{}); // segfault
+    out.write(Crypto{});
 }

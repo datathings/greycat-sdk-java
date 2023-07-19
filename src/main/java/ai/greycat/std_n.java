@@ -670,6 +670,68 @@ class std_n {
             }
         }
 
+        private static long deinterleave64(long interleaved) {
+            final long[] B = {0x5555555555555555L, 0x3333333333333333L, 0x0F0F0F0F0F0F0F0FL,
+                    0x00FF00FF00FF00FFL, 0x0000FFFF0000FFFFL, 0x00000000FFFFFFFFL};
+            final int[] S = {0, 1, 2, 4, 8, 16};
+
+            long x = interleaved,
+                    y = interleaved >> 1;
+
+            x = (x | (x >>> S[0])) & B[0];
+            y = (y | (y >>> S[0])) & B[0];
+
+            x = (x | (x >>> S[1])) & B[1];
+            y = (y | (y >>> S[1])) & B[1];
+
+            x = (x | (x >>> S[2])) & B[2];
+            y = (y | (y >>> S[2])) & B[2];
+
+            x = (x | (x >>> S[3])) & B[3];
+            y = (y | (y >>> S[3])) & B[3];
+
+            x = (x | (x >>> S[4])) & B[4];
+            y = (y | (y >>> S[4])) & B[4];
+
+            x = (x | (x >>> S[5])) & B[5];
+            y = (y | (y >>> S[5])) & B[5];
+            return x | (y << 32);
+        }
+
+        protected static class ti2d extends GreyCat.Object {
+            public int x0, x1;
+
+            protected ti2d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TU2D);
+                stream.write_i64(interleave());
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.ti2d res = (core.ti2d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "ti2d{ x0: " + x0 + ", x1: " + x1 + " }";
+            }
+
+            private long interleave() {
+                return 0L;
+            }
+
+            private void deinterleave(long interleaved) {
+                long dc = deinterleave64(interleaved);
+                x0 = (int) (dc + Integer.MIN_VALUE);
+                x1 = (int) ((dc >>> 32) + Integer.MIN_VALUE);
+            }
+        }
+
         protected static class time extends GreyCat.Object {
             public long value;
 
