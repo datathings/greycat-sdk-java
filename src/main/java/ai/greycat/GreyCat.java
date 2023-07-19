@@ -544,7 +544,11 @@ public final class GreyCat {
                         continue;
                     }
                 }
-                switch (att.sbiType) {
+                byte loadType = att.sbiType;
+                if (loadType == PrimitiveType.UNDEFINED) {
+                    loadType = stream.read_i8();
+                }
+                switch (loadType) {
                     case PrimitiveType.ENUM: {
                         Type fieldType = type.greycat.types[att.abiType];
                         loadedField = enum_loader.load(fieldType, stream);
@@ -556,10 +560,9 @@ public final class GreyCat {
                             loadedField = fieldType.loader.load(fieldType, stream);
                         } else {
                             if (fieldType.is_abstract || att.sbiType == PrimitiveType.UNDEFINED) {
-                                loadedField = stream.read();
-                            } else {
-                                loadedField = fieldType.loader.load(fieldType, stream);
+                                fieldType = type.greycat.types[stream.read_vu32()];
                             }
+                            loadedField = fieldType.loader.load(fieldType, stream);
                         }
                         break;
                     }
