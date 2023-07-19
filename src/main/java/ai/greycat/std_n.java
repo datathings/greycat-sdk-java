@@ -697,7 +697,13 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                return stream.read_string(stream.read_i32());
+                int len = stream.read_vu32();
+                if (0 != (len & 1)) {
+                    int offset = len >>> 1;
+                    return type.greycat.symbols[offset];
+                }
+                len >>>= 1;
+                return stream.read_string(len);
             }
         }
 

@@ -145,6 +145,64 @@ public final class GreyCat {
             return (tmp[3] << 24) + ((tmp[2] << 24) >>> 8) + ((tmp[1] << 24) >>> 16) + ((tmp[0] << 24) >>> 24);
         }
 
+        int read_vu32() throws IOException {
+            byte header = read_i8();
+            byte nbytes = len_varu32(header);
+            byte[] bytes = new byte[nbytes];
+            switch (nbytes) {
+                case 5:
+                    bytes[nbytes - 4] = read_i8();
+                case 4:
+                    bytes[nbytes - 3] = read_i8();
+                case 3:
+                    bytes[nbytes - 2] = read_i8();
+                    // fallthrough
+                case 2:
+                    bytes[nbytes - 1] = read_i8();
+                    // fallthrough
+                case 1:
+                    bytes[0] = header;
+                    break;
+                default:
+                    throw new IOException("wrong state");
+            }
+            return unpack_varu32(bytes);
+        }
+
+        private static byte len_varu32(byte header) {
+            if ((header & 0x80) == 0) {
+                return 1;
+            }
+            if ((header & 0x40) == 0) {
+                return 2;
+            }
+            if ((header & 0x20) == 0) {
+                return 3;
+            }
+            if ((header & 0x10) == 0) {
+                return 4;
+            }
+            return 5;
+        }
+
+        private static int unpack_varu32(byte[] bytes) throws IOException {
+            byte n = (byte) bytes.length;
+            switch (n) {
+                case 1:
+                    return ((int) bytes[0]) & 0x7f;
+                case 2:
+                    return (((int) bytes[0]) & 0x3f) | (Byte.toUnsignedInt(bytes[1]) << 6);
+                case 3:
+                    return (((int) bytes[0]) & 0x1f) | (Byte.toUnsignedInt(bytes[1]) << 5) | (Byte.toUnsignedInt(bytes[2]) << 13);
+                case 4:
+                    return (((int) bytes[0]) & 0x0f) | (Byte.toUnsignedInt(bytes[1]) << 4) | (Byte.toUnsignedInt(bytes[2]) << 12) | (Byte.toUnsignedInt(bytes[3]) << 20);
+                case 5:
+                    return (((int) bytes[0]) & 0x07) | (Byte.toUnsignedInt(bytes[1]) << 3) | (Byte.toUnsignedInt(bytes[2]) << 11) | (Byte.toUnsignedInt(bytes[3]) << 19) | (Byte.toUnsignedInt(bytes[4]) << 27);
+                default:
+                    throw new IOException("wrong state");
+            }
+        }
+
         long read_i64() throws IOException {
             if (is.read(tmp, 0, 8) == -1) {
                 throw new IOException();
@@ -190,7 +248,7 @@ public final class GreyCat {
             return sign_of(unpack_varu64(bytes));
         }
 
-        private static byte len_varu64(byte header) throws IOException {
+        private static byte len_varu64(byte header) {
             if ((header & 0x80) == 0) {
                 return 1;
             }
@@ -382,12 +440,16 @@ public final class GreyCat {
         }
 
         java.lang.Object read_object() throws IOException {
-            final Type type = greycat.types[read_i32()];
+            final Type type = greycat.types[read_vu32()];
             return type.loader.load(type, this);
         }
 
         java.lang.Object read_string_lit() throws IOException {
-            final int offset = read_i32();
+            int offset = read_vu32();
+            if (0 == (offset & 1)) {
+                throw new IOException("wrong state");
+            }
+            offset >>>= 1;
             if (offset < greycat.symbols.length) {
                 return greycat.symbols[offset];
             }
@@ -462,7 +524,7 @@ public final class GreyCat {
 
         static final Loader enum_loader = (type, stream) -> {
             final Type programType = type.greycat.types[type.mapped_type_off];
-            final int valueOffset = stream.read_i16();
+            final int valueOffset = stream.read_vu32();
             final Type.Attribute abiTypeAtt = type.attributes[valueOffset];
             return programType.enum_values[abiTypeAtt.mappedAttOffset];
         };
@@ -753,7 +815,7 @@ public final class GreyCat {
         }
     }
 
-    private final String[] symbols;
+    public final String[] symbols;
     private final java.util.Map<String, Integer> symbols_off_by_value = new HashMap<>();
     public final Type[] types;
     public final Map<String, Library> libs_by_name;

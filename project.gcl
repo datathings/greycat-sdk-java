@@ -107,6 +107,19 @@ fn write_core(out: AbiWriter) {
 }
 
 fn write_runtime(out: AbiWriter) {
+  out.write(Task{
+    id: 13,
+    user: 37,
+    mod: "",
+    type: "",
+    fun: "",
+    progress: 13.37,
+    remaining: duration::new(42, DurationUnit::microseconds),
+    creation: 42_time,
+    status: TaskStatus::empty,
+    sub_waiting: 0,
+    sub_tasks_all: 1,
+  });
   // out.write(Task{/*TODO*/});
   out.write(TaskStatus::cancelled);
   out.write(Runtime {});
