@@ -13,9 +13,9 @@ public class Sandbox {
         GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/out.gcb");
         Object res = reader.read();
         while (res != null) {
-            System.out.println(res);
             System.out.println(res.getClass());
-                res = reader.read();
+            System.out.println(res);
+            res = reader.read();
         }
 
 //        GreyCat greycat = new GreyCat("http://localhost:8080", new std()/*, new algebra()*/);

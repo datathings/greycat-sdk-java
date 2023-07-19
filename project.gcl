@@ -9,7 +9,9 @@
 
 use debug;
 use io;
+use math;
 use runtime;
+use util;
 
 fn minimal_fail() {
   var out = AbiWriter::new("fail.gcb");
@@ -24,7 +26,9 @@ fn write_std(out: AbiWriter) {
   write_core(out);
   write_debug(out);
   write_io(out);
+  write_math(out);
   write_runtime(out);
+  write_util(out);
 }
 
 fn write_core(out: AbiWriter) {
@@ -195,6 +199,22 @@ fn write_io(out: AbiWriter) {
   // out.write(FileWriter::new("project.gcl", true)); // unsupported
 }
 
+fn write_math(out: AbiWriter) {
+  out.write(MathConstants::e);
+  out.write(MathConstants::log_2e);
+  out.write(MathConstants::log_10e);
+  out.write(MathConstants::ln2);
+  out.write(MathConstants::ln10);
+  out.write(MathConstants::pi);
+  out.write(MathConstants::pi_2);
+  out.write(MathConstants::pi_4);
+  out.write(MathConstants::m1_pi);
+  out.write(MathConstants::m2_pi);
+  out.write(MathConstants::m2_sqrt_pi);
+  out.write(MathConstants::sqrt2);
+  out.write(MathConstants::sqrt1_2);
+}
+
 fn write_runtime(out: AbiWriter) {
   out.write(Task{
     id: 13,
@@ -283,5 +303,45 @@ fn write_runtime(out: AbiWriter) {
       entities: [],
       credentials: Map<String, UserCredential>::new(),
       roles: Map<String, UserRole>::new(),
+    });
+}
+
+fn write_util(out: AbiWriter) {
+  out.write(Random{
+      seed: 42,
+      v: 13.37,
+    });
+  out.write(Buffer::new());
+  out.write(Assert{});
+  out.write(ProgressTracker::new());
+  out.write(NdEncoding{});
+  out.write(Iban::new(""));
+  out.write(Gaussian::new());
+  // out.write(Quantizer::new()); // unsupported
+  out.write(GaussianProfile::new(0));
+  out.write(TimeWindow::new());
+  out.write(SlidingWindow::new());
+  out.write(Queue<SlidingWindow>::new());
+  out.write(HistogramBucket::from);
+  out.write(BoxPlotF64{
+      min: 0.0,
+      max: 13.37,
+      whiskerLow: 0.37,
+      whiskerHigh: 13.0,
+      percentile1: 1.0,
+      percentile5: 2.0,
+      percentile25: 5.0,
+      percentile50: 6.5,
+      percentile75: 10.0,
+      percentile95: 11.5,
+      percentile99: 12.5,
+      countOutliersLow: 12,
+      countOutliersHigh: 42,
+      percentageOutliersLow: 12.0,
+      percentageOutliersHigh: 42.0,
+      sum: 42.12,
+      avg: 7.2,
+      std: 3.9,
+      size: 42,
     });
 }

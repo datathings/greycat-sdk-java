@@ -440,7 +440,8 @@ public final class GreyCat {
         }
 
         java.lang.Object read_object() throws IOException {
-            final Type type = greycat.types[read_vu32()];
+            int typeOffset = read_vu32();
+            final Type type = greycat.types[typeOffset];
             return type.loader.load(type, this);
         }
 

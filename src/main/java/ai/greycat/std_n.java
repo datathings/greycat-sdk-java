@@ -819,6 +819,7 @@ class std_n {
         protected static class GaussianProfile extends GreyCat.Object {
             //            public int size;
             public byte[] data;
+            private int size;
 
             protected GaussianProfile(GreyCat.Type type) {
                 super(type, null);
@@ -829,14 +830,16 @@ class std_n {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
                 stream.write_i32(type.offset);
 //                stream.write_i32(size);
+                stream.write_i32(size);
                 stream.write_i32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 util.GaussianProfile g = (GaussianProfile) type.factory.build(type);
-                int size = stream.read_i32();
-                g.data = stream.read_i8_array(size);
+                g.size = stream.read_i32();
+                int bin_len = stream.read_i32();
+                g.data = stream.read_i8_array(bin_len);
                 return g;
             }
 
