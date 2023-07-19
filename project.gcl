@@ -7,30 +7,12 @@
 // @library("sql"); // reference to sql_n non-existing class
 // @library("useragent"); // Tricky useragent.useragent is tricky
 
+use debug;
 use io;
 use runtime;
 
 fn minimal_fail() {
   var out = AbiWriter::new("fail.gcb");
-  out.write(RuntimeInfo{
-    version: "",
-    arch: "",
-    timezone: TimeZone::Europe_Luxembourg,
-    license: License {
-        start: 13_time,
-        end: 37_time,
-        max_workers: 12,
-        max_memory: 42,
-        max_store: 0,
-      },
-    io_threads: 13,
-    bg_threads: 37,
-    fg_threads: 42,
-    mem_total: 12,
-    mem_worker: 0,
-    nb_ctx: 1,
-  });
-  out.write("${"YAY!"}");
 }
 
 fn main() {
@@ -40,6 +22,8 @@ fn main() {
 
 fn write_std(out: AbiWriter) {
   write_core(out);
+  write_debug(out);
+  write_io(out);
   write_runtime(out);
 }
 
@@ -119,6 +103,96 @@ fn write_core(out: AbiWriter) {
   out.write(12_time);
   out.write(DatePart::days);
   out.write(nodeGeo<DatePart>::new());
+}
+
+fn write_debug(out: AbiWriter) {
+  out.write(TypeAttr{
+    name: "",
+    is_static: false,
+  });
+  out.write(TypeDesc{
+    module: "",
+    name: "",
+    methods: [],
+    attrs: [],
+    is_abstract: true,
+    is_enum: false,
+  });
+  out.write(TypeRef{
+    name: "",
+    module: "",
+    nullable: true,
+  });
+  out.write(FnParam{
+    name: "",
+    type: TypeRef{
+        name: "",
+        module: "",
+        nullable: true,
+      },
+  });
+  out.write(FnMode::read_only);
+  out.write(FnDesc{
+    module: "",
+    name: "",
+    params: [],
+    is_static: true,
+    is_task: false,
+    is_exclusive: true,
+    is_reserved: false,
+    is_exposed: true,
+    mode: FnMode::read_only,
+    permissions: [],
+  });
+  out.write(ModVarDesc{
+    module: "",
+    name: "",
+    type: TypeRef{
+        name: "",
+        module: "",
+        nullable: true,
+      },
+  });
+  out.write(ModDesc{
+    name: "",
+    lib: "",
+    functions: [],
+    types: [],
+    vars: [],
+  });
+}
+
+fn write_io(out: AbiWriter) {
+  // out.write(out); // unsupported
+  // out.write(AbiReader::new("out.gcb")); // segfault
+  out.write(FileDescriptor{
+    uri: "",
+  });
+  out.write(Env{});
+  out.write(TextEncoder::plain);
+  out.write(BinaryFormat{});
+  out.write(JsonFormat{});
+  out.write(TextFormat{});
+  out.write(CSVColumnString{});
+  out.write(CSVColumnInteger{});
+  out.write(CSVColumnFloat{});
+  out.write(CSVColumnBoolean{});
+  out.write(CSVColumnTime{});
+  out.write(CSVColumnDate{});
+  out.write(CSVColumnIgnored{});
+  out.write(CSVFormat{
+    header_lines: 12,
+    infer: true,
+    separator: ',',
+    string_delimiter: '"',
+    decimal_separator: '.',
+    thousands_separator: '_',
+    columns: [],
+  });
+  out.write(JSON{});
+  // out.write(File::open("project.gcl")); // unsupported
+  // out.write(Directory::open(".")); // unsupported
+  // out.write(FileWriter::new("project.gcl", true)); // unsupported
 }
 
 fn write_runtime(out: AbiWriter) {
