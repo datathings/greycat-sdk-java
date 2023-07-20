@@ -733,6 +733,151 @@ class std_n {
             }
         }
 
+        protected static class ti3d extends GreyCat.Object {
+            public int x0, x1, x2;
+
+            private final static int GC_INT21_MIN = -1048575 - 1;
+            private final static int GC_INT_21_MAX = 1048575;
+
+            protected ti3d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8((GreyCat.PrimitiveType.TU3D));
+                stream.write_i64(interleave());
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.ti3d res = (core.ti3d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "ti3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + " }";
+            }
+
+            private long interleave() {
+                // TODO
+                return 0L;
+            }
+
+            private void deinterleave(long c) {
+                long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL, 0xffff00000000ffffL, 0x0001fffffL};
+                int[] S = {2, 4, 8, 16, 32};
+
+                long x = c & 0x1249249249249249L;
+                x = (x ^ (x >>> S[0])) & B[0];
+                x = (x ^ (x >>> S[1])) & B[1];
+                x = (x ^ (x >>> S[2])) & B[2];
+                x = (x ^ (x >>> S[3])) & B[3];
+                x = (x ^ (x >>> S[4])) & B[4];
+                x0 = (int) (x + GC_INT21_MIN);
+
+                long y = (c >>> 1) & 0x1249249249249249L;
+                y = (y ^ (y >>> S[0])) & B[0];
+                y = (y ^ (y >>> S[1])) & B[1];
+                y = (y ^ (y >>> S[2])) & B[2];
+                y = (y ^ (y >>> S[3])) & B[3];
+                y = (y ^ (y >>> S[4])) & B[4];
+                x1 = (int) (y + GC_INT21_MIN);
+
+                long z = (c >>> 2) & 0x1249249249249249L;
+                z = (z ^ (z >>> S[0])) & B[0];
+                z = (z ^ (z >>> S[1])) & B[1];
+                z = (z ^ (z >>> S[2])) & B[2];
+                z = (z ^ (z >>> S[3])) & B[3];
+                z = (z ^ (z >>> S[4])) & B[4];
+                x2 = (int) (z + GC_INT21_MIN);
+            }
+        }
+
+        protected static class ti4d extends GreyCat.Object {
+
+            protected ti4d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                // TODO
+                return null;
+            }
+        }
+
+        protected static class ti5d extends GreyCat.Object {
+
+            protected ti5d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                // TODO
+                return null;
+            }
+        }
+
+        protected static class ti6d extends GreyCat.Object {
+
+            protected ti6d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                // TODO
+                return null;
+            }
+        }
+
+        protected static class ti10d extends GreyCat.Object {
+
+            protected ti10d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                // TODO
+                return null;
+            }
+        }
+
+        protected static class tf2d extends GreyCat.Object {
+
+            protected tf2d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                // TODO
+                return null;
+            }
+        }
+
+        protected static class tf3d extends GreyCat.Object {
+
+            protected tf3d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                // TODO
+                return null;
+            }
+        }
+
+        protected static class tf4d extends GreyCat.Object {
+
+            protected tf4d(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                // TODO
+                return null;
+            }
+        }
+
         protected static class time extends GreyCat.Object {
             public long value;
 

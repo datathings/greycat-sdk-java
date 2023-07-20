@@ -2400,10 +2400,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new Error(greycat.libs_by_name.get(ai.greycat.std.name).mapped[9]);
 			}
 		}
-		public static final class tf2d extends GreyCat.Object {
+		public static final class tf2d extends ai.greycat.std_n.core.tf2d {
 			public static final java.lang.String name = "core::tf2d";
 			private tf2d(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+				super(type);
 			}
 			public static tf2d create(ai.greycat.GreyCat greycat){
 				return new tf2d(greycat.libs_by_name.get(ai.greycat.std.name).mapped[10]);
@@ -2590,10 +2590,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new ErrorCode(greycat.libs_by_name.get(ai.greycat.std.name).mapped[11]);
 			}
 		}
-		public static final class ti4d extends GreyCat.Object {
+		public static final class ti4d extends ai.greycat.std_n.core.ti4d {
 			public static final java.lang.String name = "core::ti4d";
 			private ti4d(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+				super(type);
 			}
 			public static ti4d create(ai.greycat.GreyCat greycat){
 				return new ti4d(greycat.libs_by_name.get(ai.greycat.std.name).mapped[12]);
@@ -2720,10 +2720,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new geo(greycat.libs_by_name.get(ai.greycat.std.name).mapped[17]);
 			}
 		}
-		public static final class ti6d extends GreyCat.Object {
+		public static final class ti6d extends ai.greycat.std_n.core.ti6d {
 			public static final java.lang.String name = "core::ti6d";
 			private ti6d(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+				super(type);
 			}
 			public static ti6d create(ai.greycat.GreyCat greycat){
 				return new ti6d(greycat.libs_by_name.get(ai.greycat.std.name).mapped[18]);
@@ -2786,10 +2786,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new duration(greycat.libs_by_name.get(ai.greycat.std.name).mapped[23]);
 			}
 		}
-		public static final class ti3d extends GreyCat.Object {
+		public static final class ti3d extends ai.greycat.std_n.core.ti3d {
 			public static final java.lang.String name = "core::ti3d";
 			private ti3d(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+				super(type);
 			}
 			public static ti3d create(ai.greycat.GreyCat greycat){
 				return new ti3d(greycat.libs_by_name.get(ai.greycat.std.name).mapped[24]);
@@ -2813,10 +2813,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new Array(greycat.libs_by_name.get(ai.greycat.std.name).mapped[26]);
 			}
 		}
-		public static final class ti10d extends GreyCat.Object {
+		public static final class ti10d extends ai.greycat.std_n.core.ti10d {
 			public static final java.lang.String name = "core::ti10d";
 			private ti10d(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+				super(type);
 			}
 			public static ti10d create(ai.greycat.GreyCat greycat){
 				return new ti10d(greycat.libs_by_name.get(ai.greycat.std.name).mapped[27]);
@@ -2888,10 +2888,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new nodeIndex(greycat.libs_by_name.get(ai.greycat.std.name).mapped[31]);
 			}
 		}
-		public static final class tf3d extends GreyCat.Object {
+		public static final class tf3d extends ai.greycat.std_n.core.tf3d {
 			public static final java.lang.String name = "core::tf3d";
 			private tf3d(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+				super(type);
 			}
 			public static tf3d create(ai.greycat.GreyCat greycat){
 				return new tf3d(greycat.libs_by_name.get(ai.greycat.std.name).mapped[32]);
@@ -2961,19 +2961,19 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new nodeGeo(greycat.libs_by_name.get(ai.greycat.std.name).mapped[36]);
 			}
 		}
-		public static final class ti5d extends GreyCat.Object {
+		public static final class ti5d extends ai.greycat.std_n.core.ti5d {
 			public static final java.lang.String name = "core::ti5d";
 			private ti5d(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+				super(type);
 			}
 			public static ti5d create(ai.greycat.GreyCat greycat){
 				return new ti5d(greycat.libs_by_name.get(ai.greycat.std.name).mapped[37]);
 			}
 		}
-		public static final class tf4d extends GreyCat.Object {
+		public static final class tf4d extends ai.greycat.std_n.core.tf4d {
 			public static final java.lang.String name = "core::tf4d";
 			private tf4d(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+				super(type);
 			}
 			public static tf4d create(ai.greycat.GreyCat greycat){
 				return new tf4d(greycat.libs_by_name.get(ai.greycat.std.name).mapped[38]);
@@ -5171,8 +5171,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 		factories.put(core.Error.name, core.Error::new);
 		loaders.put(core.Error.name, ai.greycat.std_n.core.Error::load);
 		factories.put(core.tf2d.name, core.tf2d::new);
+		loaders.put(core.tf2d.name, ai.greycat.std_n.core.tf2d::load);
 		factories.put(core.ErrorCode.name, core.ErrorCode::new);
 		factories.put(core.ti4d.name, core.ti4d::new);
+		loaders.put(core.ti4d.name, ai.greycat.std_n.core.ti4d::load);
 		factories.put(core.SamplingMode.name, core.SamplingMode::new);
 		factories.put(core.DurationUnit.name, core.DurationUnit::new);
 		factories.put(core.TensorType.name, core.TensorType::new);
@@ -5181,6 +5183,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 		factories.put(core.geo.name, core.geo::new);
 		loaders.put(core.geo.name, ai.greycat.std_n.core.geo::load);
 		factories.put(core.ti6d.name, core.ti6d::new);
+		loaders.put(core.ti6d.name, ai.greycat.std_n.core.ti6d::load);
 		factories.put(core.Tensor.name, core.Tensor::new);
 		loaders.put(core.Tensor.name, ai.greycat.std_n.core.Tensor::load);
 		factories.put(core.GeoCircle.name, core.GeoCircle::new);
@@ -5191,17 +5194,20 @@ public final class std extends ai.greycat.GreyCat.Library {
 		factories.put(core.duration.name, core.duration::new);
 		loaders.put(core.duration.name, ai.greycat.std_n.core.duration::load);
 		factories.put(core.ti3d.name, core.ti3d::new);
+		loaders.put(core.ti3d.name, ai.greycat.std_n.core.ti3d::load);
 		factories.put(core.nodeTime.name, core.nodeTime::new);
 		loaders.put(core.nodeTime.name, ai.greycat.std_n.core.nodeTime::load);
 		factories.put(core.Array.name, core.Array::new);
 		loaders.put(core.Array.name, ai.greycat.std_n.core.Array::load);
 		factories.put(core.ti10d.name, core.ti10d::new);
+		loaders.put(core.ti10d.name, ai.greycat.std_n.core.ti10d::load);
 		factories.put(core.function.name, core.function::new);
 		factories.put(core.NodeTimeInfo.name, core.NodeTimeInfo::new);
 		factories.put(core.Tuple.name, core.Tuple::new);
 		factories.put(core.nodeIndex.name, core.nodeIndex::new);
 		loaders.put(core.nodeIndex.name, ai.greycat.std_n.core.nodeIndex::load);
 		factories.put(core.tf3d.name, core.tf3d::new);
+		loaders.put(core.tf3d.name, ai.greycat.std_n.core.tf3d::load);
 		factories.put(core.GeoPoly.name, core.GeoPoly::new);
 		loaders.put(core.GeoPoly.name, ai.greycat.std_n.core.GeoPoly::load);
 		factories.put(core.time.name, core.time::new);
@@ -5210,7 +5216,9 @@ public final class std extends ai.greycat.GreyCat.Library {
 		factories.put(core.nodeGeo.name, core.nodeGeo::new);
 		loaders.put(core.nodeGeo.name, ai.greycat.std_n.core.nodeGeo::load);
 		factories.put(core.ti5d.name, core.ti5d::new);
+		loaders.put(core.ti5d.name, ai.greycat.std_n.core.ti5d::load);
 		factories.put(core.tf4d.name, core.tf4d::new);
+		loaders.put(core.tf4d.name, ai.greycat.std_n.core.tf4d::load);
 		factories.put(runtime.Task.name, runtime.Task::new);
 		factories.put(runtime.SecurityEntity.name, runtime.SecurityEntity::new);
 		factories.put(runtime.TaskStatus.name, runtime.TaskStatus::new);
