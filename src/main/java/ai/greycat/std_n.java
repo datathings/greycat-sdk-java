@@ -977,37 +977,114 @@ class std_n {
 
         protected static class tf2d extends GreyCat.Object {
 
+            float x0, x1;
+
             protected tf2d(GreyCat.Type type) {
                 super(type, null);
             }
 
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TUF2D);
+                stream.write_i64(interleave());
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.tf2d res = (core.tf2d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "tf2d{ x0: " + x0 + ", x1: " + x1 + " }";
+            }
+
+            private long interleave() {
                 // TODO
-                return null;
+                return 0L;
+            }
+
+            private void deinterleave(long interleaved) {
+                long dc = deinterleave64_2d(interleaved);
+                x0 = Float.intBitsToFloat((int) (dc + Integer.MIN_VALUE));
+                x1 = Float.intBitsToFloat((int) ((dc >>> 32) + Integer.MIN_VALUE));
             }
         }
 
         protected static class tf3d extends GreyCat.Object {
 
+            float x0, x1, x2;
+
             protected tf3d(GreyCat.Type type) {
                 super(type, null);
             }
 
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TUF3D);
+                stream.write_i64(interleave());
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.tf3d res = (core.tf3d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "tf3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + " }";
+            }
+
+            public long interleave() {
                 // TODO
-                return null;
+                return 0L;
+            }
+
+            public void deinterleave(long interleaved) {
+                x0 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved) + ti3d.GC_INT21_MIN) << 11));
+                x1 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 1) + ti3d.GC_INT21_MIN) << 11));
+                x2 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 2) + ti3d.GC_INT21_MIN) << 11));
             }
         }
 
         protected static class tf4d extends GreyCat.Object {
 
+            float x0, x1, x2, x3;
+
             protected tf4d(GreyCat.Type type) {
                 super(type, null);
             }
 
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TUF4D);
+                stream.write_i64(interleave());
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.tf4d res = (core.tf4d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "tf3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + " }";
+            }
+
+            private long interleave() {
                 // TODO
-                return null;
+                return 0L;
+            }
+
+            private void deinterleave(long interleaved) {
+                long d3120 = deinterleave64_2d(interleaved);
+                long d20 = deinterleave64_2d(d3120 & 0xffffffffL);
+                long d31 = deinterleave64_2d(d3120 >> 32);
+
+                x0 = Float.intBitsToFloat((int) (((d20 & 0xffff) + Short.MIN_VALUE) << 16));
+                x1 = Float.intBitsToFloat((int) (((d31 & 0xffff) + Short.MIN_VALUE) << 16));
+                x2 = Float.intBitsToFloat((int) (((d20 >>> 32) + Short.MIN_VALUE) << 16));
+                x3 = Float.intBitsToFloat((int) (((d31 >>> 32) + Short.MIN_VALUE) << 16));
             }
         }
 
