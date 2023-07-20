@@ -15,8 +15,7 @@ use util;
 
 fn fail() {
   var out = AbiWriter::new("fail.gcb");
-  out.write(ti2d::new(13, 37));
-  // out.write("${"YAY!"}");
+  out.write(-1);
 }
 
 fn main() {
