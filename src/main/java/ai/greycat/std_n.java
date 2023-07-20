@@ -670,7 +670,7 @@ class std_n {
             }
         }
 
-        private static long deinterleave64(long interleaved) {
+        private static long deinterleave64_2d(long interleaved) {
             final long[] B = {0x5555555555555555L, 0x3333333333333333L, 0x0F0F0F0F0F0F0F0FL,
                     0x00FF00FF00FF00FFL, 0x0000FFFF0000FFFFL, 0x00000000FFFFFFFFL};
             final int[] S = {0, 1, 2, 4, 8, 16};
@@ -753,7 +753,7 @@ class std_n {
             }
 
             private void deinterleave(long interleaved) {
-                long dc = deinterleave64(interleaved);
+                long dc = deinterleave64_2d(interleaved);
                 x0 = (int) (dc + Integer.MIN_VALUE);
                 x1 = (int) ((dc >>> 32) + Integer.MIN_VALUE);
             }
@@ -830,9 +830,9 @@ class std_n {
             }
 
             private void deinterleave(long interleaved) {
-                long x3120 = deinterleave64(interleaved);
-                long x20 = deinterleave64(x3120 & 0xffffffffL);
-                long x31 = deinterleave64(x3120 >>> 32);
+                long x3120 = deinterleave64_2d(interleaved);
+                long x20 = deinterleave64_2d(x3120 & 0xffffffffL);
+                long x31 = deinterleave64_2d(x3120 >>> 32);
                 x0 = (short) ((x20 & 0xffffL) + Short.MIN_VALUE);
                 x1 = (short) ((x31 & 0xffffL) + Short.MIN_VALUE);
                 x2 = (short) ((x20 >>> 32) + Short.MIN_VALUE);
@@ -915,9 +915,9 @@ class std_n {
             }
 
             private void deinterleave(long interleaved) {
-                long y30 = deinterleave64(deinterleave64_3d(interleaved));
-                long y41 = deinterleave64(deinterleave64_3d(interleaved >>> 1));
-                long y52 = deinterleave64(deinterleave64_3d(interleaved >>> 2));
+                long y30 = deinterleave64_2d(deinterleave64_3d(interleaved));
+                long y41 = deinterleave64_2d(deinterleave64_3d(interleaved >>> 1));
+                long y52 = deinterleave64_2d(deinterleave64_3d(interleaved >>> 2));
 
                 x0 = (short) ((y30 & 0x3ffL) + GC_INT10_MIN);
                 x1 = (short) ((y41 & 0x3ffL) + GC_INT10_MIN);
@@ -962,16 +962,16 @@ class std_n {
             }
 
             private void deinterleave(long interleaved) {
-                x0 = (byte) ((deinterleave64(deinterleave64_5d(interleaved)) & 0x3f) + GC_INT10_MIN);
-                x1 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 1)) & 0x3f) + GC_INT10_MIN);
-                x2 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 2)) & 0x3f) + GC_INT10_MIN);
-                x3 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 3)) & 0x3f) + GC_INT10_MIN);
-                x4 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 4)) & 0x3f) + GC_INT10_MIN);
-                x5 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 5)) & 0x3f) + GC_INT10_MIN);
-                x6 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 6)) & 0x3f) + GC_INT10_MIN);
-                x7 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 7)) & 0x3f) + GC_INT10_MIN);
-                x8 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 8)) & 0x3f) + GC_INT10_MIN);
-                x9 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 9)) & 0x3f) + GC_INT10_MIN);
+                x0 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved)) & 0x3f) + GC_INT10_MIN);
+                x1 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 1)) & 0x3f) + GC_INT10_MIN);
+                x2 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 2)) & 0x3f) + GC_INT10_MIN);
+                x3 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 3)) & 0x3f) + GC_INT10_MIN);
+                x4 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 4)) & 0x3f) + GC_INT10_MIN);
+                x5 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 5)) & 0x3f) + GC_INT10_MIN);
+                x6 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 6)) & 0x3f) + GC_INT10_MIN);
+                x7 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 7)) & 0x3f) + GC_INT10_MIN);
+                x8 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 8)) & 0x3f) + GC_INT10_MIN);
+                x9 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 9)) & 0x3f) + GC_INT10_MIN);
             }
         }
 
