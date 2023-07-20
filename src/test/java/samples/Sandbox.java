@@ -10,7 +10,7 @@ public class Sandbox {
     public static void main(String... args) throws Exception {
 
         GreyCat greycat = new GreyCat("/home/agarnier/datathings/greycat/sdk/java", new std()/*, new algebra()*/);
-        GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/out.gcb");
+        GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/fail.gcb");
         Object res = reader.read();
         while (res != null) {
             System.out.println(res.getClass());
