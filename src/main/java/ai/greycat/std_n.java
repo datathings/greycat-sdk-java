@@ -676,7 +676,7 @@ class std_n {
             final int[] S = {0, 1, 2, 4, 8, 16};
 
             long x = interleaved,
-                    y = interleaved >> 1;
+                    y = interleaved >>> 1;
 
             x = (x | (x >>> S[0])) & B[0];
             y = (y | (y >>> S[0])) & B[0];
@@ -1079,7 +1079,7 @@ class std_n {
             private void deinterleave(long interleaved) {
                 long d3120 = deinterleave64_2d(interleaved);
                 long d20 = deinterleave64_2d(d3120 & 0xffffffffL);
-                long d31 = deinterleave64_2d(d3120 >> 32);
+                long d31 = deinterleave64_2d(d3120 >>> 32);
 
                 x0 = Float.intBitsToFloat((int) (((d20 & 0xffff) + Short.MIN_VALUE) << 16));
                 x1 = Float.intBitsToFloat((int) (((d31 & 0xffff) + Short.MIN_VALUE) << 16));
