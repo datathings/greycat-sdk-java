@@ -698,6 +698,32 @@ class std_n {
             return x | (y << 32);
         }
 
+        private static int deinterleave64_3d(long interleaved) {
+            final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL, 0xffff00000000ffffL,
+                    0x0001fffffL};
+            final int[] S = {2, 4, 8, 16, 32};
+
+            long x = interleaved & 0x1249249249249249L;
+            x = (x ^ (x >>> S[0])) & B[0];
+            x = (x ^ (x >>> S[1])) & B[1];
+            x = (x ^ (x >>> S[2])) & B[2];
+            x = (x ^ (x >>> S[3])) & B[3];
+            x = (x ^ (x >>> S[4])) & B[4];
+            return (int) x;
+        }
+
+        private static short deinterleave64_5d(long interleaved) {
+            final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
+            final int[] S = {4, 8, 16, 32};
+
+            long x = interleaved & 0x1084210842108421L;
+            x = (x ^ (x >>> S[0])) & B[0];
+            x = (x ^ (x >>> S[1])) & B[1];
+            x = (x ^ (x >>> S[2])) & B[2];
+            x = (x ^ (x >>> S[3])) & B[3];
+            return (short) x;
+        }
+
         protected static class ti2d extends GreyCat.Object {
             public int x0, x1;
 
@@ -744,7 +770,7 @@ class std_n {
             }
 
             public void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i8((GreyCat.PrimitiveType.TU3D));
+                stream.write_i8(GreyCat.PrimitiveType.TU3D);
                 stream.write_i64(interleave());
             }
 
@@ -764,81 +790,188 @@ class std_n {
                 return 0L;
             }
 
-            private void deinterleave(long c) {
-                long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL, 0xffff00000000ffffL, 0x0001fffffL};
-                int[] S = {2, 4, 8, 16, 32};
+            private void deinterleave(long interleaved) {
+                final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL, 0xffff00000000ffffL, 0x0001fffffL};
+                final int[] S = {2, 4, 8, 16, 32};
 
-                long x = c & 0x1249249249249249L;
-                x = (x ^ (x >>> S[0])) & B[0];
-                x = (x ^ (x >>> S[1])) & B[1];
-                x = (x ^ (x >>> S[2])) & B[2];
-                x = (x ^ (x >>> S[3])) & B[3];
-                x = (x ^ (x >>> S[4])) & B[4];
-                x0 = (int) (x + GC_INT21_MIN);
-
-                long y = (c >>> 1) & 0x1249249249249249L;
-                y = (y ^ (y >>> S[0])) & B[0];
-                y = (y ^ (y >>> S[1])) & B[1];
-                y = (y ^ (y >>> S[2])) & B[2];
-                y = (y ^ (y >>> S[3])) & B[3];
-                y = (y ^ (y >>> S[4])) & B[4];
-                x1 = (int) (y + GC_INT21_MIN);
-
-                long z = (c >>> 2) & 0x1249249249249249L;
-                z = (z ^ (z >>> S[0])) & B[0];
-                z = (z ^ (z >>> S[1])) & B[1];
-                z = (z ^ (z >>> S[2])) & B[2];
-                z = (z ^ (z >>> S[3])) & B[3];
-                z = (z ^ (z >>> S[4])) & B[4];
-                x2 = (int) (z + GC_INT21_MIN);
+                x0 = (int) ((long) deinterleave64_3d(interleaved) + GC_INT21_MIN);
+                x1 = (int) ((long) deinterleave64_3d(interleaved >>> 1) + GC_INT21_MIN);
+                x2 = (int) ((long) deinterleave64_3d(interleaved >>> 2) + GC_INT21_MIN);
             }
         }
 
         protected static class ti4d extends GreyCat.Object {
 
+            public short x0, x1, x2, x3;
+
             protected ti4d(GreyCat.Type type) {
                 super(type, null);
             }
 
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TU4D);
+                stream.write_i64(interleave());
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.ti4d res = (core.ti4d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "ti4d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + " }";
+            }
+
+            private long interleave() {
                 // TODO
-                return null;
+                return 0L;
+            }
+
+            private void deinterleave(long interleaved) {
+                long x3120 = deinterleave64(interleaved);
+                long x20 = deinterleave64(x3120 & 0xffffffffL);
+                long x31 = deinterleave64(x3120 >>> 32);
+                x0 = (short) ((x20 & 0xffffL) + Short.MIN_VALUE);
+                x1 = (short) ((x31 & 0xffffL) + Short.MIN_VALUE);
+                x2 = (short) ((x20 >>> 32) + Short.MIN_VALUE);
+                x3 = (short) ((x31 >>> 32) + Short.MIN_VALUE);
             }
         }
 
         protected static class ti5d extends GreyCat.Object {
+            public short x0, x1, x2, x3, x4;
+
+            private final static short GC_INT12_MIN = -2047 - 1;
+            private final static short GC_INT12_MAX = 2047;
 
             protected ti5d(GreyCat.Type type) {
                 super(type, null);
             }
 
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TU5D);
+                stream.write_i64(interleave());
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.ti5d res = (core.ti5d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "ti5d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + ", x4: " + x4 + " }";
+            }
+
+            private long interleave() {
                 // TODO
-                return null;
+                return 0L;
+            }
+
+            private void deinterleave(long interleaved) {
+                final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
+                final int[] S = {4, 8, 16, 32};
+
+                x0 = (short) ((long) deinterleave64_5d(interleaved) + GC_INT12_MIN);
+                x1 = (short) ((long) deinterleave64_5d(interleaved >>> 1) + GC_INT12_MIN);
+                x2 = (short) ((long) deinterleave64_5d(interleaved >>> 2) + GC_INT12_MIN);
+                x3 = (short) ((long) deinterleave64_5d(interleaved >>> 3) + GC_INT12_MIN);
+                x4 = (short) ((long) deinterleave64_5d(interleaved >>> 4) + GC_INT12_MIN);
             }
         }
 
         protected static class ti6d extends GreyCat.Object {
 
+            public short x0, x1, x2, x3, x4, x5;
+            private final static short GC_INT10_MIN = -511 - 1;
+            private final static short GC_INT10_MAX = 511;
+
             protected ti6d(GreyCat.Type type) {
                 super(type, null);
             }
 
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TU5D);
+                stream.write_i64(interleave());
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.ti6d res = (core.ti6d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "ti6d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + ", x4: " + x4 + ", x5: " + x5 + " }";
+            }
+
+            private long interleave() {
                 // TODO
-                return null;
+                return 0L;
+            }
+
+            private void deinterleave(long interleaved) {
+                long y30 = deinterleave64(deinterleave64_3d(interleaved));
+                long y41 = deinterleave64(deinterleave64_3d(interleaved >>> 1));
+                long y52 = deinterleave64(deinterleave64_3d(interleaved >>> 2));
+
+                x0 = (short) ((y30 & 0x3ffL) + GC_INT10_MIN);
+                x1 = (short) ((y41 & 0x3ffL) + GC_INT10_MIN);
+                x2 = (short) ((y52 & 0x3ffL) + GC_INT10_MIN);
+                x3 = (short) ((y30 >>> 32) + GC_INT10_MIN);
+                x4 = (short) ((y41 >>> 32) + GC_INT10_MIN);
+                x5 = (short) ((y52 >>> 32) + GC_INT10_MIN);
             }
         }
 
         protected static class ti10d extends GreyCat.Object {
 
+            public byte x0, x1, x2, x3, x4, x5, x6, x7, x8, x9;
+
+            private final static short GC_INT10_MIN = -31 - 1;
+            private final static short GC_INT10_MAX = 31;
+
             protected ti10d(GreyCat.Type type) {
                 super(type, null);
             }
 
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TU10D);
+                stream.write_i64(interleave());
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.ti10d res = (core.ti10d) type.factory.build(type);
+                res.deinterleave(stream.read_i64());
+                return res;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return "ti10d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + ", x4: " + x4 +
+                        ", x5: " + x5 + ", x6: " + x6 + ", x7: " + x7 + ", x8: " + x8 + ", x9: " + x9 + " }";
+            }
+
+            private long interleave() {
                 // TODO
-                return null;
+                return 0L;
+            }
+
+            private void deinterleave(long interleaved) {
+                x0 = (byte) ((deinterleave64(deinterleave64_5d(interleaved)) & 0x3f) + GC_INT10_MIN);
+                x1 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 1)) & 0x3f) + GC_INT10_MIN);
+                x2 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 2)) & 0x3f) + GC_INT10_MIN);
+                x3 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 3)) & 0x3f) + GC_INT10_MIN);
+                x4 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 4)) & 0x3f) + GC_INT10_MIN);
+                x5 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 5)) & 0x3f) + GC_INT10_MIN);
+                x6 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 6)) & 0x3f) + GC_INT10_MIN);
+                x7 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 7)) & 0x3f) + GC_INT10_MIN);
+                x8 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 8)) & 0x3f) + GC_INT10_MIN);
+                x9 = (byte) ((deinterleave64(deinterleave64_5d(interleaved >>> 9)) & 0x3f) + GC_INT10_MIN);
             }
         }
 

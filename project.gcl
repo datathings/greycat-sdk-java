@@ -15,7 +15,8 @@ use util;
 
 fn fail() {
   var out = AbiWriter::new("fail.gcb");
-  out.write(ti3d::new(13, 37, 42));
+  out.write(ti5d::new(-1, 13, 37, 42, 12));
+  out.write(ti10d::new(-1, 13, 27, 22, 12, 1, -13, -27, -22, -12));
   out.write("${"YAY!"}");
 }
 
@@ -109,6 +110,12 @@ fn write_core(out: AbiWriter) {
   out.write(12_time);
   out.write(DatePart::days);
   out.write(nodeGeo<DatePart>::new());
+  out.write(ti2d::new(13, 37));
+  out.write(ti3d::new(13, 37, 42));
+  out.write(ti4d::new(13, 37, 42, 12));
+  out.write(ti5d::new(-1, 13, 37, 42, 12));
+  out.write(ti6d::new(-1, 13, 37, 42, 12, -12));
+  out.write(ti10d::new(-1, 13, 27, 22, 12, 1, -13, -27, -22, -12));
 }
 
 fn write_debug(out: AbiWriter) {
