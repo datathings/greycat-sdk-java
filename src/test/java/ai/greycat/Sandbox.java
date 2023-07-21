@@ -1,18 +1,29 @@
 package ai.greycat;
 
-import ai.greycat.GreyCat;
-import ai.greycat.std;
-
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class Sandbox {
 
+    private final static Field GREYCAT__SYMBOLS_OFF_BY_VALUE;
+
+    static {
+        getField:
+        {
+            for (Field field : GreyCat.class.getDeclaredFields()) {
+                if ("symbols_off_by_value".equals(field.getName())) {
+                    field.setAccessible(true);
+                    GREYCAT__SYMBOLS_OFF_BY_VALUE = field;
+                    break getField;
+                }
+            }
+            throw new RuntimeException();
+        }
+    }
+
     public static void main(String... args) throws Exception {
+
 
         GreyCat greycat = new GreyCat("/home/agarnier/datathings/greycat/sdk/java", new std()/*, new algebra()*/);
         GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/out.gcb");
@@ -41,14 +52,8 @@ public class Sandbox {
                     stream.write_f64((double) res);
                 } else if (res instanceof String) {
                     String string = (String) res;
-                    Integer symbolOffset = null;
-                    for (Field field : GreyCat.class.getDeclaredFields()) {
-                        if ("symbols_off_by_value".equals(field.getName())) {
-                            field.setAccessible(true);
-                            symbolOffset = ((java.util.Map<String, Integer>) field.get(greycat)).get(string);
-                            break;
-                        }
-                    }
+                    @SuppressWarnings("unchecked") Integer symbolOffset =
+                            ((java.util.Map<String, Integer>) GREYCAT__SYMBOLS_OFF_BY_VALUE.get(greycat)).get(string);
                     if (symbolOffset != null) {
                         stream.write_i8(GreyCat.PrimitiveType.STRING_LIT);
                         stream.write_i32(symbolOffset);
