@@ -115,6 +115,95 @@ public final class GreyCat {
             os.write(tmp, 0, 8);
         }
 
+        public void write_vi64(final long l) throws IOException {
+            byte[] bytes = new byte[9];
+            byte nbytes = pack_varu64(unsign_of(l), bytes);
+            os.write(bytes, 0, nbytes);
+        }
+
+        private static byte pack_varu64(long x, byte[] bytes) {
+            if (Long.compareUnsigned(x, 0x80) < 0) {
+                bytes[0] = (byte) (x & 0x7f);
+                return 1;
+            }
+            if (Long.compareUnsigned(x, 1L << 14) < 0) {
+                bytes[1] = (byte) ((x >>> 6) & 0xff);
+                bytes[0] = (byte) (x & 0x3f);
+                bytes[0] |= 0x80;
+                return 2;
+            }
+            if (Long.compareUnsigned(x, 1L << 21) < 0) {
+                bytes[2] = (byte) ((x >>> 13) & 0xff);
+                bytes[1] = (byte) ((x >>> 5) & 0xff);
+                bytes[0] = (byte) (x & 0x1f);
+                bytes[0] |= 0xc0;
+                return 3;
+            }
+            if (Long.compareUnsigned(x, 1L << 28) < 0) {
+                bytes[3] = (byte) ((x >>> 20) & 0xff);
+                bytes[2] = (byte) ((x >>> 12) & 0xff);
+                bytes[1] = (byte) ((x >> 4) & 0xff);
+                bytes[0] = (byte) (x & 0xf);
+                bytes[0] |= 0xe0;
+                return 4;
+            }
+            if (Long.compareUnsigned(x, 1L << 35) < 0) {
+                bytes[4] = (byte) ((x >> 27) & 0xff);
+                bytes[3] = (byte) ((x >> 19) & 0xff);
+                bytes[2] = (byte) ((x >> 11) & 0xff);
+                bytes[1] = (byte) ((x >> 3) & 0xff);
+                bytes[0] = (byte) (x & 0x7);
+                bytes[0] |= 0xf0;
+                return 5;
+            }
+            if (Long.compareUnsigned(x, 1L << 42) < 0) {
+                bytes[5] = (byte) ((x >> 34) & 0xff);
+                bytes[4] = (byte) ((x >> 26) & 0xff);
+                bytes[3] = (byte) ((x >> 18) & 0xff);
+                bytes[2] = (byte) ((x >> 10) & 0xff);
+                bytes[1] = (byte) ((x >> 2) & 0xff);
+                bytes[0] = (byte) (x & 0x3);
+                bytes[0] |= 0xf8;
+                return 6;
+            }
+            if (Long.compareUnsigned(x, 1L << 49) < 0) {
+                bytes[6] = (byte) ((x >> 41) & 0xff);
+                bytes[5] = (byte) ((x >> 33) & 0xff);
+                bytes[4] = (byte) ((x >> 25) & 0xff);
+                bytes[3] = (byte) ((x >> 17) & 0xff);
+                bytes[2] = (byte) ((x >> 9) & 0xff);
+                bytes[1] = (byte) ((x >> 1) & 0xff);
+                bytes[0] = (byte) (x & 0x1);
+                bytes[0] |= 0xfc;
+                return 7;
+            }
+            if (Long.compareUnsigned(x, 1L << 56) < 0) {
+                bytes[7] = (byte) ((x >> 48) & 0xff);
+                bytes[6] = (byte) ((x >> 40) & 0xff);
+                bytes[5] = (byte) ((x >> 32) & 0xff);
+                bytes[4] = (byte) ((x >> 24) & 0xff);
+                bytes[3] = (byte) ((x >> 16) & 0xff);
+                bytes[2] = (byte) ((x >> 8) & 0xff);
+                bytes[1] = (byte) ((x >> 0) & 0xff);
+                bytes[0] = (byte) 0xfe;
+                return 8;
+            }
+            bytes[8] = (byte) ((x >> 56) & 0xff);
+            bytes[7] = (byte) ((x >> 48) & 0xff);
+            bytes[6] = (byte) ((x >> 40) & 0xff);
+            bytes[5] = (byte) ((x >> 32) & 0xff);
+            bytes[4] = (byte) ((x >> 24) & 0xff);
+            bytes[3] = (byte) ((x >> 16) & 0xff);
+            bytes[2] = (byte) ((x >> 8) & 0xff);
+            bytes[1] = (byte) ((x >> 0) & 0xff);
+            bytes[0] = (byte) 0xff;
+            return 9;
+        }
+
+        private static long unsign_of(long x) {
+            return (x << 1) ^ (x >> 63);
+        }
+
         public void write_f64(final double d) throws IOException {
             write_i64(Double.doubleToLongBits(d));
         }
@@ -345,13 +434,13 @@ public final class GreyCat {
                 write_i8((byte) c);
             } else if (object instanceof Long) {
                 write_i8(GreyCat.PrimitiveType.INT);
-                write_i64((long) object);
+                write_vi64((long) object);
             } else if (object instanceof Integer) {
                 write_i8(GreyCat.PrimitiveType.INT);
-                write_i64((int) object);
+                write_vi64((int) object);
             } else if (object instanceof Short) {
                 write_i8(GreyCat.PrimitiveType.INT);
-                write_i64((short) object);
+                write_vi64((short) object);
             } else if (object instanceof Double || object instanceof Float) {
                 write_i8(GreyCat.PrimitiveType.FLOAT);
                 write_f64((double) object);

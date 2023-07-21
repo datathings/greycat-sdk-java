@@ -26,8 +26,9 @@ public class Sandbox {
 
 
         GreyCat greycat = new GreyCat("/home/agarnier/datathings/greycat/sdk/java", new std()/*, new algebra()*/);
-        GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/out.gcb");
+        GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/fail.gcb");
 
+        @SuppressWarnings("IOStreamConstructor")
         GreyCat.Stream stream = new GreyCat.Stream(greycat, new FileOutputStream("check.gcb"));
         stream.write_i8_array(new byte[]{0x01, 0x00, (byte) 0xa0, 0x47, 0x01, 0x00, 0x00, 0x00}, 0, 8);
 
@@ -46,13 +47,14 @@ public class Sandbox {
                     stream.write_i8((byte) (char) res);
                 } else if (res instanceof Long) {
                     stream.write_i8(GreyCat.PrimitiveType.INT);
-                    stream.write_i64((long) res);
+                    stream.write_vi64((long) res);
                 } else if (res instanceof Double) {
                     stream.write_i8(GreyCat.PrimitiveType.FLOAT);
                     stream.write_f64((double) res);
                 } else if (res instanceof String) {
                     String string = (String) res;
-                    @SuppressWarnings("unchecked") Integer symbolOffset =
+                    @SuppressWarnings("unchecked")
+                    Integer symbolOffset =
                             ((java.util.Map<String, Integer>) GREYCAT__SYMBOLS_OFF_BY_VALUE.get(greycat)).get(string);
                     if (symbolOffset != null) {
                         stream.write_i8(GreyCat.PrimitiveType.STRING_LIT);
