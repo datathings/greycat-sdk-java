@@ -1104,8 +1104,10 @@ class std_n {
             }
 
             private long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_2d(
+                        ((long) Float.floatToIntBits(x0)) + ti2d.UINT32_MIN,
+                        ((long) Float.floatToIntBits(x1)) + ti2d.UINT32_MIN
+                );
             }
 
             private void deinterleave(long interleaved) {
@@ -1140,8 +1142,11 @@ class std_n {
             }
 
             public long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_3d(
+                        (((long) Float.floatToIntBits(x0)) >>> 11) + ti3d.UINT21_MIN,
+                        (((long) Float.floatToIntBits(x1)) >>> 11) + ti3d.UINT21_MIN,
+                        (((long) Float.floatToIntBits(x2)) >>> 11) + ti3d.UINT21_MIN
+                );
             }
 
             public void deinterleave(long interleaved) {
@@ -1176,8 +1181,16 @@ class std_n {
             }
 
             private long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_2d(
+                        interleave64_2d(
+                                ((Float.floatToIntBits(x0)) >>> 16) + ti4d.UINT16_MIN,
+                                (Float.floatToIntBits(x2) >>> 16) + ti4d.UINT16_MIN
+                        ),
+                        interleave64_2d(
+                                (Float.floatToIntBits(x1) >>> 16) + ti4d.UINT16_MIN,
+                                (Float.floatToIntBits(x3) >>> 16) + ti4d.UINT16_MIN
+                        )
+                );
             }
 
             private void deinterleave(long interleaved) {

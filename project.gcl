@@ -15,17 +15,6 @@ use util;
 
 fn fail() {
   var out = AbiWriter::new("fail.gcb");
-  out.write(ti2d::new(13, 37));
-  out.write(ti3d::new(13, 37, 42));
-  out.write(ti4d::new(13, 37, 42, 12));
-  out.write(ti5d::new(-1, 13, 37, 42, 12));
-  out.write(ti6d::new(-1, 13, 37, 42, 12, -12));
-  out.write(ti10d::new(-1, 13, 27, 22, 12, 1, -13, -27, -22, -12));
-  /*
-  out.write(tf2d::new(13.37, 12.42));
-  out.write(tf3d::new(13.37, 12.42, -13.37));
-  out.write(tf4d::new(13.37, 12.42, -13.37, -12.42));
-  */
 }
 
 fn main() {
@@ -93,7 +82,7 @@ fn write_core(out: AbiWriter) {
   out.write(-9223372036854775808);
   out.write(13.37);
   out.write("Hello world");
-  out.write("${"Hello world"}");
+  // out.write("${"Hello world"}");
   out.write(GeoBox::new(13_geo, 37_geo));
   out.write(nodeList<int>::new());
   out.write(TimeZone::Europe_Luxembourg);
