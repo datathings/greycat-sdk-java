@@ -670,6 +670,95 @@ class std_n {
             }
         }
 
+        private static long interleave64_2d(long x, long y) {
+            final long[] B = {0x5555555555555555L, 0x3333333333333333L, 0x0F0F0F0F0F0F0F0FL,
+                    0x00FF00FF00FF00FFL, 0x0000FFFF0000FFFFL};
+            final int[] S = {1, 2, 4, 8, 16};
+
+            x = (x | (x << S[4])) & B[4];
+            y = (y | (y << S[4])) & B[4];
+
+            x = (x | (x << S[3])) & B[3];
+            y = (y | (y << S[3])) & B[3];
+
+            x = (x | (x << S[2])) & B[2];
+            y = (y | (y << S[2])) & B[2];
+
+            x = (x | (x << S[1])) & B[1];
+            y = (y | (y << S[1])) & B[1];
+
+            x = (x | (x << S[0])) & B[0];
+            y = (y | (y << S[0])) & B[0];
+
+            return x | (y << 1);
+        }
+
+        private static long interleave64_3d(long x, long y, long z) {
+            final long[] B = {0x1249249249249249L, 0x10c30c30c30c30c3L, 0x100f00f00f00f00fL,
+                    0x001f0000ff0000ffL, 0xffff00000000ffffL};
+            final int[] S = {2, 4, 8, 16, 32};
+
+            x &= 0x0001fffffL;
+            x = (x ^ (x << S[4])) & B[4];
+            x = (x ^ (x << S[3])) & B[3];
+            x = (x ^ (x << S[2])) & B[2];
+            x = (x ^ (x << S[1])) & B[1];
+            x = (x ^ (x << S[0])) & B[0];
+
+            y &= 0x0001fffffL;
+            y = (y ^ (y << S[4])) & B[4];
+            y = (y ^ (y << S[3])) & B[3];
+            y = (y ^ (y << S[2])) & B[2];
+            y = (y ^ (y << S[1])) & B[1];
+            y = (y ^ (y << S[0])) & B[0];
+
+            z &= 0x0001fffffL;
+            z = (z ^ (z << S[4])) & B[4];
+            z = (z ^ (z << S[3])) & B[3];
+            z = (z ^ (z << S[2])) & B[2];
+            z = (z ^ (z << S[1])) & B[1];
+            z = (z ^ (z << S[0])) & B[0];
+
+            return x | (y << 1) | (z << 2);
+        }
+
+        private static long interleave64_5d(long x0, long x1, long x2, long x3, long x4) {
+            final long[] B = {0x084210842108421L, 0x0c0300c0300c03L, 0x00f0000f0000fL, 0x0ff00000000ffL};
+            final int[] S = {4, 8, 16, 32};
+
+            x0 &= 0x0fffL;
+            x0 = (x0 ^ (x0 << S[3])) & B[3];
+            x0 = (x0 ^ (x0 << S[2])) & B[2];
+            x0 = (x0 ^ (x0 << S[1])) & B[1];
+            x0 = (x0 ^ (x0 << S[0])) & B[0];
+
+            x1 &= 0x0fffL;
+            x1 = (x1 ^ (x1 << S[3])) & B[3];
+            x1 = (x1 ^ (x1 << S[2])) & B[2];
+            x1 = (x1 ^ (x1 << S[1])) & B[1];
+            x1 = (x1 ^ (x1 << S[0])) & B[0];
+
+            x2 &= 0x0fffL;
+            x2 = (x2 ^ (x2 << S[3])) & B[3];
+            x2 = (x2 ^ (x2 << S[2])) & B[2];
+            x2 = (x2 ^ (x2 << S[1])) & B[1];
+            x2 = (x2 ^ (x2 << S[0])) & B[0];
+
+            x3 &= 0x0fffL;
+            x3 = (x3 ^ (x3 << S[3])) & B[3];
+            x3 = (x3 ^ (x3 << S[2])) & B[2];
+            x3 = (x3 ^ (x3 << S[1])) & B[1];
+            x3 = (x3 ^ (x3 << S[0])) & B[0];
+
+            x4 &= 0x0fffL;
+            x4 = (x4 ^ (x4 << S[3])) & B[3];
+            x4 = (x4 ^ (x4 << S[2])) & B[2];
+            x4 = (x4 ^ (x4 << S[1])) & B[1];
+            x4 = (x4 ^ (x4 << S[0])) & B[0];
+
+            return x0 | (x1 << 1) | (x2 << 2) | (x3 << 3) | (x4 << 4);
+        }
+
         private static long deinterleave64_2d(long interleaved) {
             final long[] B = {0x5555555555555555L, 0x3333333333333333L, 0x0F0F0F0F0F0F0F0FL,
                     0x00FF00FF00FF00FFL, 0x0000FFFF0000FFFFL, 0x00000000FFFFFFFFL};
@@ -699,8 +788,8 @@ class std_n {
         }
 
         private static int deinterleave64_3d(long interleaved) {
-            final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL, 0xffff00000000ffffL,
-                    0x0001fffffL};
+            final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL,
+                    0xffff00000000ffffL, 0x0001fffffL};
             final int[] S = {2, 4, 8, 16, 32};
 
             long x = interleaved & 0x1249249249249249L;
@@ -727,6 +816,8 @@ class std_n {
         protected static class ti2d extends GreyCat.Object {
             public int x0, x1;
 
+            private final static long UINT32_MIN = 2147483648L;
+
             protected ti2d(GreyCat.Type type) {
                 super(type, null);
             }
@@ -748,8 +839,7 @@ class std_n {
             }
 
             private long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_2d(((long) x0) + UINT32_MIN, ((long) x1) + UINT32_MIN);
             }
 
             private void deinterleave(long interleaved) {
@@ -762,8 +852,9 @@ class std_n {
         protected static class ti3d extends GreyCat.Object {
             public int x0, x1, x2;
 
-            private final static int GC_INT21_MIN = -1048575 - 1;
-            private final static int GC_INT_21_MAX = 1048575;
+            private final static int INT21_MIN = -1048575 - 1;
+            private final static int INT_21_MAX = 1048575;
+            private final static long UINT21_MIN = 4293918720L;
 
             protected ti3d(GreyCat.Type type) {
                 super(type, null);
@@ -786,23 +877,23 @@ class std_n {
             }
 
             private long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_3d(((long) x0) + UINT21_MIN, ((long) x1) + UINT21_MIN, ((long) x2) + UINT21_MIN);
             }
 
             private void deinterleave(long interleaved) {
                 final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL, 0xffff00000000ffffL, 0x0001fffffL};
                 final int[] S = {2, 4, 8, 16, 32};
 
-                x0 = (int) ((long) deinterleave64_3d(interleaved) + GC_INT21_MIN);
-                x1 = (int) ((long) deinterleave64_3d(interleaved >>> 1) + GC_INT21_MIN);
-                x2 = (int) ((long) deinterleave64_3d(interleaved >>> 2) + GC_INT21_MIN);
+                x0 = (int) ((long) deinterleave64_3d(interleaved) + INT21_MIN);
+                x1 = (int) ((long) deinterleave64_3d(interleaved >>> 1) + INT21_MIN);
+                x2 = (int) ((long) deinterleave64_3d(interleaved >>> 2) + INT21_MIN);
             }
         }
 
         protected static class ti4d extends GreyCat.Object {
 
             public short x0, x1, x2, x3;
+            private final static int UINT16_MIN = 32768;
 
             protected ti4d(GreyCat.Type type) {
                 super(type, null);
@@ -825,8 +916,10 @@ class std_n {
             }
 
             private long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_2d(
+                        interleave64_2d(((int) x0) + UINT16_MIN, ((int) x2) + UINT16_MIN),
+                        interleave64_2d(((int) x1) + UINT16_MIN, ((int) x3) + UINT16_MIN)
+                );
             }
 
             private void deinterleave(long interleaved) {
@@ -843,8 +936,9 @@ class std_n {
         protected static class ti5d extends GreyCat.Object {
             public short x0, x1, x2, x3, x4;
 
-            private final static short GC_INT12_MIN = -2047 - 1;
-            private final static short GC_INT12_MAX = 2047;
+            private final static short INT12_MIN = -2047 - 1;
+            private final static short INT12_MAX = 2047;
+            private final static int UINT12_MIN = 63488;
 
             protected ti5d(GreyCat.Type type) {
                 super(type, null);
@@ -867,34 +961,35 @@ class std_n {
             }
 
             private long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_5d(((int) x0) + UINT12_MIN, ((int) x1) + UINT12_MIN, ((int) x2) + UINT12_MIN,
+                        ((int) x3) + UINT12_MIN, ((int) x4) + UINT12_MIN);
             }
 
             private void deinterleave(long interleaved) {
                 final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
                 final int[] S = {4, 8, 16, 32};
 
-                x0 = (short) ((long) deinterleave64_5d(interleaved) + GC_INT12_MIN);
-                x1 = (short) ((long) deinterleave64_5d(interleaved >>> 1) + GC_INT12_MIN);
-                x2 = (short) ((long) deinterleave64_5d(interleaved >>> 2) + GC_INT12_MIN);
-                x3 = (short) ((long) deinterleave64_5d(interleaved >>> 3) + GC_INT12_MIN);
-                x4 = (short) ((long) deinterleave64_5d(interleaved >>> 4) + GC_INT12_MIN);
+                x0 = (short) ((long) deinterleave64_5d(interleaved) + INT12_MIN);
+                x1 = (short) ((long) deinterleave64_5d(interleaved >>> 1) + INT12_MIN);
+                x2 = (short) ((long) deinterleave64_5d(interleaved >>> 2) + INT12_MIN);
+                x3 = (short) ((long) deinterleave64_5d(interleaved >>> 3) + INT12_MIN);
+                x4 = (short) ((long) deinterleave64_5d(interleaved >>> 4) + INT12_MIN);
             }
         }
 
         protected static class ti6d extends GreyCat.Object {
 
             public short x0, x1, x2, x3, x4, x5;
-            private final static short GC_INT10_MIN = -511 - 1;
-            private final static short GC_INT10_MAX = 511;
+            private final static short INT10_MIN = -511 - 1;
+            private final static short INT10_MAX = 511;
+            private final static int UINT10_MIN = 65024;
 
             protected ti6d(GreyCat.Type type) {
                 super(type, null);
             }
 
             public void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TU5D);
+                stream.write_i8(GreyCat.PrimitiveType.TU6D);
                 stream.write_i64(interleave());
             }
 
@@ -910,8 +1005,11 @@ class std_n {
             }
 
             private long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_3d(
+                        interleave64_2d((((int) x0) + UINT10_MIN) & 0x3ff, (((int) x3) + UINT10_MIN) & 0x3ff),
+                        interleave64_2d((((int) x1) + UINT10_MIN) & 0x3ff, (((int) x4) + UINT10_MIN) & 0x3ff),
+                        interleave64_2d((((int) x2) + UINT10_MIN) & 0x3ff, (((int) x5) + UINT10_MIN) & 0x3ff)
+                );
             }
 
             private void deinterleave(long interleaved) {
@@ -919,12 +1017,12 @@ class std_n {
                 long y41 = deinterleave64_2d(deinterleave64_3d(interleaved >>> 1));
                 long y52 = deinterleave64_2d(deinterleave64_3d(interleaved >>> 2));
 
-                x0 = (short) ((y30 & 0x3ffL) + GC_INT10_MIN);
-                x1 = (short) ((y41 & 0x3ffL) + GC_INT10_MIN);
-                x2 = (short) ((y52 & 0x3ffL) + GC_INT10_MIN);
-                x3 = (short) ((y30 >>> 32) + GC_INT10_MIN);
-                x4 = (short) ((y41 >>> 32) + GC_INT10_MIN);
-                x5 = (short) ((y52 >>> 32) + GC_INT10_MIN);
+                x0 = (short) ((y30 & 0x3ffL) + INT10_MIN);
+                x1 = (short) ((y41 & 0x3ffL) + INT10_MIN);
+                x2 = (short) ((y52 & 0x3ffL) + INT10_MIN);
+                x3 = (short) ((y30 >>> 32) + INT10_MIN);
+                x4 = (short) ((y41 >>> 32) + INT10_MIN);
+                x5 = (short) ((y52 >>> 32) + INT10_MIN);
             }
         }
 
@@ -932,8 +1030,9 @@ class std_n {
 
             public byte x0, x1, x2, x3, x4, x5, x6, x7, x8, x9;
 
-            private final static short GC_INT10_MIN = -31 - 1;
-            private final static short GC_INT10_MAX = 31;
+            private final static byte INT10_MIN = -31 - 1;
+            private final static byte INT10_MAX = 31;
+            private final static char UINT10_MIN = 224;
 
             protected ti10d(GreyCat.Type type) {
                 super(type, null);
@@ -957,21 +1056,26 @@ class std_n {
             }
 
             private long interleave() {
-                // TODO
-                return 0L;
+                return interleave64_5d(
+                        interleave64_2d((((char) x0) + UINT10_MIN) & 0x3f, (((char) x5) + UINT10_MIN) & 0x3f),
+                        interleave64_2d((((char) x1) + UINT10_MIN) & 0x3f, (((char) x6) + UINT10_MIN) & 0x3f),
+                        interleave64_2d((((char) x2) + UINT10_MIN) & 0x3f, (((char) x7) + UINT10_MIN) & 0x3f),
+                        interleave64_2d((((char) x3) + UINT10_MIN) & 0x3f, (((char) x8) + UINT10_MIN) & 0x3f),
+                        interleave64_2d((((char) x4) + UINT10_MIN) & 0x3f, (((char) x9) + UINT10_MIN) & 0x3f)
+                );
             }
 
             private void deinterleave(long interleaved) {
-                x0 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved)) & 0x3f) + GC_INT10_MIN);
-                x1 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 1)) & 0x3f) + GC_INT10_MIN);
-                x2 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 2)) & 0x3f) + GC_INT10_MIN);
-                x3 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 3)) & 0x3f) + GC_INT10_MIN);
-                x4 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 4)) & 0x3f) + GC_INT10_MIN);
-                x5 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 5)) & 0x3f) + GC_INT10_MIN);
-                x6 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 6)) & 0x3f) + GC_INT10_MIN);
-                x7 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 7)) & 0x3f) + GC_INT10_MIN);
-                x8 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 8)) & 0x3f) + GC_INT10_MIN);
-                x9 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 9)) & 0x3f) + GC_INT10_MIN);
+                x0 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved)) & 0x3f) + INT10_MIN);
+                x1 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 1)) & 0x3f) + INT10_MIN);
+                x2 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 2)) & 0x3f) + INT10_MIN);
+                x3 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 3)) & 0x3f) + INT10_MIN);
+                x4 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 4)) & 0x3f) + INT10_MIN);
+                x5 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 5)) & 0x3f) + INT10_MIN);
+                x6 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 6)) & 0x3f) + INT10_MIN);
+                x7 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 7)) & 0x3f) + INT10_MIN);
+                x8 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 8)) & 0x3f) + INT10_MIN);
+                x9 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 9)) & 0x3f) + INT10_MIN);
             }
         }
 
@@ -1041,9 +1145,9 @@ class std_n {
             }
 
             public void deinterleave(long interleaved) {
-                x0 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved) + ti3d.GC_INT21_MIN) << 11));
-                x1 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 1) + ti3d.GC_INT21_MIN) << 11));
-                x2 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 2) + ti3d.GC_INT21_MIN) << 11));
+                x0 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved) + ti3d.INT21_MIN) << 11));
+                x1 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 1) + ti3d.INT21_MIN) << 11));
+                x2 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 2) + ti3d.INT21_MIN) << 11));
             }
         }
 

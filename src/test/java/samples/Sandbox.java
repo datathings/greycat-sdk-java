@@ -3,6 +3,9 @@ package samples;
 import ai.greycat.GreyCat;
 import ai.greycat.std;
 
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 public class Sandbox {
@@ -10,11 +13,17 @@ public class Sandbox {
     public static void main(String... args) throws Exception {
 
         GreyCat greycat = new GreyCat("/home/agarnier/datathings/greycat/sdk/java", new std()/*, new algebra()*/);
-        GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/out.gcb");
+        GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/fail.gcb");
+
+        OutputStream out = new FileOutputStream("check.gcb");
+        out.write(new byte[]{0x01, 0x00, (byte) 0xa0, 0x47, 0x01, 0x00, 0x00, 0x00});
+        GreyCat.Stream stream = new GreyCat.Stream(greycat, out);
+
         Object res = reader.read();
         while (res != null) {
             System.out.println(res.getClass());
             System.out.println(res);
+            ((GreyCat.Object) res).save(stream);
             res = reader.read();
         }
 
