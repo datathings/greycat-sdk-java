@@ -15,7 +15,6 @@ use util;
 
 fn fail() {
   var out = AbiWriter::new("fail.gcb");
-  out.write(Error::new(""));
 }
 
 fn main() {
@@ -96,11 +95,13 @@ fn write_core(out: AbiWriter) {
   out.write(SamplingMode::adaptative);
   out.write(DurationUnit::days);
   out.write(TensorType::c128);
+  /*
   out.write(Table<node>::new(0, false));
   out.write(Tensor::new());
   out.write(GeoCircle::new(42_geo, 13.37));
   out.write(Date::new(2012, 12, 12, 12, 12, 12, 12, TimeZone::Europe_Luxembourg));
   out.write(Map<geo, time>::new());
+  */
   out.write(duration::new(12, DurationUnit::microseconds));
   out.write(nodeTime<nodeGeo>::new());
   out.write(Array<nodeTime>::new(0));

@@ -831,9 +831,13 @@ public final class GreyCat {
         }
 
         @Override
-        public final void save(Stream stream) throws IOException {
+        protected final void saveType(Stream stream) throws IOException {
             stream.write_i8(GreyCat.PrimitiveType.ENUM);
             stream.write_vu32(type.offset);
+        }
+
+        @Override
+        protected final void saveValue(Stream stream) throws IOException {
             stream.write_vu32(offset);
         }
 
@@ -929,13 +933,17 @@ public final class GreyCat {
             attributes[offset] = value;
         }
 
-        public void save(Stream stream) throws IOException {
-            stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-            stream.write_vu32(type.offset);
+        public final void save(Stream stream) throws IOException {
+            saveType(stream);
             saveValue(stream);
         }
 
-        private void saveValue(Stream stream) throws IOException {
+        protected void saveType(Stream stream) throws IOException {
+            stream.write_i8(GreyCat.PrimitiveType.OBJECT);
+            stream.write_vu32(type.offset);
+        }
+
+        protected void saveValue(Stream stream) throws IOException {
             byte[] nullable_bitset = new byte[type.nullable_nb_bytes];
             byte nullable_offset = 0;
             Type.Attribute field;
@@ -976,60 +984,25 @@ public final class GreyCat {
                         stream.write_f64((double) value);
                         break;
                     case PrimitiveType.NODE:
-                        stream.write_i64(((std_n.core.node) value).ref);
-                        break;
                     case PrimitiveType.NODE_TIME:
-                        stream.write_i64(((std_n.core.nodeTime) value).ref);
-                        break;
                     case PrimitiveType.NODE_INDEX:
-                        stream.write_i64(((std_n.core.nodeIndex) value).ref);
-                        break;
                     case PrimitiveType.NODE_LIST:
-                        stream.write_i64(((std_n.core.nodeList) value).ref);
-                        break;
                     case PrimitiveType.NODE_GEO:
-                        stream.write_i64(((std_n.core.nodeGeo) value).ref);
-                        break;
                     case PrimitiveType.GEO:
-                        stream.write_i64(((std_n.core.geo) value).geocode);
-                        break;
                     case PrimitiveType.TU2D:
-                        stream.write_i64(((std_n.core.ti2d) value).interleave());
-                        break;
                     case PrimitiveType.TU3D:
-                        stream.write_i64(((std_n.core.ti3d) value).interleave());
-                        break;
                     case PrimitiveType.TU4D:
-                        stream.write_i64(((std_n.core.ti4d) value).interleave());
-                        break;
                     case PrimitiveType.TU5D:
-                        stream.write_i64(((std_n.core.ti5d) value).interleave());
-                        break;
                     case PrimitiveType.TU6D:
-                        stream.write_i64(((std_n.core.ti6d) value).interleave());
-                        break;
                     case PrimitiveType.TU10D:
-                        stream.write_i64(((std_n.core.ti10d) value).interleave());
-                        break;
                     case PrimitiveType.TUF2D:
-                        stream.write_i64(((std_n.core.tf2d) value).interleave());
-                        break;
                     case PrimitiveType.TUF3D:
-                        stream.write_i64(((std_n.core.tf3d) value).interleave());
-                        break;
                     case PrimitiveType.TUF4D:
-                        stream.write_i64(((std_n.core.tf4d) value).interleave());
-                        break;
                     case PrimitiveType.TIME:
-                        stream.write_i64(((std_n.core.time) value).value);
-                        break;
                     case PrimitiveType.DURATION:
-                        stream.write_i64(((std_n.core.duration) value).value);
-                        break;
 //                    case PrimitiveType.CUBIC: // TODO
-//                        break;
                     case PrimitiveType.ENUM:
-                        stream.write_vu32(((Enum) value).offset);
+                        ((Object) value).saveValue(stream);
                         break;
                     case PrimitiveType.OBJECT:
                         if (value instanceof String) {
