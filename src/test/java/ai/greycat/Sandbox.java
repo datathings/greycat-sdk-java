@@ -56,14 +56,15 @@ public class Sandbox {
                     @SuppressWarnings("unchecked")
                     Integer symbolOffset =
                             ((java.util.Map<String, Integer>) GREYCAT__SYMBOLS_OFF_BY_VALUE.get(greycat)).get(string);
+                    symbolOffset = null;
                     if (symbolOffset != null) {
                         stream.write_i8(GreyCat.PrimitiveType.STRING_LIT);
                         stream.write_i32(symbolOffset);
                     } else {
                         stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                        stream.write_i32(greycat.type_offset_core_string);
-                        stream.write_i32(string.length());
+                        stream.write_vu32(greycat.type_offset_core_string);
                         final byte[] data = string.getBytes(StandardCharsets.UTF_8);
+                        stream.write_vu32(data.length << 1);
                         stream.write_i8_array(data, 0, data.length);
                     }
                 } else {

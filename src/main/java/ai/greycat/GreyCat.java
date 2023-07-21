@@ -97,6 +97,47 @@ public final class GreyCat {
             os.write(tmp, 0, 4);
         }
 
+        public void write_vu32(final int i) throws IOException {
+            byte[] bytes = new byte[5];
+            byte nbytes = pack_varu32(i, bytes);
+            os.write(bytes, 0, nbytes);
+        }
+
+        private static byte pack_varu32(final int x, byte[] bytes) {
+            if (Integer.compareUnsigned(x, 0x80) < 0) {
+                bytes[0] = (byte) (x & 0x7f);
+                return 1;
+            }
+            if (Long.compareUnsigned(x, 1L << 14) < 0) {
+                bytes[1] = (byte) ((x >> 6) & 0xff);
+                bytes[0] = (byte) (x & 0x3f);
+                bytes[0] |= 0x80;
+                return 2;
+            }
+            if (Long.compareUnsigned(x, 1L << 21) < 0) {
+                bytes[2] = (byte) ((x >> 13) & 0xff);
+                bytes[1] = (byte) ((x >> 5) & 0xff);
+                bytes[0] = (byte) (x & 0x1f);
+                bytes[0] |= 0xc0;
+                return 3;
+            }
+            if (Long.compareUnsigned(x, 1L << 28) < 0) {
+                bytes[3] = (byte) ((x >> 20) & 0xff);
+                bytes[2] = (byte) ((x >> 12) & 0xff);
+                bytes[1] = (byte) ((x >> 4) & 0xff);
+                bytes[0] = (byte) (x & 0xf);
+                bytes[0] |= 0xe0;
+                return 4;
+            }
+            bytes[4] = (byte) ((x >> 27) & 0xff);
+            bytes[3] = (byte) ((x >> 19) & 0xff);
+            bytes[2] = (byte) ((x >> 11) & 0xff);
+            bytes[1] = (byte) ((x >> 3) & 0xff);
+            bytes[0] = (byte) (x & 0x7);
+            bytes[0] |= 0xf0;
+            return 5;
+        }
+
         public void write_i16(final int i) throws IOException {
             tmp[0] = (byte) (i & 0xFF);
             tmp[1] = (byte) ((i >>> 8) & 0xFF);
@@ -121,7 +162,7 @@ public final class GreyCat {
             os.write(bytes, 0, nbytes);
         }
 
-        private static byte pack_varu64(long x, byte[] bytes) {
+        private static byte pack_varu64(final long x, byte[] bytes) {
             if (Long.compareUnsigned(x, 0x80) < 0) {
                 bytes[0] = (byte) (x & 0x7f);
                 return 1;
@@ -449,11 +490,11 @@ public final class GreyCat {
                 Integer symbolOffset = greycat.symbols_off_by_value.get(string);
                 if (symbolOffset != null) {
                     write_i8(GreyCat.PrimitiveType.STRING_LIT);
-                    write_i32(symbolOffset);
+                    write_vu32((symbolOffset << 1) | 1);
                 } else {
                     write_i8(GreyCat.PrimitiveType.OBJECT);
-                    write_i32(greycat.type_offset_core_string);
-                    write_i32(string.length());
+                    write_vu32(greycat.type_offset_core_string);
+                    write_vu32(string.length());
                     final byte[] data = string.getBytes(StandardCharsets.UTF_8);
                     write_i8_array(data, 0, data.length);
                 }
@@ -552,7 +593,7 @@ public final class GreyCat {
             };
 //            PRIMITIVE_LOADERS[PrimitiveType.BLOCK] = error_loader;
             PRIMITIVE_LOADERS[PrimitiveType.BLOCK_REF] = error_loader;
-            PRIMITIVE_LOADERS[PrimitiveType.FUNCTION] = error_loader;
+            PRIMITIVE_LOADERS[PrimitiveType.FUNCTION] = error_loader; // TODO?
             PRIMITIVE_LOADERS[PrimitiveType.UNDEFINED] = error_loader;
             PRIMITIVE_LOADERS[PrimitiveType.STRING_LIT] = Stream::read_string_lit;
         }
@@ -796,8 +837,8 @@ public final class GreyCat {
         @Override
         public final void save(Stream stream) throws IOException {
             stream.write_i8(GreyCat.PrimitiveType.ENUM);
-            stream.write_i32(type.offset);
-            stream.write_i16(offset);
+            stream.write_vu32(type.offset);
+            stream.write_vu32(offset);
         }
 
         @Override
@@ -894,8 +935,8 @@ public final class GreyCat {
 
         public void save(Stream stream) throws IOException {
             stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-            stream.write_i32(type.offset);
-            if (attributes != null) {
+            stream.write_vu32(type.offset);
+            if (attributes != null) { // TODO: rework
                 int offset = 0;
                 while (offset < attributes.length) {
                     stream.write_object(get(offset));

@@ -15,7 +15,7 @@ use util;
 
 fn fail() {
   var out = AbiWriter::new("fail.gcb");
-  out.write(int::min);
+  out.write("${"Dat some test…"}");
 }
 
 fn main() {
