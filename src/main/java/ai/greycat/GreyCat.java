@@ -494,8 +494,8 @@ public final class GreyCat {
                 } else {
                     write_i8(GreyCat.PrimitiveType.OBJECT);
                     write_vu32(greycat.type_offset_core_string);
-                    write_vu32(string.length());
                     final byte[] data = string.getBytes(StandardCharsets.UTF_8);
+                    write_vu32(data.length << 1);
                     write_i8_array(data, 0, data.length);
                 }
             } else if (object instanceof Object) {
@@ -701,7 +701,7 @@ public final class GreyCat {
         static final Loader object_loader = (type, stream) -> {
             final Type programType = type.greycat.types[type.mapped_type_off];
             final java.lang.Object[] attributes = new java.lang.Object[programType.attributes.length];
-            byte[] previous_nullable = stream.read_i8_array(type.nullable_nb_bytes);
+            byte[] nullable_bitset = stream.read_i8_array(type.nullable_nb_bytes);
             int nullable_offset = -1;
             for (int attOffset = 0; attOffset < type.attributes.length; attOffset++) {
                 Type.Attribute att = type.attributes[attOffset];
@@ -709,7 +709,7 @@ public final class GreyCat {
                 if (att.nullable) {
                     ++nullable_offset;
                     // #define gc_object__is_not_null(bitset, offset) ((((bitset)[(offset) >> 3]) >> ((offset) & (gc_object_bitset_block_size - 1))) & 1)
-                    if (0 == (((previous_nullable[(nullable_offset) >> 3]) >> ((nullable_offset) & 7)) & 1)) {
+                    if (0 == (((nullable_bitset[(nullable_offset) >> 3]) >> ((nullable_offset) & 7)) & 1)) {
                         continue;
                     }
                 }
@@ -725,14 +725,10 @@ public final class GreyCat {
                     }
                     case PrimitiveType.OBJECT: {
                         Type fieldType = type.greycat.types[att.abiType];
-                        if (fieldType.is_native) {
-                            loadedField = fieldType.loader.load(fieldType, stream);
-                        } else {
-                            if (fieldType.is_abstract || att.sbiType == PrimitiveType.UNDEFINED) {
-                                fieldType = type.greycat.types[stream.read_vu32()];
-                            }
-                            loadedField = fieldType.loader.load(fieldType, stream);
+                        if (!fieldType.is_native && (fieldType.is_abstract || att.sbiType == PrimitiveType.UNDEFINED)) {
+                            fieldType = type.greycat.types[stream.read_vu32()];
                         }
+                        loadedField = fieldType.loader.load(fieldType, stream);
                         break;
                     }
                     default: {
@@ -936,13 +932,142 @@ public final class GreyCat {
         public void save(Stream stream) throws IOException {
             stream.write_i8(GreyCat.PrimitiveType.OBJECT);
             stream.write_vu32(type.offset);
-            if (attributes != null) { // TODO: rework
-                int offset = 0;
-                while (offset < attributes.length) {
-                    stream.write_object(get(offset));
-                    offset++;
+            saveValue(stream);
+        }
+
+        private void saveValue(Stream stream) throws IOException {
+            byte[] nullable_bitset = new byte[type.nullable_nb_bytes];
+            byte nullable_offset = 0;
+            Type.Attribute field;
+            for (int offset = 0; offset < type.attributes.length; ++offset) {
+                field = type.attributes[offset];
+                if (field.nullable) {
+                    nullable_bitset[nullable_offset >> 3] |= (null == get(offset) ? 0 : 1) << (nullable_offset & 7);
+                    ++nullable_offset;
                 }
             }
+            stream.write_i8_array(nullable_bitset, 0, nullable_bitset.length);
+
+            java.lang.Object value;
+            for (int offset = 0; offset < type.attributes.length; ++offset) {
+                field = type.attributes[offset];
+                value = get(offset);
+                if (field.nullable && null == value) {
+                    continue;
+                }
+
+                switch (field.sbiType) {
+                    case PrimitiveType.NULL:
+                        break;
+                    case PrimitiveType.BOOL:
+                        stream.write_bool((boolean) value);
+                        break;
+                    case PrimitiveType.CHAR:
+                        char c = (Character) value;
+                        if ((int) c > Stream.ASCII_MAX) {
+                            throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
+                        }
+                        stream.write_i8((byte) c);
+                        break;
+                    case PrimitiveType.INT:
+                        stream.write_vi64((long) value);
+                        break;
+                    case PrimitiveType.FLOAT:
+                        stream.write_f64((double) value);
+                        break;
+                    case PrimitiveType.NODE:
+                        stream.write_i64(((std_n.core.node) value).ref);
+                        break;
+                    case PrimitiveType.NODE_TIME:
+                        stream.write_i64(((std_n.core.nodeTime) value).ref);
+                        break;
+                    case PrimitiveType.NODE_INDEX:
+                        stream.write_i64(((std_n.core.nodeIndex) value).ref);
+                        break;
+                    case PrimitiveType.NODE_LIST:
+                        stream.write_i64(((std_n.core.nodeList) value).ref);
+                        break;
+                    case PrimitiveType.NODE_GEO:
+                        stream.write_i64(((std_n.core.nodeGeo) value).ref);
+                        break;
+                    case PrimitiveType.GEO:
+                        stream.write_i64(((std_n.core.geo) value).geocode);
+                        break;
+                    case PrimitiveType.TU2D:
+                        stream.write_i64(((std_n.core.ti2d) value).interleave());
+                        break;
+                    case PrimitiveType.TU3D:
+                        stream.write_i64(((std_n.core.ti3d) value).interleave());
+                        break;
+                    case PrimitiveType.TU4D:
+                        stream.write_i64(((std_n.core.ti4d) value).interleave());
+                        break;
+                    case PrimitiveType.TU5D:
+                        stream.write_i64(((std_n.core.ti5d) value).interleave());
+                        break;
+                    case PrimitiveType.TU6D:
+                        stream.write_i64(((std_n.core.ti6d) value).interleave());
+                        break;
+                    case PrimitiveType.TU10D:
+                        stream.write_i64(((std_n.core.ti10d) value).interleave());
+                        break;
+                    case PrimitiveType.TUF2D:
+                        stream.write_i64(((std_n.core.tf2d) value).interleave());
+                        break;
+                    case PrimitiveType.TUF3D:
+                        stream.write_i64(((std_n.core.tf3d) value).interleave());
+                        break;
+                    case PrimitiveType.TUF4D:
+                        stream.write_i64(((std_n.core.tf4d) value).interleave());
+                        break;
+                    case PrimitiveType.TIME:
+                        stream.write_i64(((std_n.core.time) value).value);
+                        break;
+                    case PrimitiveType.DURATION:
+                        stream.write_i64(((std_n.core.duration) value).value);
+                        break;
+//                    case PrimitiveType.CUBIC: // TODO
+//                        break;
+                    case PrimitiveType.ENUM:
+                        stream.write_vu32(((Enum) value).offset);
+                        break;
+                    case PrimitiveType.OBJECT:
+                        if (value instanceof String) {
+                            String string = (String) value;
+                            Integer symbolOffset = type.greycat.symbols_off_by_value.get(string);
+                            if (symbolOffset != null) {
+                                stream.write_vu32((symbolOffset << 1) | 1);
+                            } else {
+                                final byte[] data = string.getBytes(StandardCharsets.UTF_8);
+                                stream.write_vu32(data.length << 1);
+                                stream.write_i8_array(data, 0, data.length);
+                            }
+                        } else {
+                            Object object = (Object) value;
+                            if (field.abiType != object.type.offset) {
+                                stream.write_vu32(object.type.offset);
+                            }
+                            object.saveValue(stream);
+                        }
+                        break;
+//                    case PrimitiveType.BLOCK_REF: // TODO
+//                        break;
+//                    case PrimitiveType.FUNCTION: // TODO
+//                        break;
+                    case PrimitiveType.UNDEFINED:
+                        stream.write_object(value);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("wrong state");
+                }
+            }
+//            if (attributes != null) {
+//                int offset = 0;
+//                while (offset < attributes.length) {
+//                    stream.write_object(get(offset));
+//                    offset++;
+//                }
+//            }
         }
 
         @Override

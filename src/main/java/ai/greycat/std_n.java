@@ -28,6 +28,16 @@ class std_n {
                 super(type, null);
             }
 
+            @Override
+            public void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.OBJECT);
+                stream.write_vu32(type.offset);
+                stream.write_i32(attributes.length);
+                for (int offset = 0; offset < attributes.length; ++offset) {
+                    stream.write_object(attributes[offset]);
+                }
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 final int size = stream.read_i32();
                 final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
@@ -65,7 +75,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i64(localizedEpochS);
                 stream.write_i64(epochUs);
                 stream.write_i32(timeZone);
@@ -115,7 +125,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i32(code);
                 stream.write_i32(frames.length);
                 final byte[] msg_bytes = msg.getBytes(StandardCharsets.UTF_8);
@@ -297,7 +307,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 if (this.attributes == null) {
                     stream.write_i32(0);
                 } else {
@@ -338,7 +348,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i32(size());
                 for (Object key : map.keySet()) {
                     stream.write_object(key);
@@ -452,7 +462,7 @@ class std_n {
             @Override
             public final void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 if (attributes == null) {
                     stream.write_i32(0);
                 } else {
@@ -534,7 +544,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i32(cols);
                 stream.write_i32(rows);
                 stream.write_bool(meta != null);
@@ -623,7 +633,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i8((byte) shape.length);
                 stream.write_i8(tensorType);
                 int i = 0;
@@ -838,7 +848,7 @@ class std_n {
                 return "ti2d{ x0: " + x0 + ", x1: " + x1 + " }";
             }
 
-            private long interleave() {
+            long interleave() {
                 return interleave64_2d(((long) x0) + UINT32_MIN, ((long) x1) + UINT32_MIN);
             }
 
@@ -876,7 +886,7 @@ class std_n {
                 return "ti3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + " }";
             }
 
-            private long interleave() {
+            long interleave() {
                 return interleave64_3d(((long) x0) + UINT21_MIN, ((long) x1) + UINT21_MIN, ((long) x2) + UINT21_MIN);
             }
 
@@ -915,7 +925,7 @@ class std_n {
                 return "ti4d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + " }";
             }
 
-            private long interleave() {
+            long interleave() {
                 return interleave64_2d(
                         interleave64_2d(((int) x0) + UINT16_MIN, ((int) x2) + UINT16_MIN),
                         interleave64_2d(((int) x1) + UINT16_MIN, ((int) x3) + UINT16_MIN)
@@ -960,7 +970,7 @@ class std_n {
                 return "ti5d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + ", x4: " + x4 + " }";
             }
 
-            private long interleave() {
+            long interleave() {
                 return interleave64_5d(((int) x0) + UINT12_MIN, ((int) x1) + UINT12_MIN, ((int) x2) + UINT12_MIN,
                         ((int) x3) + UINT12_MIN, ((int) x4) + UINT12_MIN);
             }
@@ -1004,7 +1014,7 @@ class std_n {
                 return "ti6d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + ", x4: " + x4 + ", x5: " + x5 + " }";
             }
 
-            private long interleave() {
+            long interleave() {
                 return interleave64_3d(
                         interleave64_2d((((int) x0) + UINT10_MIN) & 0x3ff, (((int) x3) + UINT10_MIN) & 0x3ff),
                         interleave64_2d((((int) x1) + UINT10_MIN) & 0x3ff, (((int) x4) + UINT10_MIN) & 0x3ff),
@@ -1055,7 +1065,7 @@ class std_n {
                         ", x5: " + x5 + ", x6: " + x6 + ", x7: " + x7 + ", x8: " + x8 + ", x9: " + x9 + " }";
             }
 
-            private long interleave() {
+            long interleave() {
                 return interleave64_5d(
                         interleave64_2d((((char) x0) + UINT10_MIN) & 0x3f, (((char) x5) + UINT10_MIN) & 0x3f),
                         interleave64_2d((((char) x1) + UINT10_MIN) & 0x3f, (((char) x6) + UINT10_MIN) & 0x3f),
@@ -1103,7 +1113,7 @@ class std_n {
                 return "tf2d{ x0: " + x0 + ", x1: " + x1 + " }";
             }
 
-            private long interleave() {
+            long interleave() {
                 return interleave64_2d(
                         ((long) Float.floatToIntBits(x0)) + ti2d.UINT32_MIN,
                         ((long) Float.floatToIntBits(x1)) + ti2d.UINT32_MIN
@@ -1141,7 +1151,7 @@ class std_n {
                 return "tf3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + " }";
             }
 
-            public long interleave() {
+            long interleave() {
                 return interleave64_3d(
                         (((long) Float.floatToIntBits(x0)) >>> 11) + ti3d.UINT21_MIN,
                         (((long) Float.floatToIntBits(x1)) >>> 11) + ti3d.UINT21_MIN,
@@ -1180,7 +1190,7 @@ class std_n {
                 return "tf3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + " }";
             }
 
-            private long interleave() {
+            long interleave() {
                 return interleave64_2d(
                         interleave64_2d(
                                 ((Float.floatToIntBits(x0)) >>> 16) + ti4d.UINT16_MIN,
@@ -1268,7 +1278,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
@@ -1290,7 +1300,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
@@ -1321,7 +1331,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_f64(sum);
                 stream.write_f64(sumSq);
                 stream.write_i64(size);
@@ -1363,7 +1373,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
 //                stream.write_i32(size);
                 stream.write_i32(size);
                 stream.write_i32(data.length);
@@ -1411,7 +1421,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_f64(realMin);
                 stream.write_f64(realMax);
                 stream.write_f64(min);
@@ -1524,7 +1534,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i64(realMin);
                 stream.write_i64(realMax);
                 stream.write_i64(min);
@@ -1627,7 +1637,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i64(initialTime);
                 stream.write_i64(lastTime);
                 stream.write_i64(previousTime);
@@ -1684,7 +1694,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i32(infoOff);
                 stream.write_i32(data.length);
                 stream.write_i8_array(data, 0, data.length);
@@ -1710,7 +1720,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i64(size()); // width
                 stream.write_i32(size()); // size
                 stream.write_i32(size()); // capacity
@@ -1785,7 +1795,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i64(width);
                 stream.write_i8(sumType);
                 stream.write_f64(sum);
@@ -1847,7 +1857,7 @@ class std_n {
             @Override
             public void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_i32(type.offset);
+                stream.write_vu32(type.offset);
                 stream.write_i64(timeWidth);
                 stream.write_i8(sumType);
                 stream.write_f64(sum);
