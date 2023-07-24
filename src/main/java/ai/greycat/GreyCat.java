@@ -460,33 +460,33 @@ public final class GreyCat {
 
         private final static byte ASCII_MAX = 127;
 
-        public void write_object(java.lang.Object object) throws IOException {
-            if (object == null) {
+        public void write_object(java.lang.Object value) throws IOException {
+            if (value == null) {
                 write_i8(GreyCat.PrimitiveType.NULL);
-            } else if (object instanceof Boolean) {
+            } else if (value instanceof Boolean) {
                 write_i8(GreyCat.PrimitiveType.BOOL);
-                write_bool((Boolean) object);
-            } else if (object instanceof Character) {
+                write_bool((Boolean) value);
+            } else if (value instanceof Character) {
                 write_i8(GreyCat.PrimitiveType.CHAR);
-                char c = (Character) object;
+                char c = (Character) value;
                 if ((int) c > ASCII_MAX) {
                     throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
                 }
                 write_i8((byte) c);
-            } else if (object instanceof Long) {
+            } else if (value instanceof Long) {
                 write_i8(GreyCat.PrimitiveType.INT);
-                write_vi64((long) object);
-            } else if (object instanceof Integer) {
+                write_vi64((long) value);
+            } else if (value instanceof Integer) {
                 write_i8(GreyCat.PrimitiveType.INT);
-                write_vi64((int) object);
-            } else if (object instanceof Short) {
+                write_vi64((int) value);
+            } else if (value instanceof Short) {
                 write_i8(GreyCat.PrimitiveType.INT);
-                write_vi64((short) object);
-            } else if (object instanceof Double || object instanceof Float) {
+                write_vi64((short) value);
+            } else if (value instanceof Double || value instanceof Float) {
                 write_i8(GreyCat.PrimitiveType.FLOAT);
-                write_f64((double) object);
-            } else if (object instanceof String) {
-                String string = (String) object;
+                write_f64((double) value);
+            } else if (value instanceof String) {
+                String string = (String) value;
                 Integer symbolOffset = greycat.symbols_off_by_value.get(string);
                 if (symbolOffset != null) {
                     write_i8(GreyCat.PrimitiveType.STRING_LIT);
@@ -498,8 +498,10 @@ public final class GreyCat {
                     write_vu32(data.length << 1);
                     write_i8_array(data, 0, data.length);
                 }
-            } else if (object instanceof Object) {
-                ((Object) object).save(this);
+            } else if (value instanceof Object) {
+                Object object = (Object) value;
+                object.saveType(this);
+                object.save(this);
             } else {
                 throw new IllegalArgumentException("wrong state");
             }
@@ -837,7 +839,7 @@ public final class GreyCat {
         }
 
         @Override
-        protected final void saveValue(Stream stream) throws IOException {
+        protected final void save(Stream stream) throws IOException {
             stream.write_vu32(offset);
         }
 
@@ -933,17 +935,12 @@ public final class GreyCat {
             attributes[offset] = value;
         }
 
-        public final void save(Stream stream) throws IOException {
-            saveType(stream);
-            saveValue(stream);
-        }
-
         protected void saveType(Stream stream) throws IOException {
             stream.write_i8(GreyCat.PrimitiveType.OBJECT);
             stream.write_vu32(type.offset);
         }
 
-        protected void saveValue(Stream stream) throws IOException {
+        protected void save(Stream stream) throws IOException {
             byte[] nullable_bitset = new byte[type.nullable_nb_bytes];
             byte nullable_offset = 0;
             Type.Attribute field;
@@ -1002,7 +999,7 @@ public final class GreyCat {
                     case PrimitiveType.DURATION:
 //                    case PrimitiveType.CUBIC: // TODO
                     case PrimitiveType.ENUM:
-                        ((Object) value).saveValue(stream);
+                        ((Object) value).save(stream);
                         break;
                     case PrimitiveType.OBJECT:
                         if (value instanceof String) {
@@ -1020,7 +1017,7 @@ public final class GreyCat {
                             if (field.abiType != object.type.offset) {
                                 stream.write_vu32(object.type.offset);
                             }
-                            object.saveValue(stream);
+                            object.save(stream);
                         }
                         break;
 //                    case PrimitiveType.BLOCK_REF: // TODO

@@ -29,7 +29,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(attributes.length);
                 for (int offset = 0; offset < attributes.length; ++offset) {
                     stream.write_object(attributes[offset]);
@@ -71,7 +71,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(localizedEpochS);
                 stream.write_i64(epochUs);
                 stream.write_i32(timeZone);
@@ -99,7 +99,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(value);
             }
 
@@ -123,7 +123,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(code);
                 stream.write_i32(frames.length);
                 final byte[] msg_bytes = msg.getBytes(StandardCharsets.UTF_8);
@@ -201,7 +201,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(geocode);
             }
 
@@ -307,7 +307,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 if (this.attributes == null) {
                     stream.write_i32(0);
                 } else {
@@ -346,7 +346,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(size());
                 for (Object key : map.keySet()) {
                     stream.write_object(key);
@@ -400,7 +400,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(ref);
             }
 
@@ -425,7 +425,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(ref);
             }
 
@@ -453,7 +453,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(ref);
             }
 
@@ -470,7 +470,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.OBJECT);
                 stream.write_vu32(type.offset);
                 if (attributes == null) {
@@ -512,7 +512,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(ref);
             }
 
@@ -537,7 +537,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(ref);
             }
 
@@ -560,7 +560,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(cols);
                 stream.write_i32(rows);
                 stream.write_bool(meta != null);
@@ -647,7 +647,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8((byte) shape.length);
                 stream.write_i8(tensorType);
                 int i = 0;
@@ -852,7 +852,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -895,7 +895,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -939,7 +939,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -989,7 +989,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -1038,7 +1038,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -1093,7 +1093,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -1147,7 +1147,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -1190,7 +1190,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -1234,7 +1234,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -1287,7 +1287,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(value);
             }
 
@@ -1340,7 +1340,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
@@ -1360,7 +1360,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
@@ -1389,7 +1389,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_f64(sum);
                 stream.write_f64(sumSq);
                 stream.write_i64(size);
@@ -1429,7 +1429,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
 //                stream.write_i32(size);
                 stream.write_i32(size);
                 stream.write_i32(data.length);
@@ -1475,7 +1475,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_f64(realMin);
                 stream.write_f64(realMax);
                 stream.write_f64(min);
@@ -1586,7 +1586,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(realMin);
                 stream.write_i64(realMax);
                 stream.write_i64(min);
@@ -1687,7 +1687,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(initialTime);
                 stream.write_i64(lastTime);
                 stream.write_i64(previousTime);
@@ -1742,7 +1742,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(infoOff);
                 stream.write_i32(data.length);
                 stream.write_i8_array(data, 0, data.length);
@@ -1766,7 +1766,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(size()); // width
                 stream.write_i32(size()); // size
                 stream.write_i32(size()); // capacity
@@ -1839,7 +1839,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(width);
                 stream.write_i8(sumType);
                 stream.write_f64(sum);
@@ -1899,7 +1899,7 @@ class std_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(timeWidth);
                 stream.write_i8(sumType);
                 stream.write_f64(sum);

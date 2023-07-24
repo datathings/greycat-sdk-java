@@ -37,7 +37,9 @@ public class Sandbox {
             System.out.println(res.getClass());
             System.out.println(res);
             try {
-                ((GreyCat.Object) res).save(stream);
+                GreyCat.Object object = (GreyCat.Object) res;
+                object.saveType(stream);
+                object.save(stream);
             } catch (ClassCastException ex) {
                 if (res instanceof Boolean) {
                     stream.write_i8(GreyCat.PrimitiveType.BOOL);

@@ -63,7 +63,7 @@ class algebra_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(degree);
                 stream.write_i64(data.length);
                 stream.write_f64(x_start);
@@ -151,7 +151,7 @@ class algebra_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(bestDim);
                 stream.write_i32(selectedDim);
                 stream.write_f64(threshold);
@@ -209,7 +209,7 @@ class algebra_n {
             }
 
             @Override
-            protected void saveValue(GreyCat.Stream stream) throws IOException {
+            protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(count);
                 stream.write_object(min);
                 stream.write_object(max);
