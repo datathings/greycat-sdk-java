@@ -5,22 +5,6 @@ import java.lang.reflect.Field;
 
 public class Sandbox {
 
-    private final static Field GREYCAT__SYMBOLS_OFF_BY_VALUE;
-
-    static {
-        getField:
-        {
-            for (Field field : GreyCat.class.getDeclaredFields()) {
-                if ("symbols_off_by_value".equals(field.getName())) {
-                    field.setAccessible(true);
-                    GREYCAT__SYMBOLS_OFF_BY_VALUE = field;
-                    break getField;
-                }
-            }
-            throw new RuntimeException();
-        }
-    }
-
     public static void main(String... args) throws Exception {
 
 
