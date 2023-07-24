@@ -32,6 +32,7 @@ fn write_std(out: AbiWriter) {
 }
 
 fn write_core(out: AbiWriter) {
+  out.write(null);
   out.write(true);
   out.write('*');
   // 1 byte

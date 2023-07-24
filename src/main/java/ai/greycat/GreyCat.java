@@ -22,6 +22,25 @@ public final class GreyCat {
             return stream.read();
         }
 
+        public int available() {
+            try {
+                return stream.is.available();
+            } catch (IOException ex) {
+                return 0;
+            }
+        }
+    }
+
+    public static final class AbiWriter {
+
+        private final Stream stream;
+        private AbiWriter(Stream stream) {
+            this.stream = stream;
+        }
+
+        public void write(java.lang.Object object) throws IOException {
+            stream.write(object);
+        }
     }
 
     public AbiReader openAbiRead(String path) throws IOException {
@@ -30,24 +49,30 @@ public final class GreyCat {
         return new AbiReader(s);
     }
 
-    public static final class Stream {
+    public AbiWriter openAbiWrite(String path) throws IOException {
+        Stream s = new Stream(this, new PrintStream(new FileOutputStream(path)));
+        s.writeAbiHeader();
+        return new AbiWriter(s);
+    }
+
+    static final class Stream {
         private final byte[] tmp = new byte[8];
         private InputStream is;
         private OutputStream os;
 
         public final GreyCat greycat;
 
-        public Stream(GreyCat greycat, OutputStream os) {
+        Stream(GreyCat greycat, OutputStream os) {
             this.greycat = greycat;
             this.os = os;
         }
 
-        public Stream(GreyCat greycat, InputStream is) {
+        Stream(GreyCat greycat, InputStream is) {
             this.greycat = greycat;
             this.is = is;
         }
 
-        public void readAbiHeader() throws IOException {
+        void readAbiHeader() throws IOException {
             int abi_major = this.read_i16();
             if (abi_major != GreyCat.abi_proto) {
                 throw new RuntimeException("wrong ABI protocol major version");
@@ -62,13 +87,13 @@ public final class GreyCat {
             }
         }
 
-        public void writeAbiHeader() throws IOException {
+        void writeAbiHeader() throws IOException {
             this.write_i16(GreyCat.abi_proto);
             this.write_i16(greycat.abi_magic);
             this.write_i32(greycat.abi_version);
         }
 
-        public void close() throws IOException {
+        void close() throws IOException {
             if (is != null) {
                 is.close();
             }
@@ -77,19 +102,19 @@ public final class GreyCat {
             }
         }
 
-        public void write_i8(final byte b) throws IOException {
+        void write_i8(final byte b) throws IOException {
             os.write(b);
         }
 
-        public void write_bool(final boolean b) throws IOException {
+        void write_bool(final boolean b) throws IOException {
             os.write((byte) (b ? 1 : 0));
         }
 
-        public void write_i8_array(final byte[] bytes, final int offset, final int length) throws IOException {
+        void write_i8_array(final byte[] bytes, final int offset, final int length) throws IOException {
             os.write(bytes, offset, length);
         }
 
-        public void write_i32(final int i) throws IOException {
+        void write_i32(final int i) throws IOException {
             tmp[0] = (byte) (i & 0xFF);
             tmp[1] = (byte) ((i >>> 8) & 0xFF);
             tmp[2] = (byte) ((i >>> 16) & 0xFF);
@@ -97,7 +122,7 @@ public final class GreyCat {
             os.write(tmp, 0, 4);
         }
 
-        public void write_vu32(final int i) throws IOException {
+        void write_vu32(final int i) throws IOException {
             byte[] bytes = new byte[5];
             byte nbytes = pack_varu32(i, bytes);
             os.write(bytes, 0, nbytes);
@@ -138,13 +163,13 @@ public final class GreyCat {
             return 5;
         }
 
-        public void write_i16(final int i) throws IOException {
+        void write_i16(final int i) throws IOException {
             tmp[0] = (byte) (i & 0xFF);
             tmp[1] = (byte) ((i >>> 8) & 0xFF);
             os.write(tmp, 0, 2);
         }
 
-        public void write_i64(final long l) throws IOException {
+        void write_i64(final long l) throws IOException {
             tmp[0] = (byte) (l & 0xFF);
             tmp[1] = (byte) ((l >>> 8) & 0xFF);
             tmp[2] = (byte) ((l >>> 16) & 0xFF);
@@ -156,7 +181,7 @@ public final class GreyCat {
             os.write(tmp, 0, 8);
         }
 
-        public void write_vi64(final long l) throws IOException {
+        void write_vi64(final long l) throws IOException {
             byte[] bytes = new byte[9];
             byte nbytes = pack_varu64(unsign_of(l), bytes);
             os.write(bytes, 0, nbytes);
@@ -245,7 +270,7 @@ public final class GreyCat {
             return (x << 1) ^ (x >> 63);
         }
 
-        public void write_f64(final double d) throws IOException {
+        void write_f64(final double d) throws IOException {
             write_i64(Double.doubleToLongBits(d));
         }
 
@@ -460,7 +485,7 @@ public final class GreyCat {
 
         private final static byte ASCII_MAX = 127;
 
-        public void write_object(java.lang.Object value) throws IOException {
+        void write(java.lang.Object value) throws IOException {
             if (value == null) {
                 write_i8(GreyCat.PrimitiveType.NULL);
             } else if (value instanceof Boolean) {
@@ -1025,7 +1050,7 @@ public final class GreyCat {
 //                    case PrimitiveType.FUNCTION: // TODO
 //                        break;
                     case PrimitiveType.UNDEFINED:
-                        stream.write_object(value);
+                        stream.write(value);
                         break;
                     default:
                         throw new IllegalArgumentException("wrong state");
@@ -1373,7 +1398,7 @@ public final class GreyCat {
             b.writeAbiHeader();
             int paramOffset = 0;
             while (paramOffset < parameters.length) {
-                b.write_object(parameters[paramOffset]);
+                b.write(parameters[paramOffset]);
                 paramOffset++;
             }
             b.close();

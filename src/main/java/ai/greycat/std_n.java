@@ -32,7 +32,7 @@ class std_n {
             protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(attributes.length);
                 for (int offset = 0; offset < attributes.length; ++offset) {
-                    stream.write_object(attributes[offset]);
+                    stream.write(attributes[offset]);
                 }
             }
 
@@ -94,12 +94,12 @@ class std_n {
             }
 
             @Override
-            protected void saveType(GreyCat.Stream stream) throws IOException {
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.DURATION);
             }
 
             @Override
-            protected void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(value);
             }
 
@@ -139,7 +139,7 @@ class std_n {
                     offset++;
                 }
                 stream.write_i8_array(msg_bytes, 0, msg_bytes.length);
-                stream.write_object(value);
+                stream.write(value);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
@@ -349,8 +349,8 @@ class std_n {
             protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i32(size());
                 for (Object key : map.keySet()) {
-                    stream.write_object(key);
-                    stream.write_object(get(key));
+                    stream.write(key);
+                    stream.write(get(key));
                 }
             }
 
@@ -480,7 +480,7 @@ class std_n {
                     int i = 0;
                     while (i < attributes.length) {
                         Object object = attributes[i];
-                        stream.write_object(object);
+                        stream.write(object);
                         i++;
                     }
                 }
@@ -582,7 +582,7 @@ class std_n {
                 }
                 int i = 0;
                 while (i < data.length) {
-                    stream.write_object(data[i]);
+                    stream.write(data[i]);
                     i++;
                 }
             }
@@ -1773,7 +1773,7 @@ class std_n {
                 stream.write_i64(size()); // TODO: head - values
                 stream.write_i64(0); // TODO: tail - values
                 for (T t : queue) {
-                    stream.write_object(t);
+                    stream.write(t);
                 }
             }
 
@@ -1850,7 +1850,7 @@ class std_n {
                 stream.write_i64(toTail);
                 int i = 0;
                 while (i < values.length) {
-                    stream.write_object(values[i]);
+                    stream.write(values[i]);
                     i++;
                 }
             }
@@ -1911,7 +1911,7 @@ class std_n {
                 int i = 0;
                 while (i < valueTimes.length) {
                     final ValueTime valueTime = valueTimes[i];
-                    stream.write_object(valueTime.value);
+                    stream.write(valueTime.value);
                     stream.write_i64(valueTime.time);
                     i++;
                 }

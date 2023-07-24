@@ -155,15 +155,15 @@ class algebra_n {
                 stream.write_i32(bestDim);
                 stream.write_i32(selectedDim);
                 stream.write_f64(threshold);
-                stream.write_object(eigenVectors);
-                stream.write_object(eigenValues);
-                stream.write_object(avg);
-                stream.write_object(std);
-                stream.write_object(correlation);
-                stream.write_object(explainedVariance);
-                stream.write_object(spaceOrigin);
-                stream.write_object(spaceCropped);
-                stream.write_object(dimInfo);
+                stream.write(eigenVectors);
+                stream.write(eigenValues);
+                stream.write(avg);
+                stream.write(std);
+                stream.write(correlation);
+                stream.write(explainedVariance);
+                stream.write(spaceOrigin);
+                stream.write(spaceCropped);
+                stream.write(dimInfo);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
@@ -211,10 +211,10 @@ class algebra_n {
             @Override
             protected void save(GreyCat.Stream stream) throws IOException {
                 stream.write_i64(count);
-                stream.write_object(min);
-                stream.write_object(max);
-                stream.write_object(sum);
-                stream.write_object(sum_sq);
+                stream.write(min);
+                stream.write(max);
+                stream.write(sum);
+                stream.write(sum_sq);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
