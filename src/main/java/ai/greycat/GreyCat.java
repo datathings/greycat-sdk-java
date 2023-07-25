@@ -288,12 +288,10 @@ public final class GreyCat {
                     value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
                     if (0 == (current & 0x80)) {
                         is.reset();
-                        int toSkip = offset + 1;
-                        do {
-                            toSkip -= is.skip(toSkip);
-                        } while (toSkip > 0 && is.available() > 0);
-                        if (toSkip > 0) {
-                            throw new IOException("wrong state");
+                        for (int to_skip = offset + 1; to_skip > 0; to_skip -= is.skip(to_skip)) {
+                            if (is.available() == 0) {
+                                throw new IOException("wrong state");
+                            }
                         }
                         return value;
                     }
@@ -337,12 +335,10 @@ public final class GreyCat {
                     sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
                     if (0 == (current & 0x80)) {
                         is.reset();
-                        int toSkip = offset + 1;
-                        do {
-                            toSkip -= is.skip(toSkip);
-                        } while (toSkip > 0 && is.available() > 0);
-                        if (toSkip > 0) {
-                            throw new IOException("wrong state");
+                        for (int to_skip = offset + 1; to_skip > 0; to_skip -= is.skip(to_skip)) {
+                            if (is.available() == 0) {
+                                throw new IOException("wrong state");
+                            }
                         }
                         return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
                     }
