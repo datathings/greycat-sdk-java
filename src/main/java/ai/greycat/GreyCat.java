@@ -277,29 +277,18 @@ public final class GreyCat {
         }
 
         int read_vu32() throws IOException {
-            byte header = read_i8();
-            byte nbytes = len_varu32(header);
-            byte[] bytes = new byte[nbytes];
-            bytes[0] = header;
-            switch (nbytes) {
-                case 5:
-                    is.read(bytes, 1, 4);
-                    break;
-                case 4:
-                    is.read(bytes, 1, 3);
-                    break;
-                case 3:
-                    is.read(bytes, 1, 2);
-                    break;
-                case 2:
-                    is.read(bytes, 1, 1);
-                    break;
-                case 1:
-                    break;
-                default:
-                    throw new IOException("wrong state");
+            byte current;
+            int value = 0;
+            for (int i = 0; i < 4; ++i) {
+                current = read_i8();
+                value |= (Byte.toUnsignedLong(current) & 0x7f) << (i * 7);
+                if (0 == (current & 0x80)) {
+                    return value;
+                }
             }
-            return unpack_varu32(bytes);
+            current = read_i8();
+            value |= (Byte.toUnsignedLong(current)) << 28;
+            return value;
         }
 
         long read_i64() throws IOException {
@@ -380,10 +369,19 @@ public final class GreyCat {
             os.write(tmp, 0, 4);
         }
 
-        void write_vu32(final int i) throws IOException {
-            byte[] bytes = new byte[5];
-            byte nbytes = pack_varu32(i, bytes);
-            os.write(bytes, 0, nbytes);
+        void write_vu32(int i) throws IOException {
+            byte[] packed_value = new byte[5];
+            for (int offset = 0; offset < 4; ++offset) {
+                packed_value[offset] = (byte) (i & 0x7f);
+                if (Integer.compareUnsigned(i, 0x80) < 0) {
+                    write_i8_array(packed_value, 0, offset + 1);
+                    return;
+                }
+                packed_value[offset] |= 0x80;
+                i >>>= 7; // TODO: double right shift instead?
+            }
+            packed_value[4] = (byte) i;
+            write_i8_array(packed_value, 0, 5);
         }
 
         void write_i64(final long l) throws IOException {
@@ -398,20 +396,20 @@ public final class GreyCat {
             os.write(tmp, 0, 8);
         }
 
-        void write_vi64(final long value) throws IOException {
+        void write_vi64(final long l) throws IOException {
             byte[] packed_value = new byte[9];
-            long sign_swapped_value = (value << 1) ^ (value >> 63);
+            long sign_swapped_l = (l << 1) ^ (l >> 63);
             for (int offset = 0; offset < 8; ++offset) {
-                packed_value[offset] = (byte) (sign_swapped_value & 0x7f);
-                if (Long.compareUnsigned(sign_swapped_value, 0x80) < 0) {
-                    os.write(packed_value, 0, offset + 1);
+                packed_value[offset] = (byte) (sign_swapped_l & 0x7f);
+                if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                    write_i8_array(packed_value, 0, offset + 1);
                     return;
                 }
                 packed_value[offset] |= 0x80;
-                sign_swapped_value >>>= 7; // TODO: double right shift instead?
+                sign_swapped_l >>>= 7; // TODO: double right shift instead?
             }
-            packed_value[8] = (byte) sign_swapped_value;
-            os.write(packed_value, 0, 9);
+            packed_value[8] = (byte) sign_swapped_l;
+            write_i8_array(packed_value, 0, 9);
         }
 
         void write_f64(final double d) throws IOException {
@@ -420,75 +418,6 @@ public final class GreyCat {
 
         void write_i8_array(final byte[] bytes, final int offset, final int length) throws IOException {
             os.write(bytes, offset, length);
-        }
-
-        private static byte len_varu32(byte header) {
-            if ((header & 0x80) == 0) {
-                return 1;
-            }
-            if ((header & 0x40) == 0) {
-                return 2;
-            }
-            if ((header & 0x20) == 0) {
-                return 3;
-            }
-            if ((header & 0x10) == 0) {
-                return 4;
-            }
-            return 5;
-        }
-
-        private static byte pack_varu32(final int x, byte[] bytes) {
-            if (Integer.compareUnsigned(x, 0x80) < 0) {
-                bytes[0] = (byte) (x & 0x7f);
-                return 1;
-            }
-            if (Long.compareUnsigned(x, 1L << 14) < 0) {
-                bytes[1] = (byte) ((x >> 6) & 0xff);
-                bytes[0] = (byte) (x & 0x3f);
-                bytes[0] |= 0x80;
-                return 2;
-            }
-            if (Long.compareUnsigned(x, 1L << 21) < 0) {
-                bytes[2] = (byte) ((x >> 13) & 0xff);
-                bytes[1] = (byte) ((x >> 5) & 0xff);
-                bytes[0] = (byte) (x & 0x1f);
-                bytes[0] |= 0xc0;
-                return 3;
-            }
-            if (Long.compareUnsigned(x, 1L << 28) < 0) {
-                bytes[3] = (byte) ((x >> 20) & 0xff);
-                bytes[2] = (byte) ((x >> 12) & 0xff);
-                bytes[1] = (byte) ((x >> 4) & 0xff);
-                bytes[0] = (byte) (x & 0xf);
-                bytes[0] |= 0xe0;
-                return 4;
-            }
-            bytes[4] = (byte) ((x >> 27) & 0xff);
-            bytes[3] = (byte) ((x >> 19) & 0xff);
-            bytes[2] = (byte) ((x >> 11) & 0xff);
-            bytes[1] = (byte) ((x >> 3) & 0xff);
-            bytes[0] = (byte) (x & 0x7);
-            bytes[0] |= 0xf0;
-            return 5;
-        }
-
-        private static int unpack_varu32(byte[] bytes) throws IOException {
-            byte n = (byte) bytes.length;
-            switch (n) {
-                case 1:
-                    return ((int) bytes[0]) & 0x7f;
-                case 2:
-                    return (((int) bytes[0]) & 0x3f) | (Byte.toUnsignedInt(bytes[1]) << 6);
-                case 3:
-                    return (((int) bytes[0]) & 0x1f) | (Byte.toUnsignedInt(bytes[1]) << 5) | (Byte.toUnsignedInt(bytes[2]) << 13);
-                case 4:
-                    return (((int) bytes[0]) & 0x0f) | (Byte.toUnsignedInt(bytes[1]) << 4) | (Byte.toUnsignedInt(bytes[2]) << 12) | (Byte.toUnsignedInt(bytes[3]) << 20);
-                case 5:
-                    return (((int) bytes[0]) & 0x07) | (Byte.toUnsignedInt(bytes[1]) << 3) | (Byte.toUnsignedInt(bytes[2]) << 11) | (Byte.toUnsignedInt(bytes[3]) << 19) | (Byte.toUnsignedInt(bytes[4]) << 27);
-                default:
-                    throw new IOException("wrong state");
-            }
         }
 
         @FunctionalInterface
@@ -795,11 +724,11 @@ public final class GreyCat {
             set(type.attribute_off_by_name.get(attributeName), value);
         }
 
-        public final java.lang.Object get(int offset) {
+        protected java.lang.Object get(int offset) {
             return attributes[offset];
         }
 
-        public final void set(int offset, java.lang.Object value) {
+        protected void set(int offset, java.lang.Object value) {
             attributes[offset] = value;
         }
 
