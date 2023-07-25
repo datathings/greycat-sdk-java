@@ -279,39 +279,49 @@ public final class GreyCat {
         int read_vu32() throws IOException {
             byte current;
             int value = 0;
-
-            if (is.markSupported()) {
-                is.mark(5);
-                byte[] bytes = read_i8_array(Math.min(is.available(), 5));
-                for (int offset = 0; offset < Math.min(bytes.length, 4); ++offset) {
-                    current = bytes[offset];
-                    value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
-                    if (0 == (current & 0x80)) {
-                        is.reset();
-                        for (int to_skip = offset + 1; to_skip > 0; to_skip -= is.skip(to_skip)) {
-                            if (is.available() == 0) {
-                                throw new IOException("wrong state");
-                            }
-                        }
-                        return value;
-                    }
-                }
-                if (bytes.length < 5) {
-                    throw new IOException("wrong state");
-                }
-                current = bytes[4];
-
-            } else {
-                for (int offset = 0; offset < 4; ++offset) {
-                    current = read_i8();
-                    value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
-                    if (0 == (current & 0x80)) {
-                        return value;
-                    }
-                }
-                current = read_i8();
+            is.mark(5);
+            byte[] bytes = new byte[5];
+            if (-1 == is.read(bytes, 0, 5)) {
+                throw new IOException();
             }
 
+            current = bytes[0];
+            value |= Byte.toUnsignedLong(current) & 0x7f;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(1);
+                return value;
+            }
+
+            current = bytes[1];
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 7;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(2);
+                return value;
+            }
+
+            current = bytes[2];
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 14;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(3);
+                return value;
+            }
+
+            current = bytes[3];
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 21;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(4);
+                return value;
+            }
+
+            current = bytes[4];
             value |= (Byte.toUnsignedLong(current)) << 28;
             return value;
         }
@@ -326,39 +336,85 @@ public final class GreyCat {
         long read_vi64() throws IOException {
             byte current;
             long sign_swapped_value = 0;
-
-            if (is.markSupported()) {
-                is.mark(9);
-                byte[] bytes = read_i8_array(Math.min(is.available(), 9));
-                for (int offset = 0; offset < Math.min(bytes.length, 8); ++offset) {
-                    current = bytes[offset];
-                    sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
-                    if (0 == (current & 0x80)) {
-                        is.reset();
-                        for (int to_skip = offset + 1; to_skip > 0; to_skip -= is.skip(to_skip)) {
-                            if (is.available() == 0) {
-                                throw new IOException("wrong state");
-                            }
-                        }
-                        return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
-                    }
-                }
-                if (bytes.length < 9) {
-                    throw new IOException("wrong state");
-                }
-                current = bytes[8];
-
-            } else {
-                for (int offset = 0; offset < 8; ++offset) {
-                    current = read_i8();
-                    sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
-                    if (0 == (current & 0x80)) {
-                        return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
-                    }
-                }
-                current = read_i8();
+            is.mark(9);
+            byte[] bytes = new byte[9];
+            if (-1 == is.read(bytes, 0, 9)) {
+                throw new IOException();
             }
 
+            current = bytes[0];
+            sign_swapped_value |= Byte.toUnsignedLong(current) & 0x7f;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(1);
+                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            }
+
+            current = bytes[1];
+            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 7;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(2);
+                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            }
+
+            current = bytes[2];
+            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 14;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(3);
+                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            }
+
+            current = bytes[3];
+            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 21;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(4);
+                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            }
+
+            current = bytes[4];
+            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 28;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(5);
+                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            }
+
+            current = bytes[5];
+            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 35;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(6);
+                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            }
+
+            current = bytes[6];
+            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 42;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(7);
+                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            }
+
+            current = bytes[7];
+            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 49;
+            if (0 == (current & 0x80)) {
+                is.reset();
+                //noinspection ResultOfMethodCallIgnored
+                is.skip(8);
+                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            }
+
+            current = bytes[8];
             sign_swapped_value |= (Byte.toUnsignedLong(current)) << 56;
             return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
         }
@@ -369,13 +425,8 @@ public final class GreyCat {
 
         byte[] read_i8_array(final int len) throws IOException {
             byte[] newArr = new byte[len];
-            int to_read = len;
-            while (to_read > 0) {
-                int read = is.read(newArr, len - to_read, to_read);
-                if (read == -1) {
-                    throw new IOException();
-                }
-                to_read -= read;
+            if (is.read(newArr, 0, len) == -1) {
+                throw new IOException();
             }
             return newArr;
         }
@@ -424,18 +475,43 @@ public final class GreyCat {
             os.write(tmp, 0, 4);
         }
 
-        void write_vu32(int i) throws IOException {
+        void write_vu32(final int i) throws IOException {
             byte[] packed_value = new byte[5];
-            for (int offset = 0; offset < 4; ++offset) {
-                packed_value[offset] = (byte) (i & 0x7f);
-                if (Integer.compareUnsigned(i, 0x80) < 0) {
-                    write_i8_array(packed_value, 0, offset + 1);
-                    return;
-                }
-                packed_value[offset] |= 0x80;
-                i >>>= 7; // TODO: double right shift instead?
+            int value = i;
+
+            packed_value[0] = (byte) (value & 0x7f);
+            if (Integer.compareUnsigned(value, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 1);
+                return;
             }
-            packed_value[4] = (byte) i;
+
+            packed_value[0] |= 0x80;
+            value >>>= 7;
+            packed_value[1] = (byte) (value & 0x7f);
+            if (Integer.compareUnsigned(value, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 2);
+                return;
+            }
+
+            packed_value[1] |= 0x80;
+            value >>>= 7;
+            packed_value[2] = (byte) (value & 0x7f);
+            if (Integer.compareUnsigned(value, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 3);
+                return;
+            }
+
+            packed_value[2] |= 0x80;
+            value >>>= 7;
+            packed_value[3] = (byte) (value & 0x7f);
+            if (Integer.compareUnsigned(value, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 4);
+                return;
+            }
+
+            packed_value[3] |= 0x80;
+            value >>>= 7;
+            packed_value[4] = (byte) value;
             write_i8_array(packed_value, 0, 5);
         }
 
@@ -454,15 +530,71 @@ public final class GreyCat {
         void write_vi64(final long l) throws IOException {
             byte[] packed_value = new byte[9];
             long sign_swapped_l = (l << 1) ^ (l >> 63);
-            for (int offset = 0; offset < 8; ++offset) {
-                packed_value[offset] = (byte) (sign_swapped_l & 0x7f);
-                if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
-                    write_i8_array(packed_value, 0, offset + 1);
-                    return;
-                }
-                packed_value[offset] |= 0x80;
-                sign_swapped_l >>>= 7; // TODO: double right shift instead?
+
+            packed_value[0] = (byte) (sign_swapped_l & 0x7f);
+            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 1);
+                return;
             }
+
+            packed_value[0] |= 0x80;
+            sign_swapped_l >>>= 7;
+            packed_value[1] = (byte) sign_swapped_l;
+            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 2);
+                return;
+            }
+
+            packed_value[1] |= 0x80;
+            sign_swapped_l >>>= 7;
+            packed_value[2] = (byte) sign_swapped_l;
+            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 3);
+                return;
+            }
+
+            packed_value[2] |= 0x80;
+            sign_swapped_l >>>= 7;
+            packed_value[3] = (byte) sign_swapped_l;
+            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 4);
+                return;
+            }
+
+            packed_value[3] |= 0x80;
+            sign_swapped_l >>>= 7;
+            packed_value[4] = (byte) sign_swapped_l;
+            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 5);
+                return;
+            }
+
+            packed_value[4] |= 0x80;
+            sign_swapped_l >>>= 7;
+            packed_value[5] = (byte) sign_swapped_l;
+            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 6);
+                return;
+            }
+
+            packed_value[5] |= 0x80;
+            sign_swapped_l >>>= 7;
+            packed_value[6] = (byte) sign_swapped_l;
+            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 7);
+                return;
+            }
+
+            packed_value[6] |= 0x80;
+            sign_swapped_l >>>= 7;
+            packed_value[7] = (byte) sign_swapped_l;
+            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+                write_i8_array(packed_value, 0, 8);
+                return;
+            }
+
+            packed_value[7] |= 0x80;
+            sign_swapped_l >>>= 7;
             packed_value[8] = (byte) sign_swapped_l;
             write_i8_array(packed_value, 0, 9);
         }
@@ -913,7 +1045,9 @@ public final class GreyCat {
     public final static class Files {
 
         public static java.lang.Object get(GreyCat greycat, String path) throws IOException {
-            String url = greycat.runtime_url + "/files/" + path;
+            String url = greycat.runtime_url +
+                    "/files/" +
+                    path;
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/octet-stream");
