@@ -282,7 +282,7 @@ public final class GreyCat {
 
             if (is.markSupported()) {
                 is.mark(5);
-                byte[] bytes = read_i8_array(Math.min(is.available(), 9));
+                byte[] bytes = read_i8_array(Math.min(is.available(), 5));
                 for (int offset = 0; offset < Math.min(bytes.length, 4); ++offset) {
                     current = bytes[offset];
                     value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
