@@ -279,14 +279,38 @@ public final class GreyCat {
         int read_vu32() throws IOException {
             byte current;
             int value = 0;
-            for (int offset = 0; offset < 4; ++offset) {
-                current = read_i8();
-                value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
-                if (0 == (current & 0x80)) {
-                    return value;
+
+            if (is.markSupported()) {
+                is.mark(5);
+                byte[] bytes = read_i8_array(5);
+                for (int offset = 0; offset < 4; ++offset) {
+                    current = bytes[offset];
+                    value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
+                    if (0 == (current & 0x80)) {
+                        is.reset();
+                        int toSkip = offset + 1;
+                        do {
+                            toSkip -= is.skip(toSkip);
+                        } while (toSkip > 0 && is.available() > 0);
+                        if (toSkip > 0) {
+                            throw new IOException("wrong state");
+                        }
+                        return value;
+                    }
                 }
+                current = bytes[4];
+
+            } else {
+                for (int offset = 0; offset < 4; ++offset) {
+                    current = read_i8();
+                    value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
+                    if (0 == (current & 0x80)) {
+                        return value;
+                    }
+                }
+                current = read_i8();
             }
-            current = read_i8();
+
             value |= (Byte.toUnsignedLong(current)) << 28;
             return value;
         }
@@ -301,14 +325,38 @@ public final class GreyCat {
         long read_vi64() throws IOException {
             byte current;
             long sign_swapped_value = 0;
-            for (int offset = 0; offset < 8; ++offset) {
-                current = read_i8();
-                sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
-                if (0 == (current & 0x80)) {
-                    return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+
+            if (is.markSupported()) {
+                is.mark(9);
+                byte[] bytes = read_i8_array(9);
+                for (int offset = 0; offset < bytes.length; ++offset) {
+                    current = bytes[offset];
+                    sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
+                    if (0 == (current & 0x80)) {
+                        is.reset();
+                        int toSkip = offset + 1;
+                        do {
+                            toSkip -= is.skip(toSkip);
+                        } while (toSkip > 0 && is.available() > 0);
+                        if (toSkip > 0) {
+                            throw new IOException("wrong state");
+                        }
+                        return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                    }
                 }
+                current = bytes[8];
+
+            } else {
+                for (int offset = 0; offset < 8; ++offset) {
+                    current = read_i8();
+                    sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
+                    if (0 == (current & 0x80)) {
+                        return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                    }
+                }
+                current = read_i8();
             }
-            current = read_i8();
+
             sign_swapped_value |= (Byte.toUnsignedLong(current)) << 56;
             return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
         }
