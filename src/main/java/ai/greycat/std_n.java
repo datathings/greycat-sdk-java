@@ -30,14 +30,14 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i32(attributes.length);
+                stream.write_vu32(attributes.length);
                 for (int offset = 0; offset < attributes.length; ++offset) {
                     stream.write(attributes[offset]);
                 }
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int size = stream.read_i32();
+                final int size = stream.read_vu32();
                 final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
                 array.attributes = new java.lang.Object[size];
                 for (int offset = 0; offset < size; offset++) {
@@ -72,16 +72,16 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(localizedEpochS);
-                stream.write_i64(epochUs);
-                stream.write_i32(timeZone);
+                stream.write_vi64(localizedEpochS);
+                stream.write_vi64(epochUs);
+                stream.write_vu32(timeZone);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 Date res = (Date) type.factory.build(type);
-                res.localizedEpochS = stream.read_i64();
-                res.epochUs = stream.read_i64();
-                res.timeZone = stream.read_i32();
+                res.localizedEpochS = stream.read_vi64();
+                res.epochUs = stream.read_vi64();
+                res.timeZone = stream.read_vu32();
                 return res;
             }
         }
@@ -100,12 +100,12 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(value);
+                stream.write_vi64(value);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 core.duration res = (duration) type.factory.build(type);
-                res.value = stream.read_i64();
+                res.value = stream.read_vi64();
                 return res;
             }
 
@@ -124,18 +124,18 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i32(code);
-                stream.write_i32(frames.length);
+                stream.write_vu32(code);
+                stream.write_vu32(frames.length);
                 final byte[] msg_bytes = msg.getBytes(StandardCharsets.UTF_8);
-                stream.write_i32(msg_bytes.length);
+                stream.write_vu32(msg_bytes.length);
                 int offset = 0;
                 while (offset < frames.length) {
                     core.Error.Frame frame = frames[offset];
-                    stream.write_i32(frame.modSymbol);
-                    stream.write_i32(frame.typeSymbol);
-                    stream.write_i32(frame.fnSymbol);
-                    stream.write_i32(frame.line);
-                    stream.write_i32(frame.column);
+                    stream.write_vu32(frame.modSymbol);
+                    stream.write_vu32(frame.typeSymbol);
+                    stream.write_vu32(frame.fnSymbol);
+                    stream.write_vu32(frame.line);
+                    stream.write_vu32(frame.column);
                     offset++;
                 }
                 stream.write_i8_array(msg_bytes, 0, msg_bytes.length);
@@ -143,16 +143,16 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int code = stream.read_i32();
-                final int framesLen = stream.read_i32();
-                final int msgLen = stream.read_i32();
+                final int code = stream.read_vu32();
+                final int framesLen = stream.read_vu32();
+                final int msgLen = stream.read_vu32();
                 final core.Error.Frame[] frames = new core.Error.Frame[framesLen];
                 for (int offset = 0; offset < framesLen; offset++) {
-                    final int modSymbol = stream.read_i32();
-                    final int typeSymbol = stream.read_i32();
-                    final int fnSymbol = stream.read_i32();
-                    final int line = stream.read_i32();
-                    final int column = stream.read_i32();
+                    final int modSymbol = stream.read_vu32();
+                    final int typeSymbol = stream.read_vu32();
+                    final int fnSymbol = stream.read_vu32();
+                    final int line = stream.read_vu32();
+                    final int column = stream.read_vu32();
                     frames[offset] = new core.Error.Frame(modSymbol, typeSymbol, fnSymbol, line, column);
                 }
                 core.Error res = (Error) type.factory.build(type);
@@ -309,9 +309,9 @@ class std_n {
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
                 if (this.attributes == null) {
-                    stream.write_i32(0);
+                    stream.write_vu32(0);
                 } else {
-                    stream.write_i32(attributes.length);
+                    stream.write_vu32(attributes.length);
                     int i = 0;
                     while (i < attributes.length) {
                         core.geo point = (geo) attributes[i];
@@ -322,7 +322,7 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int size = stream.read_i32();
+                final int size = stream.read_vu32();
                 final GreyCat.Type geoType = type.greycat.types[type.greycat.type_offset_core_geo];
                 final core.geo[] points = new core.geo[size];
                 for (int offset = 0; offset < size; offset++) {
@@ -347,7 +347,7 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i32(size());
+                stream.write_vu32(size());
                 for (Object key : map.keySet()) {
                     stream.write(key);
                     stream.write(get(key));
@@ -356,7 +356,7 @@ class std_n {
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 final core.Map<Object, Object> map = (Map<Object, Object>) type.factory.build(type);
-                final int mapLength = stream.read_i32();
+                final int mapLength = stream.read_vu32();
                 for (int offset = 0; offset < mapLength; offset++) {
                     map.set(stream.read(), stream.read());
                 }
@@ -1288,12 +1288,12 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(value);
+                stream.write_vi64(value);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 core.time res = (core.time) type.factory.build(type);
-                res.value = stream.read_i64();
+                res.value = stream.read_vi64();
                 return res;
             }
 
@@ -1341,13 +1341,13 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i32(data.length);
+                stream.write_vu32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 util.Buffer buf = (Buffer) type.factory.build(type);
-                buf.data = stream.read_i8_array(stream.read_i32());
+                buf.data = stream.read_i8_array(stream.read_vu32());
                 return buf;
             }
         }
@@ -1361,13 +1361,13 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i32(data.length);
+                stream.write_vu32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 util.ByteArray buf = (ByteArray) type.factory.build(type);
-                buf.data = stream.read_i8_array(stream.read_i32());
+                buf.data = stream.read_i8_array(stream.read_vu32());
                 return buf;
             }
         }
@@ -1392,10 +1392,10 @@ class std_n {
             protected final void save(GreyCat.Stream stream) throws IOException {
                 stream.write_f64(sum);
                 stream.write_f64(sumSq);
-                stream.write_i64(size);
-                stream.write_i64(nbAccepted);
-                stream.write_i64(nbRejected);
-                stream.write_i64(nbNull);
+                stream.write_vi64(size);
+                stream.write_vi64(nbAccepted);
+                stream.write_vi64(nbRejected);
+                stream.write_vi64(nbNull);
                 stream.write_f64(min);
                 stream.write_f64(max);
                 stream.write_f64(minBound);
@@ -1406,10 +1406,10 @@ class std_n {
                 util.Gaussian g = (Gaussian) type.factory.build(type);
                 g.sum = stream.read_f64();
                 g.sumSq = stream.read_f64();
-                g.size = stream.read_i64();
-                g.nbAccepted = stream.read_i64();
-                g.nbRejected = stream.read_i64();
-                g.nbNull = stream.read_i64();
+                g.size = stream.read_vi64();
+                g.nbAccepted = stream.read_vi64();
+                g.nbRejected = stream.read_vi64();
+                g.nbNull = stream.read_vi64();
                 g.min = stream.read_f64();
                 g.max = stream.read_f64();
                 g.minBound = stream.read_f64();
@@ -1743,15 +1743,15 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i32(infoOff);
-                stream.write_i32(data.length);
+                stream.write_vu32(infoOff);
+                stream.write_vu32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 util.Iban iban = (Iban) type.factory.build(type);
-                iban.infoOff = stream.read_i32();
-                iban.data = stream.read_i8_array(stream.read_i32());
+                iban.infoOff = stream.read_vu32();
+                iban.data = stream.read_i8_array(stream.read_vu32());
                 return iban;
             }
 
@@ -1767,22 +1767,22 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(size()); // width
-                stream.write_i32(size()); // size
-                stream.write_i32(size()); // capacity
-                stream.write_i64(size()); // TODO: head - values
-                stream.write_i64(0); // TODO: tail - values
+                stream.write_vi64(size()); // width
+                stream.write_vu32(size()); // size
+                stream.write_vu32(size()); // capacity
+                stream.write_vi64(size()); // TODO: head - values
+                stream.write_vi64(0); // TODO: tail - values
                 for (T t : queue) {
                     stream.write(t);
                 }
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                stream.read_i64(); // width
-                final int size = stream.read_i32();
-                final int capacity = stream.read_i32();
-                stream.read_i64(); // head - values;
-                stream.read_i64(); // tail - values;
+                stream.read_vi64(); // width
+                final int size = stream.read_vu32();
+                final int capacity = stream.read_vu32();
+                stream.read_vi64(); // head - values;
+                stream.read_vi64(); // tail - values;
                 final util.Queue<Object> queue = (Queue<Object>) type.factory.build(type);
                 int offset;
                 for (offset = 0; offset < size; offset++) {
@@ -1840,14 +1840,14 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(width);
+                stream.write_vi64(width);
                 stream.write_i8(sumType);
                 stream.write_f64(sum);
                 stream.write_f64(sumSq);
-                stream.write_i32(size);
-                stream.write_i32(capacity);
-                stream.write_i64(toHead);
-                stream.write_i64(toTail);
+                stream.write_vu32(size);
+                stream.write_vu32(capacity);
+                stream.write_vi64(toHead);
+                stream.write_vi64(toTail);
                 int i = 0;
                 while (i < values.length) {
                     stream.write(values[i]);
@@ -1856,14 +1856,14 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final long width = stream.read_i64();
+                final long width = stream.read_vi64();
                 final byte sumType = stream.read_i8();
                 final double sum = stream.read_f64();
                 final double sumSq = stream.read_f64();
-                final int size = stream.read_i32();
-                final int capacity = stream.read_i32();
-                final long toHead = stream.read_i64();
-                final long toTail = stream.read_i64();
+                final int size = stream.read_vu32();
+                final int capacity = stream.read_vu32();
+                final long toHead = stream.read_vi64();
+                final long toTail = stream.read_vi64();
                 final Object[] values = new Object[capacity];
                 for (int offset = 0; offset < capacity; offset++) {
                     values[offset] = stream.read();
@@ -1900,14 +1900,14 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(timeWidth);
+                stream.write_vi64(timeWidth);
                 stream.write_i8(sumType);
                 stream.write_f64(sum);
                 stream.write_f64(sumSq);
-                stream.write_i32(size);
-                stream.write_i32(capacity);
-                stream.write_i64(toHead);
-                stream.write_i64(toTail);
+                stream.write_vu32(size);
+                stream.write_vu32(capacity);
+                stream.write_vi64(toHead);
+                stream.write_vi64(toTail);
                 int i = 0;
                 while (i < valueTimes.length) {
                     final ValueTime valueTime = valueTimes[i];
@@ -1918,14 +1918,14 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final long timeWidth = stream.read_i64();
+                final long timeWidth = stream.read_vi64();
                 final byte sumType = stream.read_i8();
                 final double sum = stream.read_f64();
                 final double sumSq = stream.read_f64();
-                final int size = stream.read_i32();
-                final int capacity = stream.read_i32();
-                final long toHead = stream.read_i64();
-                final long toTail = stream.read_i64();
+                final int size = stream.read_vu32();
+                final int capacity = stream.read_vu32();
+                final long toHead = stream.read_vi64();
+                final long toTail = stream.read_vi64();
                 final util.TimeWindow.ValueTime[] values = new util.TimeWindow.ValueTime[capacity];
                 for (int offset = 0; offset < capacity; offset++) {
                     values[offset] = new util.TimeWindow.ValueTime(stream.read(), stream.read_i64());

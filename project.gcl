@@ -202,6 +202,7 @@ fn write_debug(out: AbiWriter) {
 }
 
 fn write_io(out: AbiWriter) {
+/*
   // out.write(out); // unsupported
   // out.write(AbiReader::new("out.gcb")); // segfault
   out.write(FileDescriptor{
@@ -232,6 +233,7 @@ fn write_io(out: AbiWriter) {
   // out.write(File::open("project.gcl")); // unsupported
   // out.write(Directory::open(".")); // unsupported
   // out.write(FileWriter::new("project.gcl", true)); // unsupported
+*/
 }
 
 fn write_math(out: AbiWriter) {
