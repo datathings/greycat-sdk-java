@@ -279,9 +279,9 @@ public final class GreyCat {
         int read_vu32() throws IOException {
             byte current;
             int value = 0;
-            for (int i = 0; i < 4; ++i) {
+            for (int offset = 0; offset < 4; ++offset) {
                 current = read_i8();
-                value |= (Byte.toUnsignedLong(current) & 0x7f) << (i * 7);
+                value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
                 if (0 == (current & 0x80)) {
                     return value;
                 }
@@ -301,9 +301,9 @@ public final class GreyCat {
         long read_vi64() throws IOException {
             byte current;
             long sign_swapped_value = 0;
-            for (int i = 0; i < 8; ++i) {
+            for (int offset = 0; offset < 8; ++offset) {
                 current = read_i8();
-                sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (i * 7);
+                sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (offset * 7);
                 if (0 == (current & 0x80)) {
                     return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
                 }
