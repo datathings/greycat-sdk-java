@@ -310,18 +310,18 @@ public final class GreyCat {
         }
 
         long read_vi64() throws IOException {
-            byte header;
-            long unpacked = 0;
+            byte current;
+            long sign_swapped_value = 0;
             for (int i = 0; i < 8; ++i) {
-                header = read_i8();
-                unpacked |= (Byte.toUnsignedLong(header) & 0x7f) << (i * 7);
-                if (0 == (header & 0x80)) {
-                    return (unpacked >>> 1) ^ (-(unpacked & 1));
+                current = read_i8();
+                sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << (i * 7);
+                if (0 == (current & 0x80)) {
+                    return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
                 }
             }
-            header = read_i8();
-            unpacked |= (Byte.toUnsignedLong(header)) << 56;
-            return (unpacked >>> 1) ^ (-(unpacked & 1));
+            current = read_i8();
+            sign_swapped_value |= (Byte.toUnsignedLong(current)) << 56;
+            return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
         }
 
         double read_f64() throws IOException {
@@ -398,20 +398,20 @@ public final class GreyCat {
             os.write(tmp, 0, 8);
         }
 
-        void write_vi64(final long l) throws IOException {
-            byte[] bytes = new byte[9];
-            long x = (l << 1) ^ (l >> 63);
-            for (int i = 0; i < 8; ++i) {
-                bytes[i] = (byte) (x & 0x7f);
-                if (Long.compareUnsigned(x, 0x80) < 0) {
-                    os.write(bytes, 0, i + 1);
+        void write_vi64(final long value) throws IOException {
+            byte[] packed_value = new byte[9];
+            long sign_swapped_value = (value << 1) ^ (value >> 63);
+            for (int offset = 0; offset < 8; ++offset) {
+                packed_value[offset] = (byte) (sign_swapped_value & 0x7f);
+                if (Long.compareUnsigned(sign_swapped_value, 0x80) < 0) {
+                    os.write(packed_value, 0, offset + 1);
                     return;
                 }
-                bytes[i] |= 0x80;
-                x >>>= 7; // TODO: double right shift instead?
+                packed_value[offset] |= 0x80;
+                sign_swapped_value >>>= 7; // TODO: double right shift instead?
             }
-            bytes[8] = (byte) x;
-            os.write(bytes, 0, 9);
+            packed_value[8] = (byte) sign_swapped_value;
+            os.write(packed_value, 0, 9);
         }
 
         void write_f64(final double d) throws IOException {
