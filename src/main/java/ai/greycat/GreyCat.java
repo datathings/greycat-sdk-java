@@ -369,8 +369,13 @@ public final class GreyCat {
 
         byte[] read_i8_array(final int len) throws IOException {
             byte[] newArr = new byte[len];
-            if (is.read(newArr, 0, len) == -1) {
-                throw new IOException();
+            int to_read = len;
+            while (to_read > 0) {
+                int read = is.read(newArr, len - to_read, to_read);
+                if (read == -1) {
+                    throw new IOException();
+                }
+                to_read -= read;
             }
             return newArr;
         }
@@ -908,9 +913,7 @@ public final class GreyCat {
     public final static class Files {
 
         public static java.lang.Object get(GreyCat greycat, String path) throws IOException {
-            String url = greycat.runtime_url +
-                    "/files/" +
-                    path;
+            String url = greycat.runtime_url + "/files/" + path;
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/octet-stream");
