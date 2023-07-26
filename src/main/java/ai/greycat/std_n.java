@@ -10,182 +10,132 @@ class std_n {
 
     public static final class core {
 
-        protected static class nodeTimeCursor extends GreyCat.Object {
-            protected nodeTimeCursor(GreyCat.Type type) {
-                super(type, null);
-                throw new RuntimeException("unsupported");
-            }
+        // Primitive types
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                throw new IOException("unsupported");
-            }
-        }
+        protected static class node extends GreyCat.Object {
+            public long ref;
 
-
-        @SuppressWarnings("unused")
-        protected static class Array<T> extends GreyCat.Object {
-            protected Array(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(attributes.length);
-                for (int offset = 0; offset < attributes.length; ++offset) {
-                    stream.write(attributes[offset]);
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int size = stream.read_vu32();
-                final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
-                array.attributes = new java.lang.Object[size];
-                for (int offset = 0; offset < size; offset++) {
-                    array.set(offset, stream.read());
-                }
-                return array;
-            }
-
-            @Override
-            public java.lang.String toString() {
-                StringBuilder b = new StringBuilder();
-                b.append('[');
-                for (int i = 0; i < this.attributes.length; i++) {
-                    if (i != 0) {
-                        b.append(',');
-                    }
-                    b.append(this.attributes[i]);
-                }
-                b.append(']');
-                return b.toString();
-            }
-        }
-
-        protected static class Date extends GreyCat.Object {
-            public long localizedEpochS;
-            public long epochUs;
-            public int timeZone;
-
-            protected Date(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(localizedEpochS);
-                stream.write_vi64(epochUs);
-                stream.write_vu32(timeZone);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                Date res = (Date) type.factory.build(type);
-                res.localizedEpochS = stream.read_vi64();
-                res.epochUs = stream.read_vi64();
-                res.timeZone = stream.read_vu32();
-                return res;
-            }
-        }
-
-        protected static class duration extends GreyCat.Object {
-            public long value;
-
-            protected duration(GreyCat.Type type) {
+            protected node(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.DURATION);
+                stream.write_i8(GreyCat.PrimitiveType.NODE);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(value);
+                stream.write_i64(ref);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.duration res = (duration) type.factory.build(type);
-                res.value = stream.read_vi64();
+                core.node res = (core.node) type.factory.build(type);
+                res.ref = stream.read_i64();
                 return res;
             }
 
         }
 
-        protected static class Error extends GreyCat.Object {
-            public int code;
-            public core.Error.Frame[] frames;
-            public java.lang.String msg;
+        protected static class nodeTime extends GreyCat.Object {
+            public long ref;
 
-            public Object value;
-
-            protected Error(GreyCat.Type type) {
+            protected nodeTime(GreyCat.Type type) {
                 super(type, null);
+
+            }
+
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_TIME);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(code);
-                stream.write_vu32(frames.length);
-                final byte[] msg_bytes = msg.getBytes(StandardCharsets.UTF_8);
-                stream.write_vu32(msg_bytes.length);
-                int offset = 0;
-                while (offset < frames.length) {
-                    core.Error.Frame frame = frames[offset];
-                    stream.write_vu32(frame.modSymbol);
-                    stream.write_vu32(frame.typeSymbol);
-                    stream.write_vu32(frame.fnSymbol);
-                    stream.write_vu32(frame.line);
-                    stream.write_vu32(frame.column);
-                    offset++;
-                }
-                stream.write_i8_array(msg_bytes, 0, msg_bytes.length);
-                stream.write(value);
+                stream.write_i64(ref);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int code = stream.read_vu32();
-                final int framesLen = stream.read_vu32();
-                final int msgLen = stream.read_vu32();
-                final core.Error.Frame[] frames = new core.Error.Frame[framesLen];
-                for (int offset = 0; offset < framesLen; offset++) {
-                    final int modSymbol = stream.read_vu32();
-                    final int typeSymbol = stream.read_vu32();
-                    final int fnSymbol = stream.read_vu32();
-                    final int line = stream.read_vu32();
-                    final int column = stream.read_vu32();
-                    frames[offset] = new core.Error.Frame(modSymbol, typeSymbol, fnSymbol, line, column);
-                }
-                core.Error res = (Error) type.factory.build(type);
-                res.code = code;
-                res.frames = frames;
-                res.msg = stream.read_string(msgLen);
-                res.value = stream.read();
+                core.nodeTime res = (nodeTime) type.factory.build(type);
+                res.ref = stream.read_i64();
                 return res;
             }
+        }
 
-            public final static class Frame {
-                private final int modSymbol,
-                        typeSymbol,
-                        fnSymbol,
-                        line,
-                        column;
+        protected static class nodeIndex extends GreyCat.Object {
+            @SuppressWarnings("unused")
+            public static final java.lang.String type_name = "core::nodeIndex";
 
-                public Frame(int modSymbol, int typeSymbol, int fnSymbol, int line, int column) {
-                    this.modSymbol = modSymbol;
-                    this.typeSymbol = typeSymbol;
-                    this.fnSymbol = fnSymbol;
-                    this.line = line;
-                    this.column = column;
-                }
+            public long ref;
+
+            protected nodeIndex(GreyCat.Type type) {
+                super(type, null);
             }
 
             @Override
-            public java.lang.String toString() {
-                return type.name + "{" +
-                        "msg='" + msg + '\'' +
-                        ", value=" + value +
-                        '}';
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_INDEX);
             }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i64(ref);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeIndex res = (nodeIndex) type.factory.build(type);
+                res.ref = stream.read_i64();
+                return res;
+            }
+        }
+
+        protected static class nodeList extends GreyCat.Object {
+            public long ref;
+
+            protected nodeList(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_LIST);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i64(ref);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeList res = (nodeList) type.factory.build(type);
+                res.ref = stream.read_i64();
+                return res;
+            }
+
+        }
+
+        protected static class nodeGeo extends GreyCat.Object {
+            public long ref;
+
+            protected nodeGeo(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_GEO);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i64(ref);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeGeo res = (core.nodeGeo) type.factory.build(type);
+                res.ref = stream.read_i64();
+                return res;
+            }
+
         }
 
         protected static class geo extends GreyCat.Object {
@@ -299,542 +249,65 @@ class std_n {
             }
         }
 
-        protected static class GeoPoly extends GreyCat.Object {
-            public static final java.lang.String type_name = "core::GeoPoly";
+        protected static class time extends GreyCat.Object {
+            public long value;
 
-            protected GeoPoly(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                if (this.attributes == null) {
-                    stream.write_vu32(0);
-                } else {
-                    stream.write_vu32(attributes.length);
-                    int i = 0;
-                    while (i < attributes.length) {
-                        core.geo point = (geo) attributes[i];
-                        stream.write_i64(point.geocode);
-                        i++;
-                    }
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int size = stream.read_vu32();
-                final GreyCat.Type geoType = type.greycat.types[type.greycat.type_offset_core_geo];
-                final core.geo[] points = new core.geo[size];
-                for (int offset = 0; offset < size; offset++) {
-                    points[offset] = new core.geo(geoType);
-                    points[offset].geocode = stream.read_i64();
-                    //TODO update
-                }
-                core.GeoPoly gp = (GeoPoly) type.factory.build(type);
-                gp.attributes = points;
-                return gp;
-            }
-        }
-
-        protected static class Map<T, U> extends GreyCat.Object {
-            public static final java.lang.String type_name = "core::Map";
-
-            private final java.util.Map<Object, Object> map = new HashMap<>();
-
-            protected Map(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(size());
-                for (Object key : map.keySet()) {
-                    stream.write(key);
-                    stream.write(get(key));
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final core.Map<Object, Object> map = (Map<Object, Object>) type.factory.build(type);
-                final int mapLength = stream.read_vu32();
-                for (int offset = 0; offset < mapLength; offset++) {
-                    map.set(stream.read(), stream.read());
-                }
-                return map;
-            }
-
-            public int size() {
-                return map.size();
-            }
-
-            @SuppressWarnings("unchecked")
-            public U get(Object o) {
-                return (U) map.get(o);
-            }
-
-            public void set(T t, U u) {
-                map.put(t, u);
-            }
-
-            @SuppressWarnings({"unused", "FieldCanBeLocal"})
-            public void remove(Object o) {
-                map.remove(o);
-            }
-
-            @SuppressWarnings({"unused"})
-            public void clear() {
-                map.clear();
-            }
-        }
-
-        protected static class node extends GreyCat.Object {
-            public long ref;
-
-            protected node(GreyCat.Type type) {
+            protected time(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE);
+                stream.write_i8(GreyCat.PrimitiveType.TIME);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
+                stream.write_vi64(value);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.node res = (core.node) type.factory.build(type);
-                res.ref = stream.read_i64();
+                core.time res = (core.time) type.factory.build(type);
+                res.value = stream.read_vi64();
                 return res;
             }
 
         }
 
-        protected static class nodeGeo extends GreyCat.Object {
-            public long ref;
+        protected static class nodeTimeCursor extends GreyCat.Object {
+            protected nodeTimeCursor(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
 
-            protected nodeGeo(GreyCat.Type type) {
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+        }
+
+        protected static class duration extends GreyCat.Object {
+            public long value;
+
+            protected duration(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_GEO);
+                stream.write_i8(GreyCat.PrimitiveType.DURATION);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
+                stream.write_vi64(value);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeGeo res = (core.nodeGeo) type.factory.build(type);
-                res.ref = stream.read_i64();
+                core.duration res = (duration) type.factory.build(type);
+                res.value = stream.read_vi64();
                 return res;
             }
 
-        }
-
-        protected static class nodeIndex extends GreyCat.Object {
-            @SuppressWarnings("unused")
-            public static final java.lang.String type_name = "core::nodeIndex";
-
-            public long ref;
-
-            protected nodeIndex(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_INDEX);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeIndex res = (nodeIndex) type.factory.build(type);
-                res.ref = stream.read_i64();
-                return res;
-            }
-        }
-
-        protected static class nodeIndexBucket extends GreyCat.Object {
-            protected nodeIndexBucket(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_vu32(type.offset);
-                if (attributes == null) {
-                    stream.write_i32(0);
-                } else {
-                    stream.write_i32(attributes.length);
-                    int i = 0;
-                    while (i < attributes.length) {
-                        Object object = attributes[i];
-                        stream.write(object);
-                        i++;
-                    }
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int size = stream.read_i32();
-                final Object[] data = new Object[size];
-                for (int offset = 0; offset < size; offset++) {
-                    data[offset] = stream.read();
-                }
-                core.nodeIndexBucket res = (nodeIndexBucket) type.factory.build(type);
-                res.attributes = data;
-                return res;
-            }
-
-        }
-
-        protected static class nodeList extends GreyCat.Object {
-            public long ref;
-
-            protected nodeList(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_LIST);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeList res = (nodeList) type.factory.build(type);
-                res.ref = stream.read_i64();
-                return res;
-            }
-
-        }
-
-        protected static class nodeTime extends GreyCat.Object {
-            public long ref;
-
-            protected nodeTime(GreyCat.Type type) {
-                super(type, null);
-
-            }
-
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_TIME);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeTime res = (nodeTime) type.factory.build(type);
-                res.ref = stream.read_i64();
-                return res;
-            }
-        }
-
-        protected static class Table<T> extends GreyCat.Object {
-            public int cols;
-
-            public int rows;
-            public core.Table.TableColumnMeta[] meta;
-            public T[] data;
-
-            protected Table(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i32(cols);
-                stream.write_i32(rows);
-                stream.write_bool(meta != null);
-                if (meta != null) {
-                    int i = 0;
-                    while (i < meta.length) {
-                        core.Table.TableColumnMeta colMeta = meta[i];
-                        stream.write_i32(colMeta.colType);
-                        stream.write_i32(colMeta.type);
-                        stream.write_i32(colMeta.size);
-                        stream.write_f64(colMeta.sum);
-                        stream.write_f64(colMeta.sumSq);
-                        stream.write_i64(colMeta.min);
-                        stream.write_i64(colMeta.max);
-                        stream.write_bool(colMeta.index);
-                        stream.write_i32(colMeta.tz);
-                        i++;
-                    }
-                }
-                int i = 0;
-                while (i < data.length) {
-                    stream.write(data[i]);
-                    i++;
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int cols = stream.read_i32();
-                final int rows = stream.read_i32();
-                final boolean useMeta = 0 != stream.read_i8();
-                core.Table.TableColumnMeta[] meta = null;
-                if (useMeta) {
-                    meta = new core.Table.TableColumnMeta[cols];
-                    for (int col = 0; col < cols; col++) {
-                        meta[col] = new core.Table.TableColumnMeta(stream.read_i32(), stream.read_i32(), stream.read_i32(), stream.read_f64(), stream.read_f64(), stream.read_i64(), stream.read_i64(), stream.read_bool(), stream.read_i32());
-                    }
-                }
-                final int capacity = cols * rows;
-                final Object[] data = new Object[capacity];
-                for (int offset = 0; offset < capacity; offset++) {
-                    data[offset] = stream.read();
-                }
-                core.Table<java.lang.Object> t = (Table<java.lang.Object>) type.factory.build(type);
-                t.cols = cols;
-                t.rows = rows;
-                t.meta = meta;
-                t.data = data;
-                return t;
-            }
-
-            public static final class TableColumnMeta {
-                public final int colType;
-                public final int type;
-                public final int size;
-                public final double sum;
-                public final double sumSq;
-                public final long min;
-                public final long max;
-                public final boolean index;
-                public final int tz;
-
-                public TableColumnMeta(int colType, int type, int size, double sum, double sumSq, long min, long max, boolean index, int tz) {
-                    this.colType = colType;
-                    this.type = type;
-                    this.size = size;
-                    this.sum = sum;
-                    this.sumSq = sumSq;
-                    this.min = min;
-                    this.max = max;
-                    this.index = index;
-                    this.tz = tz;
-                }
-            }
-        }
-
-        protected static class Tensor extends GreyCat.Object {
-            public int[] shape;
-            public byte tensorType;
-            public int size;
-            public byte[] data;
-
-            protected Tensor(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i8((byte) shape.length);
-                stream.write_i8(tensorType);
-                int i = 0;
-                while (i < shape.length) {
-                    int dim = shape[i];
-                    stream.write_i32(dim);
-                    i++;
-                }
-                stream.write_i32(size);
-                stream.write_i8_array(data, 0, data.length);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final byte nbDim = stream.read_i8();
-                final byte tensorType = stream.read_i8();
-                final int[] shape = new int[nbDim];
-                for (int offset = 0; offset < nbDim; offset++) {
-                    shape[offset] = stream.read_i32();
-                }
-                int size = stream.read_i32();
-                int bin_size = size;
-                switch (tensorType) {
-                    case 0:
-                    case 2:
-                        bin_size *= 4;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                        bin_size *= 8;
-                        break;
-                    case 5:
-                        bin_size *= 16;
-                        break;
-                    default:
-                        throw new IllegalArgumentException("" + tensorType);
-                }
-                core.Tensor res = (Tensor) type.factory.build(type);
-                res.shape = shape;
-                res.tensorType = tensorType;
-                res.size = size;
-                res.data = stream.read_i8_array(bin_size);
-                return res;
-            }
-        }
-
-        private static long interleave64_2d(long x, long y) {
-            final long[] B = {0x5555555555555555L, 0x3333333333333333L, 0x0F0F0F0F0F0F0F0FL,
-                    0x00FF00FF00FF00FFL, 0x0000FFFF0000FFFFL};
-            final int[] S = {1, 2, 4, 8, 16};
-
-            x = (x | (x << S[4])) & B[4];
-            y = (y | (y << S[4])) & B[4];
-
-            x = (x | (x << S[3])) & B[3];
-            y = (y | (y << S[3])) & B[3];
-
-            x = (x | (x << S[2])) & B[2];
-            y = (y | (y << S[2])) & B[2];
-
-            x = (x | (x << S[1])) & B[1];
-            y = (y | (y << S[1])) & B[1];
-
-            x = (x | (x << S[0])) & B[0];
-            y = (y | (y << S[0])) & B[0];
-
-            return x | (y << 1);
-        }
-
-        private static long interleave64_3d(long x, long y, long z) {
-            final long[] B = {0x1249249249249249L, 0x10c30c30c30c30c3L, 0x100f00f00f00f00fL,
-                    0x001f0000ff0000ffL, 0xffff00000000ffffL};
-            final int[] S = {2, 4, 8, 16, 32};
-
-            x &= 0x0001fffffL;
-            x = (x ^ (x << S[4])) & B[4];
-            x = (x ^ (x << S[3])) & B[3];
-            x = (x ^ (x << S[2])) & B[2];
-            x = (x ^ (x << S[1])) & B[1];
-            x = (x ^ (x << S[0])) & B[0];
-
-            y &= 0x0001fffffL;
-            y = (y ^ (y << S[4])) & B[4];
-            y = (y ^ (y << S[3])) & B[3];
-            y = (y ^ (y << S[2])) & B[2];
-            y = (y ^ (y << S[1])) & B[1];
-            y = (y ^ (y << S[0])) & B[0];
-
-            z &= 0x0001fffffL;
-            z = (z ^ (z << S[4])) & B[4];
-            z = (z ^ (z << S[3])) & B[3];
-            z = (z ^ (z << S[2])) & B[2];
-            z = (z ^ (z << S[1])) & B[1];
-            z = (z ^ (z << S[0])) & B[0];
-
-            return x | (y << 1) | (z << 2);
-        }
-
-        private static long interleave64_5d(long x0, long x1, long x2, long x3, long x4) {
-            final long[] B = {0x084210842108421L, 0x0c0300c0300c03L, 0x00f0000f0000fL, 0x0ff00000000ffL};
-            final int[] S = {4, 8, 16, 32};
-
-            x0 &= 0x0fffL;
-            x0 = (x0 ^ (x0 << S[3])) & B[3];
-            x0 = (x0 ^ (x0 << S[2])) & B[2];
-            x0 = (x0 ^ (x0 << S[1])) & B[1];
-            x0 = (x0 ^ (x0 << S[0])) & B[0];
-
-            x1 &= 0x0fffL;
-            x1 = (x1 ^ (x1 << S[3])) & B[3];
-            x1 = (x1 ^ (x1 << S[2])) & B[2];
-            x1 = (x1 ^ (x1 << S[1])) & B[1];
-            x1 = (x1 ^ (x1 << S[0])) & B[0];
-
-            x2 &= 0x0fffL;
-            x2 = (x2 ^ (x2 << S[3])) & B[3];
-            x2 = (x2 ^ (x2 << S[2])) & B[2];
-            x2 = (x2 ^ (x2 << S[1])) & B[1];
-            x2 = (x2 ^ (x2 << S[0])) & B[0];
-
-            x3 &= 0x0fffL;
-            x3 = (x3 ^ (x3 << S[3])) & B[3];
-            x3 = (x3 ^ (x3 << S[2])) & B[2];
-            x3 = (x3 ^ (x3 << S[1])) & B[1];
-            x3 = (x3 ^ (x3 << S[0])) & B[0];
-
-            x4 &= 0x0fffL;
-            x4 = (x4 ^ (x4 << S[3])) & B[3];
-            x4 = (x4 ^ (x4 << S[2])) & B[2];
-            x4 = (x4 ^ (x4 << S[1])) & B[1];
-            x4 = (x4 ^ (x4 << S[0])) & B[0];
-
-            return x0 | (x1 << 1) | (x2 << 2) | (x3 << 3) | (x4 << 4);
-        }
-
-        private static long deinterleave64_2d(long interleaved) {
-            final long[] B = {0x5555555555555555L, 0x3333333333333333L, 0x0F0F0F0F0F0F0F0FL,
-                    0x00FF00FF00FF00FFL, 0x0000FFFF0000FFFFL, 0x00000000FFFFFFFFL};
-            final int[] S = {0, 1, 2, 4, 8, 16};
-
-            long x = interleaved,
-                    y = interleaved >>> 1;
-
-            x = (x | (x >>> S[0])) & B[0];
-            y = (y | (y >>> S[0])) & B[0];
-
-            x = (x | (x >>> S[1])) & B[1];
-            y = (y | (y >>> S[1])) & B[1];
-
-            x = (x | (x >>> S[2])) & B[2];
-            y = (y | (y >>> S[2])) & B[2];
-
-            x = (x | (x >>> S[3])) & B[3];
-            y = (y | (y >>> S[3])) & B[3];
-
-            x = (x | (x >>> S[4])) & B[4];
-            y = (y | (y >>> S[4])) & B[4];
-
-            x = (x | (x >>> S[5])) & B[5];
-            y = (y | (y >>> S[5])) & B[5];
-            return x | (y << 32);
-        }
-
-        private static int deinterleave64_3d(long interleaved) {
-            final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL,
-                    0xffff00000000ffffL, 0x0001fffffL};
-            final int[] S = {2, 4, 8, 16, 32};
-
-            long x = interleaved & 0x1249249249249249L;
-            x = (x ^ (x >>> S[0])) & B[0];
-            x = (x ^ (x >>> S[1])) & B[1];
-            x = (x ^ (x >>> S[2])) & B[2];
-            x = (x ^ (x >>> S[3])) & B[3];
-            x = (x ^ (x >>> S[4])) & B[4];
-            return (int) x;
-        }
-
-        private static short deinterleave64_5d(long interleaved) {
-            final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
-            final int[] S = {4, 8, 16, 32};
-
-            long x = interleaved & 0x1084210842108421L;
-            x = (x ^ (x >>> S[0])) & B[0];
-            x = (x ^ (x >>> S[1])) & B[1];
-            x = (x ^ (x >>> S[2])) & B[2];
-            x = (x ^ (x >>> S[3])) & B[3];
-            return (short) x;
         }
 
         protected static class ti2d extends GreyCat.Object {
@@ -1274,29 +747,235 @@ class std_n {
             }
         }
 
-        protected static class time extends GreyCat.Object {
-            public long value;
+        // Object types
 
-            protected time(GreyCat.Type type) {
+        @SuppressWarnings("unused")
+        protected static class Array<T> extends GreyCat.Object {
+            protected Array(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TIME);
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vu32(attributes.length);
+                for (int offset = 0; offset < attributes.length; ++offset) {
+                    stream.write(attributes[offset]);
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final int size = stream.read_vu32();
+                final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
+                array.attributes = new java.lang.Object[size];
+                for (int offset = 0; offset < size; offset++) {
+                    array.set(offset, stream.read());
+                }
+                return array;
+            }
+
+            @Override
+            public java.lang.String toString() {
+                StringBuilder b = new StringBuilder();
+                b.append('[');
+                for (int i = 0; i < this.attributes.length; i++) {
+                    if (i != 0) {
+                        b.append(',');
+                    }
+                    b.append(this.attributes[i]);
+                }
+                b.append(']');
+                return b.toString();
+            }
+        }
+
+        protected static class Date extends GreyCat.Object {
+            public long localizedEpochS;
+            public long epochUs;
+            public int timeZone;
+
+            protected Date(GreyCat.Type type) {
+                super(type, null);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(value);
+                stream.write_vi64(localizedEpochS);
+                stream.write_vi64(epochUs);
+                stream.write_vu32(timeZone);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.time res = (core.time) type.factory.build(type);
-                res.value = stream.read_vi64();
+                Date res = (Date) type.factory.build(type);
+                res.localizedEpochS = stream.read_vi64();
+                res.epochUs = stream.read_vi64();
+                res.timeZone = stream.read_vu32();
+                return res;
+            }
+        }
+
+        protected static class Error extends GreyCat.Object {
+            public int code;
+            public core.Error.Frame[] frames;
+            public java.lang.String msg;
+
+            public Object value;
+
+            protected Error(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vu32(code);
+                stream.write_vu32(frames.length);
+                final byte[] msg_bytes = msg.getBytes(StandardCharsets.UTF_8);
+                stream.write_vu32(msg_bytes.length);
+                int offset = 0;
+                while (offset < frames.length) {
+                    core.Error.Frame frame = frames[offset];
+                    stream.write_vu32(frame.modSymbol);
+                    stream.write_vu32(frame.typeSymbol);
+                    stream.write_vu32(frame.fnSymbol);
+                    stream.write_vu32(frame.line);
+                    stream.write_vu32(frame.column);
+                    offset++;
+                }
+                stream.write_i8_array(msg_bytes, 0, msg_bytes.length);
+                stream.write(value);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final int code = stream.read_vu32();
+                final int framesLen = stream.read_vu32();
+                final int msgLen = stream.read_vu32();
+                final core.Error.Frame[] frames = new core.Error.Frame[framesLen];
+                for (int offset = 0; offset < framesLen; offset++) {
+                    final int modSymbol = stream.read_vu32();
+                    final int typeSymbol = stream.read_vu32();
+                    final int fnSymbol = stream.read_vu32();
+                    final int line = stream.read_vu32();
+                    final int column = stream.read_vu32();
+                    frames[offset] = new core.Error.Frame(modSymbol, typeSymbol, fnSymbol, line, column);
+                }
+                core.Error res = (Error) type.factory.build(type);
+                res.code = code;
+                res.frames = frames;
+                res.msg = stream.read_string(msgLen);
+                res.value = stream.read();
                 return res;
             }
 
+            public final static class Frame {
+                private final int modSymbol,
+                        typeSymbol,
+                        fnSymbol,
+                        line,
+                        column;
+
+                public Frame(int modSymbol, int typeSymbol, int fnSymbol, int line, int column) {
+                    this.modSymbol = modSymbol;
+                    this.typeSymbol = typeSymbol;
+                    this.fnSymbol = fnSymbol;
+                    this.line = line;
+                    this.column = column;
+                }
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return type.name + "{" +
+                        "msg='" + msg + '\'' +
+                        ", value=" + value +
+                        '}';
+            }
+        }
+
+        protected static class GeoPoly extends GreyCat.Object {
+            public static final java.lang.String type_name = "core::GeoPoly";
+
+            protected GeoPoly(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                if (this.attributes == null) {
+                    stream.write_vu32(0);
+                } else {
+                    stream.write_vu32(attributes.length);
+                    int i = 0;
+                    while (i < attributes.length) {
+                        core.geo point = (geo) attributes[i];
+                        stream.write_i64(point.geocode);
+                        i++;
+                    }
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final int size = stream.read_vu32();
+                final GreyCat.Type geoType = type.greycat.types[type.greycat.type_offset_core_geo];
+                final core.geo[] points = new core.geo[size];
+                for (int offset = 0; offset < size; offset++) {
+                    points[offset] = new core.geo(geoType);
+                    points[offset].geocode = stream.read_i64();
+                    //TODO update
+                }
+                core.GeoPoly gp = (GeoPoly) type.factory.build(type);
+                gp.attributes = points;
+                return gp;
+            }
+        }
+
+        protected static class Map<T, U> extends GreyCat.Object {
+            public static final java.lang.String type_name = "core::Map";
+
+            private final java.util.Map<Object, Object> map = new HashMap<>();
+
+            protected Map(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vu32(size());
+                for (Object key : map.keySet()) {
+                    stream.write(key);
+                    stream.write(get(key));
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final core.Map<Object, Object> map = (Map<Object, Object>) type.factory.build(type);
+                final int mapLength = stream.read_vu32();
+                for (int offset = 0; offset < mapLength; offset++) {
+                    map.set(stream.read(), stream.read());
+                }
+                return map;
+            }
+
+            public int size() {
+                return map.size();
+            }
+
+            @SuppressWarnings("unchecked")
+            public U get(Object o) {
+                return (U) map.get(o);
+            }
+
+            public void set(T t, U u) {
+                map.put(t, u);
+            }
+
+            @SuppressWarnings({"unused", "FieldCanBeLocal"})
+            public void remove(Object o) {
+                map.remove(o);
+            }
+
+            @SuppressWarnings({"unused"})
+            public void clear() {
+                map.clear();
+            }
         }
 
         protected static class String extends GreyCat.Object {
@@ -1314,6 +993,330 @@ class std_n {
                 len >>>= 1;
                 return stream.read_string(len);
             }
+        }
+
+        protected static class Table<T> extends GreyCat.Object {
+            public int cols;
+
+            public int rows;
+            public core.Table.TableColumnMeta[] meta;
+            public T[] data;
+
+            protected Table(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i32(cols);
+                stream.write_i32(rows);
+                stream.write_bool(meta != null);
+                if (meta != null) {
+                    int i = 0;
+                    while (i < meta.length) {
+                        core.Table.TableColumnMeta colMeta = meta[i];
+                        stream.write_i32(colMeta.colType);
+                        stream.write_i32(colMeta.type);
+                        stream.write_i32(colMeta.size);
+                        stream.write_f64(colMeta.sum);
+                        stream.write_f64(colMeta.sumSq);
+                        stream.write_i64(colMeta.min);
+                        stream.write_i64(colMeta.max);
+                        stream.write_bool(colMeta.index);
+                        stream.write_i32(colMeta.tz);
+                        i++;
+                    }
+                }
+                int i = 0;
+                while (i < data.length) {
+                    stream.write(data[i]);
+                    i++;
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final int cols = stream.read_i32();
+                final int rows = stream.read_i32();
+                final boolean useMeta = 0 != stream.read_i8();
+                core.Table.TableColumnMeta[] meta = null;
+                if (useMeta) {
+                    meta = new core.Table.TableColumnMeta[cols];
+                    for (int col = 0; col < cols; col++) {
+                        meta[col] = new core.Table.TableColumnMeta(stream.read_i32(), stream.read_i32(), stream.read_i32(), stream.read_f64(), stream.read_f64(), stream.read_i64(), stream.read_i64(), stream.read_bool(), stream.read_i32());
+                    }
+                }
+                final int capacity = cols * rows;
+                final Object[] data = new Object[capacity];
+                for (int offset = 0; offset < capacity; offset++) {
+                    data[offset] = stream.read();
+                }
+                core.Table<java.lang.Object> t = (Table<java.lang.Object>) type.factory.build(type);
+                t.cols = cols;
+                t.rows = rows;
+                t.meta = meta;
+                t.data = data;
+                return t;
+            }
+
+            public static final class TableColumnMeta {
+                public final int colType;
+                public final int type;
+                public final int size;
+                public final double sum;
+                public final double sumSq;
+                public final long min;
+                public final long max;
+                public final boolean index;
+                public final int tz;
+
+                public TableColumnMeta(int colType, int type, int size, double sum, double sumSq, long min, long max, boolean index, int tz) {
+                    this.colType = colType;
+                    this.type = type;
+                    this.size = size;
+                    this.sum = sum;
+                    this.sumSq = sumSq;
+                    this.min = min;
+                    this.max = max;
+                    this.index = index;
+                    this.tz = tz;
+                }
+            }
+        }
+
+        protected static class Tensor extends GreyCat.Object {
+            public int[] shape;
+            public byte tensorType;
+            public int size;
+            public byte[] data;
+
+            protected Tensor(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8((byte) shape.length);
+                stream.write_i8(tensorType);
+                int i = 0;
+                while (i < shape.length) {
+                    int dim = shape[i];
+                    stream.write_i32(dim);
+                    i++;
+                }
+                stream.write_i32(size);
+                stream.write_i8_array(data, 0, data.length);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final byte nbDim = stream.read_i8();
+                final byte tensorType = stream.read_i8();
+                final int[] shape = new int[nbDim];
+                for (int offset = 0; offset < nbDim; offset++) {
+                    shape[offset] = stream.read_i32();
+                }
+                int size = stream.read_i32();
+                int bin_size = size;
+                switch (tensorType) {
+                    case 0:
+                    case 2:
+                        bin_size *= 4;
+                        break;
+                    case 1:
+                    case 3:
+                    case 4:
+                        bin_size *= 8;
+                        break;
+                    case 5:
+                        bin_size *= 16;
+                        break;
+                    default:
+                        throw new IllegalArgumentException("" + tensorType);
+                }
+                core.Tensor res = (Tensor) type.factory.build(type);
+                res.shape = shape;
+                res.tensorType = tensorType;
+                res.size = size;
+                res.data = stream.read_i8_array(bin_size);
+                return res;
+            }
+        }
+
+        // Deliberately unsupported types
+
+        protected static class nodeIndexBucket extends GreyCat.Object {
+            protected nodeIndexBucket(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.OBJECT);
+                stream.write_vu32(type.offset);
+                if (attributes == null) {
+                    stream.write_i32(0);
+                } else {
+                    stream.write_i32(attributes.length);
+                    int i = 0;
+                    while (i < attributes.length) {
+                        Object object = attributes[i];
+                        stream.write(object);
+                        i++;
+                    }
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final int size = stream.read_i32();
+                final Object[] data = new Object[size];
+                for (int offset = 0; offset < size; offset++) {
+                    data[offset] = stream.read();
+                }
+                core.nodeIndexBucket res = (nodeIndexBucket) type.factory.build(type);
+                res.attributes = data;
+                return res;
+            }
+
+        }
+
+        // ti*d & tf*d (de)interleaving algorithms
+
+        private final static long[] B_2D = {0x5555555555555555L, 0x3333333333333333L, 0x0F0F0F0F0F0F0F0FL,
+                0x00FF00FF00FF00FFL, 0x0000FFFF0000FFFFL, 0x00000000FFFFFFFFL};
+        private final static int[] S_2D = {0, 1, 2, 4, 8, 16};
+
+        private static long interleave64_2d(long x, long y) {
+            x = (x | (x << S_2D[5])) & B_2D[4];
+            y = (y | (y << S_2D[5])) & B_2D[4];
+
+            x = (x | (x << S_2D[4])) & B_2D[3];
+            y = (y | (y << S_2D[4])) & B_2D[3];
+
+            x = (x | (x << S_2D[3])) & B_2D[2];
+            y = (y | (y << S_2D[3])) & B_2D[2];
+
+            x = (x | (x << S_2D[2])) & B_2D[1];
+            y = (y | (y << S_2D[2])) & B_2D[1];
+
+            x = (x | (x << S_2D[1])) & B_2D[0];
+            y = (y | (y << S_2D[1])) & B_2D[0];
+
+            return x | (y << 1);
+        }
+
+        private static long deinterleave64_2d(long interleaved) {
+            long x = interleaved;
+            long y = interleaved >>> 1;
+
+            x = (x | (x >>> S_2D[0])) & B_2D[0];
+            y = (y | (y >>> S_2D[0])) & B_2D[0];
+
+            x = (x | (x >>> S_2D[1])) & B_2D[1];
+            y = (y | (y >>> S_2D[1])) & B_2D[1];
+
+            x = (x | (x >>> S_2D[2])) & B_2D[2];
+            y = (y | (y >>> S_2D[2])) & B_2D[2];
+
+            x = (x | (x >>> S_2D[3])) & B_2D[3];
+            y = (y | (y >>> S_2D[3])) & B_2D[3];
+
+            x = (x | (x >>> S_2D[4])) & B_2D[4];
+            y = (y | (y >>> S_2D[4])) & B_2D[4];
+
+            x = (x | (x >>> S_2D[5])) & B_2D[5];
+            y = (y | (y >>> S_2D[5])) & B_2D[5];
+
+            return x | (y << 32);
+        }
+        private final static int[] S_3D = {2, 4, 8, 16, 32};
+
+        private static long interleave64_3d(long x, long y, long z) {
+            final long[] B = {0x1249249249249249L, 0x10c30c30c30c30c3L, 0x100f00f00f00f00fL,
+                    0x001f0000ff0000ffL, 0xffff00000000ffffL};
+
+            x &= 0x0001fffffL;
+            x = (x ^ (x << S_3D[4])) & B[4];
+            x = (x ^ (x << S_3D[3])) & B[3];
+            x = (x ^ (x << S_3D[2])) & B[2];
+            x = (x ^ (x << S_3D[1])) & B[1];
+            x = (x ^ (x << S_3D[0])) & B[0];
+
+            y &= 0x0001fffffL;
+            y = (y ^ (y << S_3D[4])) & B[4];
+            y = (y ^ (y << S_3D[3])) & B[3];
+            y = (y ^ (y << S_3D[2])) & B[2];
+            y = (y ^ (y << S_3D[1])) & B[1];
+            y = (y ^ (y << S_3D[0])) & B[0];
+
+            z &= 0x0001fffffL;
+            z = (z ^ (z << S_3D[4])) & B[4];
+            z = (z ^ (z << S_3D[3])) & B[3];
+            z = (z ^ (z << S_3D[2])) & B[2];
+            z = (z ^ (z << S_3D[1])) & B[1];
+            z = (z ^ (z << S_3D[0])) & B[0];
+
+            return x | (y << 1) | (z << 2);
+        }
+
+        private static int deinterleave64_3d(long interleaved) {
+            final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL,
+                    0xffff00000000ffffL, 0x0001fffffL};
+
+            long x = interleaved & 0x1249249249249249L;
+            x = (x ^ (x >>> S_3D[0])) & B[0];
+            x = (x ^ (x >>> S_3D[1])) & B[1];
+            x = (x ^ (x >>> S_3D[2])) & B[2];
+            x = (x ^ (x >>> S_3D[3])) & B[3];
+            x = (x ^ (x >>> S_3D[4])) & B[4];
+            return (int) x;
+        }
+
+        private final static int[] S_5D = {4, 8, 16, 32};
+
+        private static long interleave64_5d(long x0, long x1, long x2, long x3, long x4) {
+            final long[] B = {0x084210842108421L, 0x0c0300c0300c03L, 0x00f0000f0000fL, 0x0ff00000000ffL};
+
+            x0 &= 0x0fffL;
+            x0 = (x0 ^ (x0 << S_5D[3])) & B[3];
+            x0 = (x0 ^ (x0 << S_5D[2])) & B[2];
+            x0 = (x0 ^ (x0 << S_5D[1])) & B[1];
+            x0 = (x0 ^ (x0 << S_5D[0])) & B[0];
+
+            x1 &= 0x0fffL;
+            x1 = (x1 ^ (x1 << S_5D[3])) & B[3];
+            x1 = (x1 ^ (x1 << S_5D[2])) & B[2];
+            x1 = (x1 ^ (x1 << S_5D[1])) & B[1];
+            x1 = (x1 ^ (x1 << S_5D[0])) & B[0];
+
+            x2 &= 0x0fffL;
+            x2 = (x2 ^ (x2 << S_5D[3])) & B[3];
+            x2 = (x2 ^ (x2 << S_5D[2])) & B[2];
+            x2 = (x2 ^ (x2 << S_5D[1])) & B[1];
+            x2 = (x2 ^ (x2 << S_5D[0])) & B[0];
+
+            x3 &= 0x0fffL;
+            x3 = (x3 ^ (x3 << S_5D[3])) & B[3];
+            x3 = (x3 ^ (x3 << S_5D[2])) & B[2];
+            x3 = (x3 ^ (x3 << S_5D[1])) & B[1];
+            x3 = (x3 ^ (x3 << S_5D[0])) & B[0];
+
+            x4 &= 0x0fffL;
+            x4 = (x4 ^ (x4 << S_5D[3])) & B[3];
+            x4 = (x4 ^ (x4 << S_5D[2])) & B[2];
+            x4 = (x4 ^ (x4 << S_5D[1])) & B[1];
+            x4 = (x4 ^ (x4 << S_5D[0])) & B[0];
+
+            return x0 | (x1 << 1) | (x2 << 2) | (x3 << 3) | (x4 << 4);
+        }
+
+        private static short deinterleave64_5d(long interleaved) {
+            final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
+
+            long x = interleaved & 0x1084210842108421L;
+            x = (x ^ (x >>> S_5D[0])) & B[0];
+            x = (x ^ (x >>> S_5D[1])) & B[1];
+            x = (x ^ (x >>> S_5D[2])) & B[2];
+            x = (x ^ (x >>> S_5D[3])) & B[3];
+            return (short) x;
         }
 
     }
