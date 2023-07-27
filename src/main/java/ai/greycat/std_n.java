@@ -1228,8 +1228,8 @@ class std_n {
             return x | (y << 32);
         }
 
-        private final static long[] B_3D = {0x1249249249249249L, 0x10c30c30c30c30c3L, 0x100f00f00f00f00fL,
-                0x001f0000ff0000ffL, 0xffff00000000ffffL, 0x00000000001fffffL};
+        private final static long[] B_3D = {0x1249249249249249L, 0x10C30C30C30C30C3L, 0x100F00F00F00F00FL,
+                0x001F0000FF0000FFL, 0xFFFF00000000FFFFL, 0x00000000001FFFFFL};
         private final static int[] S_3D = {2, 4, 8, 16, 32};
 
         private static long interleave64_3d(long x, long y, long z) {
@@ -1267,8 +1267,8 @@ class std_n {
             return (int) x;
         }
 
-        private final static long[] B_5D = {0x0084210842108421L, 0x000c0300c0300c03L, 0x00000f0000f0000fL,
-                0x0000ff00000000ffL, 0x0000000000000fffL};
+        private final static long[] B_5D = {0x0084210842108421L, 0x000C0300C0300C03L, 0x00000F0000F0000FL,
+                0x0000FF00000000FFL, 0x0000000000000FFFL};
         private final static int[] S_5D = {4, 8, 16, 32};
 
         private static long interleave64_5d(long x0, long x1, long x2, long x3, long x4) {
