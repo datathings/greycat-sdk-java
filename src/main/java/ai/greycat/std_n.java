@@ -1227,95 +1227,90 @@ class std_n {
 
             return x | (y << 32);
         }
+
+        private final static long[] B_3D = {0x1249249249249249L, 0x10c30c30c30c30c3L, 0x100f00f00f00f00fL,
+                0x001f0000ff0000ffL, 0xffff00000000ffffL, 0x00000000001fffffL};
         private final static int[] S_3D = {2, 4, 8, 16, 32};
 
         private static long interleave64_3d(long x, long y, long z) {
-            final long[] B = {0x1249249249249249L, 0x10c30c30c30c30c3L, 0x100f00f00f00f00fL,
-                    0x001f0000ff0000ffL, 0xffff00000000ffffL};
+            x &= B_3D[5];
+            x = (x ^ (x << S_3D[4])) & B_3D[4];
+            x = (x ^ (x << S_3D[3])) & B_3D[3];
+            x = (x ^ (x << S_3D[2])) & B_3D[2];
+            x = (x ^ (x << S_3D[1])) & B_3D[1];
+            x = (x ^ (x << S_3D[0])) & B_3D[0];
 
-            x &= 0x0001fffffL;
-            x = (x ^ (x << S_3D[4])) & B[4];
-            x = (x ^ (x << S_3D[3])) & B[3];
-            x = (x ^ (x << S_3D[2])) & B[2];
-            x = (x ^ (x << S_3D[1])) & B[1];
-            x = (x ^ (x << S_3D[0])) & B[0];
+            y &= B_3D[5];
+            y = (y ^ (y << S_3D[4])) & B_3D[4];
+            y = (y ^ (y << S_3D[3])) & B_3D[3];
+            y = (y ^ (y << S_3D[2])) & B_3D[2];
+            y = (y ^ (y << S_3D[1])) & B_3D[1];
+            y = (y ^ (y << S_3D[0])) & B_3D[0];
 
-            y &= 0x0001fffffL;
-            y = (y ^ (y << S_3D[4])) & B[4];
-            y = (y ^ (y << S_3D[3])) & B[3];
-            y = (y ^ (y << S_3D[2])) & B[2];
-            y = (y ^ (y << S_3D[1])) & B[1];
-            y = (y ^ (y << S_3D[0])) & B[0];
-
-            z &= 0x0001fffffL;
-            z = (z ^ (z << S_3D[4])) & B[4];
-            z = (z ^ (z << S_3D[3])) & B[3];
-            z = (z ^ (z << S_3D[2])) & B[2];
-            z = (z ^ (z << S_3D[1])) & B[1];
-            z = (z ^ (z << S_3D[0])) & B[0];
+            z &= B_3D[5];
+            z = (z ^ (z << S_3D[4])) & B_3D[4];
+            z = (z ^ (z << S_3D[3])) & B_3D[3];
+            z = (z ^ (z << S_3D[2])) & B_3D[2];
+            z = (z ^ (z << S_3D[1])) & B_3D[1];
+            z = (z ^ (z << S_3D[0])) & B_3D[0];
 
             return x | (y << 1) | (z << 2);
         }
 
         private static int deinterleave64_3d(long interleaved) {
-            final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL,
-                    0xffff00000000ffffL, 0x0001fffffL};
-
-            long x = interleaved & 0x1249249249249249L;
-            x = (x ^ (x >>> S_3D[0])) & B[0];
-            x = (x ^ (x >>> S_3D[1])) & B[1];
-            x = (x ^ (x >>> S_3D[2])) & B[2];
-            x = (x ^ (x >>> S_3D[3])) & B[3];
-            x = (x ^ (x >>> S_3D[4])) & B[4];
+            long x = interleaved & core.B_3D[0];
+            x = (x ^ (x >>> S_3D[0])) & B_3D[1];
+            x = (x ^ (x >>> S_3D[1])) & B_3D[2];
+            x = (x ^ (x >>> S_3D[2])) & B_3D[3];
+            x = (x ^ (x >>> S_3D[3])) & B_3D[4];
+            x = (x ^ (x >>> S_3D[4])) & B_3D[5];
             return (int) x;
         }
 
+        private final static long[] B_5D = {0x0084210842108421L, 0x000c0300c0300c03L, 0x00000f0000f0000fL,
+                0x0000ff00000000ffL, 0x0000000000000fffL};
         private final static int[] S_5D = {4, 8, 16, 32};
 
         private static long interleave64_5d(long x0, long x1, long x2, long x3, long x4) {
-            final long[] B = {0x084210842108421L, 0x0c0300c0300c03L, 0x00f0000f0000fL, 0x0ff00000000ffL};
+            x0 &= B_5D[4];
+            x0 = (x0 ^ (x0 << S_5D[3])) & B_5D[3];
+            x0 = (x0 ^ (x0 << S_5D[2])) & B_5D[2];
+            x0 = (x0 ^ (x0 << S_5D[1])) & B_5D[1];
+            x0 = (x0 ^ (x0 << S_5D[0])) & B_5D[0];
 
-            x0 &= 0x0fffL;
-            x0 = (x0 ^ (x0 << S_5D[3])) & B[3];
-            x0 = (x0 ^ (x0 << S_5D[2])) & B[2];
-            x0 = (x0 ^ (x0 << S_5D[1])) & B[1];
-            x0 = (x0 ^ (x0 << S_5D[0])) & B[0];
+            x1 &= B_5D[4];
+            x1 = (x1 ^ (x1 << S_5D[3])) & B_5D[3];
+            x1 = (x1 ^ (x1 << S_5D[2])) & B_5D[2];
+            x1 = (x1 ^ (x1 << S_5D[1])) & B_5D[1];
+            x1 = (x1 ^ (x1 << S_5D[0])) & B_5D[0];
 
-            x1 &= 0x0fffL;
-            x1 = (x1 ^ (x1 << S_5D[3])) & B[3];
-            x1 = (x1 ^ (x1 << S_5D[2])) & B[2];
-            x1 = (x1 ^ (x1 << S_5D[1])) & B[1];
-            x1 = (x1 ^ (x1 << S_5D[0])) & B[0];
+            x2 &= B_5D[4];
+            x2 = (x2 ^ (x2 << S_5D[3])) & B_5D[3];
+            x2 = (x2 ^ (x2 << S_5D[2])) & B_5D[2];
+            x2 = (x2 ^ (x2 << S_5D[1])) & B_5D[1];
+            x2 = (x2 ^ (x2 << S_5D[0])) & B_5D[0];
 
-            x2 &= 0x0fffL;
-            x2 = (x2 ^ (x2 << S_5D[3])) & B[3];
-            x2 = (x2 ^ (x2 << S_5D[2])) & B[2];
-            x2 = (x2 ^ (x2 << S_5D[1])) & B[1];
-            x2 = (x2 ^ (x2 << S_5D[0])) & B[0];
+            x3 &= B_5D[4];
+            x3 = (x3 ^ (x3 << S_5D[3])) & B_5D[3];
+            x3 = (x3 ^ (x3 << S_5D[2])) & B_5D[2];
+            x3 = (x3 ^ (x3 << S_5D[1])) & B_5D[1];
+            x3 = (x3 ^ (x3 << S_5D[0])) & B_5D[0];
 
-            x3 &= 0x0fffL;
-            x3 = (x3 ^ (x3 << S_5D[3])) & B[3];
-            x3 = (x3 ^ (x3 << S_5D[2])) & B[2];
-            x3 = (x3 ^ (x3 << S_5D[1])) & B[1];
-            x3 = (x3 ^ (x3 << S_5D[0])) & B[0];
-
-            x4 &= 0x0fffL;
-            x4 = (x4 ^ (x4 << S_5D[3])) & B[3];
-            x4 = (x4 ^ (x4 << S_5D[2])) & B[2];
-            x4 = (x4 ^ (x4 << S_5D[1])) & B[1];
-            x4 = (x4 ^ (x4 << S_5D[0])) & B[0];
+            x4 &= B_5D[4];
+            x4 = (x4 ^ (x4 << S_5D[3])) & B_5D[3];
+            x4 = (x4 ^ (x4 << S_5D[2])) & B_5D[2];
+            x4 = (x4 ^ (x4 << S_5D[1])) & B_5D[1];
+            x4 = (x4 ^ (x4 << S_5D[0])) & B_5D[0];
 
             return x0 | (x1 << 1) | (x2 << 2) | (x3 << 3) | (x4 << 4);
         }
 
         private static short deinterleave64_5d(long interleaved) {
-            final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
-
-            long x = interleaved & 0x1084210842108421L;
-            x = (x ^ (x >>> S_5D[0])) & B[0];
-            x = (x ^ (x >>> S_5D[1])) & B[1];
-            x = (x ^ (x >>> S_5D[2])) & B[2];
-            x = (x ^ (x >>> S_5D[3])) & B[3];
+            long x = interleaved & B_5D[0];
+            x = (x ^ (x >>> S_5D[0])) & B_5D[1];
+            x = (x ^ (x >>> S_5D[1])) & B_5D[2];
+            x = (x ^ (x >>> S_5D[2])) & B_5D[3];
+            x = (x ^ (x >>> S_5D[3])) & B_5D[4];
             return (short) x;
         }
 
