@@ -15,6 +15,7 @@ use util;
 
 fn fail() {
   var out = AbiWriter::new("fail.gcb");
+  out.write(null);
 }
 
 fn main() {

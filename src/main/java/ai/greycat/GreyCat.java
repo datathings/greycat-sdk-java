@@ -334,8 +334,13 @@ public final class GreyCat {
         }
 
         long read_vi64() throws IOException {
+            long sign_swapped_value = read_vu64();
+            return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+        }
+
+        long read_vu64() throws IOException {
             byte current;
-            long sign_swapped_value = 0;
+            long value = 0;
             is.mark(9);
             byte[] bytes = new byte[9];
             if (-1 == is.read(bytes, 0, 9)) {
@@ -343,80 +348,80 @@ public final class GreyCat {
             }
 
             current = bytes[0];
-            sign_swapped_value |= Byte.toUnsignedLong(current) & 0x7f;
+            value |= Byte.toUnsignedLong(current) & 0x7f;
             if (0 == (current & 0x80)) {
                 is.reset();
                 //noinspection ResultOfMethodCallIgnored
                 is.skip(1);
-                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                return value;
             }
 
             current = bytes[1];
-            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 7;
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 7;
             if (0 == (current & 0x80)) {
                 is.reset();
                 //noinspection ResultOfMethodCallIgnored
                 is.skip(2);
-                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                return value;
             }
 
             current = bytes[2];
-            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 14;
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 14;
             if (0 == (current & 0x80)) {
                 is.reset();
                 //noinspection ResultOfMethodCallIgnored
                 is.skip(3);
-                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                return value;
             }
 
             current = bytes[3];
-            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 21;
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 21;
             if (0 == (current & 0x80)) {
                 is.reset();
                 //noinspection ResultOfMethodCallIgnored
                 is.skip(4);
-                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                return value;
             }
 
             current = bytes[4];
-            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 28;
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 28;
             if (0 == (current & 0x80)) {
                 is.reset();
                 //noinspection ResultOfMethodCallIgnored
                 is.skip(5);
-                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                return value;
             }
 
             current = bytes[5];
-            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 35;
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 35;
             if (0 == (current & 0x80)) {
                 is.reset();
                 //noinspection ResultOfMethodCallIgnored
                 is.skip(6);
-                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                return value;
             }
 
             current = bytes[6];
-            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 42;
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 42;
             if (0 == (current & 0x80)) {
                 is.reset();
                 //noinspection ResultOfMethodCallIgnored
                 is.skip(7);
-                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                return value;
             }
 
             current = bytes[7];
-            sign_swapped_value |= (Byte.toUnsignedLong(current) & 0x7f) << 49;
+            value |= (Byte.toUnsignedLong(current) & 0x7f) << 49;
             if (0 == (current & 0x80)) {
                 is.reset();
                 //noinspection ResultOfMethodCallIgnored
                 is.skip(8);
-                return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+                return value;
             }
 
             current = bytes[8];
-            sign_swapped_value |= (Byte.toUnsignedLong(current)) << 56;
-            return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
+            value |= (Byte.toUnsignedLong(current)) << 56;
+            return value;
         }
 
         double read_f64() throws IOException {
@@ -528,74 +533,78 @@ public final class GreyCat {
         }
 
         void write_vi64(final long l) throws IOException {
-            byte[] packed_value = new byte[9];
-            long sign_swapped_l = (l << 1) ^ (l >> 63);
+            write_vu64((l << 1) ^ (l >> 63));
+        }
 
-            packed_value[0] = (byte) (sign_swapped_l & 0x7f);
-            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+        void write_vu64(final long l) throws IOException {
+            byte[] packed_value = new byte[9];
+            long value = l;
+
+            packed_value[0] = (byte) (value & 0x7f);
+            if (Long.compareUnsigned(value, 0x80) < 0) {
                 write_i8_array(packed_value, 0, 1);
                 return;
             }
 
             packed_value[0] |= 0x80;
-            sign_swapped_l >>>= 7;
-            packed_value[1] = (byte) sign_swapped_l;
-            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+            value >>>= 7;
+            packed_value[1] = (byte) value;
+            if (Long.compareUnsigned(value, 0x80) < 0) {
                 write_i8_array(packed_value, 0, 2);
                 return;
             }
 
             packed_value[1] |= 0x80;
-            sign_swapped_l >>>= 7;
-            packed_value[2] = (byte) sign_swapped_l;
-            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+            value >>>= 7;
+            packed_value[2] = (byte) value;
+            if (Long.compareUnsigned(value, 0x80) < 0) {
                 write_i8_array(packed_value, 0, 3);
                 return;
             }
 
             packed_value[2] |= 0x80;
-            sign_swapped_l >>>= 7;
-            packed_value[3] = (byte) sign_swapped_l;
-            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+            value >>>= 7;
+            packed_value[3] = (byte) value;
+            if (Long.compareUnsigned(value, 0x80) < 0) {
                 write_i8_array(packed_value, 0, 4);
                 return;
             }
 
             packed_value[3] |= 0x80;
-            sign_swapped_l >>>= 7;
-            packed_value[4] = (byte) sign_swapped_l;
-            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+            value >>>= 7;
+            packed_value[4] = (byte) value;
+            if (Long.compareUnsigned(value, 0x80) < 0) {
                 write_i8_array(packed_value, 0, 5);
                 return;
             }
 
             packed_value[4] |= 0x80;
-            sign_swapped_l >>>= 7;
-            packed_value[5] = (byte) sign_swapped_l;
-            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+            value >>>= 7;
+            packed_value[5] = (byte) value;
+            if (Long.compareUnsigned(value, 0x80) < 0) {
                 write_i8_array(packed_value, 0, 6);
                 return;
             }
 
             packed_value[5] |= 0x80;
-            sign_swapped_l >>>= 7;
-            packed_value[6] = (byte) sign_swapped_l;
-            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+            value >>>= 7;
+            packed_value[6] = (byte) value;
+            if (Long.compareUnsigned(value, 0x80) < 0) {
                 write_i8_array(packed_value, 0, 7);
                 return;
             }
 
             packed_value[6] |= 0x80;
-            sign_swapped_l >>>= 7;
-            packed_value[7] = (byte) sign_swapped_l;
-            if (Long.compareUnsigned(sign_swapped_l, 0x80) < 0) {
+            value >>>= 7;
+            packed_value[7] = (byte) value;
+            if (Long.compareUnsigned(value, 0x80) < 0) {
                 write_i8_array(packed_value, 0, 8);
                 return;
             }
 
             packed_value[7] |= 0x80;
-            sign_swapped_l >>>= 7;
-            packed_value[8] = (byte) sign_swapped_l;
+            value >>>= 7;
+            packed_value[8] = (byte) value;
             write_i8_array(packed_value, 0, 9);
         }
 

@@ -2981,109 +2981,85 @@ public final class std extends ai.greycat.GreyCat.Library {
 		}
 	}
 	public static final class runtime {
-		public static final class Task extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::Task";
-			private Task(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class PeriodicTask extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::PeriodicTask";
+			private PeriodicTask(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
-			public java.lang.Long id(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[0]);
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
 			}
-			public void set_id(java.lang.Long v){
+			public void set_name(java.lang.String v){
 				super.set(super.type.generated_offsets[0],v);
 			}
-			public java.lang.Long user(){
+			public java.lang.Long user_id(){
 				return (java.lang.Long)super.get(super.type.generated_offsets[1]);
 			}
-			public void set_user(java.lang.Long v){
+			public void set_user_id(java.lang.Long v){
 				super.set(super.type.generated_offsets[1],v);
 			}
-			public java.lang.Long parent(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[2]);
+			public java.lang.String args(){
+				return (java.lang.String)super.get(super.type.generated_offsets[2]);
 			}
-			public void set_parent(java.lang.Long v){
+			public void set_args(java.lang.String v){
 				super.set(super.type.generated_offsets[2],v);
 			}
-			public java.lang.String mod(){
-				return (java.lang.String)super.get(super.type.generated_offsets[3]);
-			}
-			public void set_mod(java.lang.String v){
-				super.set(super.type.generated_offsets[3],v);
-			}
-			public java.lang.String type(){
-				return (java.lang.String)super.get(super.type.generated_offsets[4]);
-			}
-			public void set_type(java.lang.String v){
-				super.set(super.type.generated_offsets[4],v);
-			}
-			public java.lang.String fun(){
-				return (java.lang.String)super.get(super.type.generated_offsets[5]);
-			}
-			public void set_fun(java.lang.String v){
-				super.set(super.type.generated_offsets[5],v);
-			}
-			public java.lang.Double progress(){
-				return (java.lang.Double)super.get(super.type.generated_offsets[6]);
-			}
-			public void set_progress(java.lang.Double v){
-				super.set(super.type.generated_offsets[6],v);
-			}
-			public ai.greycat.std_n.core.duration remaining(){
-				return (ai.greycat.std_n.core.duration)super.get(super.type.generated_offsets[7]);
-			}
-			public void set_remaining(ai.greycat.std_n.core.duration v){
-				super.set(super.type.generated_offsets[7],v);
-			}
-			public ai.greycat.std_n.core.time creation(){
-				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[8]);
-			}
-			public void set_creation(ai.greycat.std_n.core.time v){
-				super.set(super.type.generated_offsets[8],v);
-			}
 			public ai.greycat.std_n.core.time start(){
-				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[9]);
+				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[3]);
 			}
 			public void set_start(ai.greycat.std_n.core.time v){
-				super.set(super.type.generated_offsets[9],v);
+				super.set(super.type.generated_offsets[3],v);
 			}
-			public ai.greycat.std_n.core.duration duration(){
-				return (ai.greycat.std_n.core.duration)super.get(super.type.generated_offsets[10]);
+			public ai.greycat.std_n.core.duration every(){
+				return (ai.greycat.std_n.core.duration)super.get(super.type.generated_offsets[4]);
 			}
-			public void set_duration(ai.greycat.std_n.core.duration v){
-				super.set(super.type.generated_offsets[10],v);
+			public void set_every(ai.greycat.std_n.core.duration v){
+				super.set(super.type.generated_offsets[4],v);
 			}
-			public ai.greycat.std.runtime.TaskStatus status(){
-				return (ai.greycat.std.runtime.TaskStatus)super.get(super.type.generated_offsets[11]);
+			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask>) ai.greycat.GreyCat.call(greycat,"runtime::PeriodicTask::all");
 			}
-			public void set_status(ai.greycat.std.runtime.TaskStatus v){
-				super.set(super.type.generated_offsets[11],v);
+			public static void set(ai.greycat.GreyCat greycat,ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask> tasks) throws java.io.IOException {
+				ai.greycat.GreyCat.call(greycat,"runtime::PeriodicTask::set", tasks);
 			}
-			public java.lang.Long sub_waiting(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[12]);
+			public static PeriodicTask create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Long user_id, java.lang.String args, ai.greycat.std_n.core.time start, ai.greycat.std_n.core.duration every){
+				return new PeriodicTask(greycat.libs_by_name.get(ai.greycat.std.name).mapped[39], name, user_id, args, start, every);
 			}
-			public void set_sub_waiting(java.lang.Long v){
-				super.set(super.type.generated_offsets[12],v);
+		}
+		public static final class UserGroupPolicyType extends GreyCat.Enum {
+			public static final java.lang.String name = "runtime::UserGroupPolicyType";
+			private UserGroupPolicyType(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
 			}
-			public java.lang.Long sub_tasks_all(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[13]);
+			public static ai.greycat.std.runtime.UserGroupPolicyType read(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[40];
+				return (ai.greycat.std.runtime.UserGroupPolicyType) t.enum_values[t.generated_offsets[0]];
 			}
-			public void set_sub_tasks_all(java.lang.Long v){
-				super.set(super.type.generated_offsets[13],v);
+			public static ai.greycat.std.runtime.UserGroupPolicyType write(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[40];
+				return (ai.greycat.std.runtime.UserGroupPolicyType) t.enum_values[t.generated_offsets[1]];
 			}
-			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.Task> running(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.Task>) ai.greycat.GreyCat.call(greycat,"runtime::Task::running");
+			public static ai.greycat.std.runtime.UserGroupPolicyType execute(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[40];
+				return (ai.greycat.std.runtime.UserGroupPolicyType) t.enum_values[t.generated_offsets[2]];
 			}
-			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.Task> history(ai.greycat.GreyCat greycat,java.lang.Long offset,java.lang.Long max) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.Task>) ai.greycat.GreyCat.call(greycat,"runtime::Task::history", offset, max);
+			public static UserGroupPolicyType create(ai.greycat.GreyCat greycat){
+				return new UserGroupPolicyType(greycat.libs_by_name.get(ai.greycat.std.name).mapped[40]);
 			}
-			public static java.lang.Boolean cancel(ai.greycat.GreyCat greycat,java.lang.Long task_id) throws java.io.IOException {
-				return (java.lang.Boolean) ai.greycat.GreyCat.call(greycat,"runtime::Task::cancel", task_id);
+		}
+		public static final class Runtime extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::Runtime";
+			private Runtime(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
 			}
-			public static ai.greycat.std.runtime.Task info(ai.greycat.GreyCat greycat,java.lang.Long user_id,java.lang.Long task_id) throws java.io.IOException {
-				return (ai.greycat.std.runtime.Task) ai.greycat.GreyCat.call(greycat,"runtime::Task::info", user_id, task_id);
+			public static ai.greycat.std.runtime.RuntimeInfo info(ai.greycat.GreyCat greycat) throws java.io.IOException {
+				return (ai.greycat.std.runtime.RuntimeInfo) ai.greycat.GreyCat.call(greycat,"runtime::Runtime::info");
 			}
-			public static Task create(ai.greycat.GreyCat greycat, java.lang.Long id, java.lang.Long user, java.lang.Long parent, java.lang.String mod, java.lang.String type, java.lang.String fun, java.lang.Double progress, ai.greycat.std_n.core.duration remaining, ai.greycat.std_n.core.time creation, ai.greycat.std_n.core.time start, ai.greycat.std_n.core.duration duration, ai.greycat.std.runtime.TaskStatus status, java.lang.Long sub_waiting, java.lang.Long sub_tasks_all){
-				return new Task(greycat.libs_by_name.get(ai.greycat.std.name).mapped[39], id, user, parent, mod, type, fun, progress, remaining, creation, start, duration, status, sub_waiting, sub_tasks_all);
+			public static void abi(ai.greycat.GreyCat greycat) throws java.io.IOException {
+				ai.greycat.GreyCat.call(greycat,"runtime::Runtime::abi");
+			}
+			public static Runtime create(ai.greycat.GreyCat greycat){
+				return new Runtime(greycat.libs_by_name.get(ai.greycat.std.name).mapped[41]);
 			}
 		}
 		public static final class SecurityEntity extends GreyCat.Object {
@@ -3116,55 +3092,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return (java.lang.Long) ai.greycat.GreyCat.call(greycat,"runtime::SecurityEntity::set", entity);
 			}
 			public static SecurityEntity create(ai.greycat.GreyCat greycat, java.lang.Long id, java.lang.String name, java.lang.Boolean activated){
-				return new SecurityEntity(greycat.libs_by_name.get(ai.greycat.std.name).mapped[40], id, name, activated);
-			}
-		}
-		public static final class TaskStatus extends GreyCat.Enum {
-			public static final java.lang.String name = "runtime::TaskStatus";
-			private TaskStatus(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static ai.greycat.std.runtime.TaskStatus empty(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[41];
-				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[0]];
-			}
-			public static ai.greycat.std.runtime.TaskStatus waiting(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[41];
-				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[1]];
-			}
-			public static ai.greycat.std.runtime.TaskStatus running(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[41];
-				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[2]];
-			}
-			public static ai.greycat.std.runtime.TaskStatus cancelled(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[41];
-				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[3]];
-			}
-			public static ai.greycat.std.runtime.TaskStatus error(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[41];
-				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[4]];
-			}
-			public static ai.greycat.std.runtime.TaskStatus ended(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[41];
-				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[5]];
-			}
-			public static TaskStatus create(ai.greycat.GreyCat greycat){
-				return new TaskStatus(greycat.libs_by_name.get(ai.greycat.std.name).mapped[41]);
-			}
-		}
-		public static final class Runtime extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::Runtime";
-			private Runtime(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static ai.greycat.std.runtime.RuntimeInfo info(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.runtime.RuntimeInfo) ai.greycat.GreyCat.call(greycat,"runtime::Runtime::info");
-			}
-			public static void abi(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::Runtime::abi");
-			}
-			public static Runtime create(ai.greycat.GreyCat greycat){
-				return new Runtime(greycat.libs_by_name.get(ai.greycat.std.name).mapped[42]);
+				return new SecurityEntity(greycat.libs_by_name.get(ai.greycat.std.name).mapped[42], id, name, activated);
 			}
 		}
 		public static final class RuntimeInfo extends GreyCat.Object {
@@ -3242,6 +3170,42 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new RuntimeInfo(greycat.libs_by_name.get(ai.greycat.std.name).mapped[43], version, arch, timezone, license, io_threads, bg_threads, fg_threads, mem_total, mem_worker, nb_ctx, store_stats);
 			}
 		}
+		public static final class SecurityPolicy extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::SecurityPolicy";
+			private SecurityPolicy(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> entities(){
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity>)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_entities(ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential> credentials(){
+				return (ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential>)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_credentials(ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential> v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole> roles(){
+				return (ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole>)super.get(super.type.generated_offsets[2]);
+			}
+			public void set_roles(ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole> v){
+				super.set(super.type.generated_offsets[2],v);
+			}
+			public ai.greycat.std.runtime.SecurityFields fields(){
+				return (ai.greycat.std.runtime.SecurityFields)super.get(super.type.generated_offsets[3]);
+			}
+			public void set_fields(ai.greycat.std.runtime.SecurityFields v){
+				super.set(super.type.generated_offsets[3],v);
+			}
+			public static ai.greycat.std.core.Array<java.lang.String> permissions(ai.greycat.GreyCat greycat) throws java.io.IOException {
+				return (ai.greycat.std.core.Array<java.lang.String>) ai.greycat.GreyCat.call(greycat,"runtime::SecurityPolicy::permissions");
+			}
+			public static SecurityPolicy create(ai.greycat.GreyCat greycat, ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> entities, ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential> credentials, ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole> roles, ai.greycat.std.runtime.SecurityFields fields){
+				return new SecurityPolicy(greycat.libs_by_name.get(ai.greycat.std.name).mapped[44], entities, credentials, roles, fields);
+			}
+		}
 		public static final class SecurityFields extends GreyCat.Object {
 			public static final java.lang.String name = "runtime::SecurityFields";
 			private SecurityFields(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
@@ -3290,7 +3254,73 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return (ai.greycat.std.runtime.SecurityFields) ai.greycat.GreyCat.call(greycat,"runtime::SecurityFields::get");
 			}
 			public static SecurityFields create(ai.greycat.GreyCat greycat, java.lang.String email, java.lang.String name, java.lang.String first_name, java.lang.String last_name, ai.greycat.std.core.Map<java.lang.String, java.lang.String> roles, ai.greycat.std.core.Map<java.lang.String, java.lang.String> groups){
-				return new SecurityFields(greycat.libs_by_name.get(ai.greycat.std.name).mapped[44], email, name, first_name, last_name, roles, groups);
+				return new SecurityFields(greycat.libs_by_name.get(ai.greycat.std.name).mapped[45], email, name, first_name, last_name, roles, groups);
+			}
+		}
+		public static final class UserCredential extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::UserCredential";
+			private UserCredential(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.Long offset(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_offset(java.lang.Long v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.String pass(){
+				return (java.lang.String)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_pass(java.lang.String v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public static UserCredential create(ai.greycat.GreyCat greycat, java.lang.Long offset, java.lang.String pass){
+				return new UserCredential(greycat.libs_by_name.get(ai.greycat.std.name).mapped[46], offset, pass);
+			}
+		}
+		public static final class OpenIDConnect extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::OpenIDConnect";
+			private OpenIDConnect(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.String url(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_url(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.String clientId(){
+				return (java.lang.String)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_clientId(java.lang.String v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public static ai.greycat.std.runtime.OpenIDConnect config(ai.greycat.GreyCat greycat) throws java.io.IOException {
+				return (ai.greycat.std.runtime.OpenIDConnect) ai.greycat.GreyCat.call(greycat,"runtime::OpenIDConnect::config");
+			}
+			public static OpenIDConnect create(ai.greycat.GreyCat greycat, java.lang.String url, java.lang.String clientId){
+				return new OpenIDConnect(greycat.libs_by_name.get(ai.greycat.std.name).mapped[47], url, clientId);
+			}
+		}
+		public static final class UserGroupPolicy extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::UserGroupPolicy";
+			private UserGroupPolicy(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.Long group_id(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_group_id(java.lang.Long v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public ai.greycat.std.runtime.UserGroupPolicyType type(){
+				return (ai.greycat.std.runtime.UserGroupPolicyType)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_type(ai.greycat.std.runtime.UserGroupPolicyType v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public static UserGroupPolicy create(ai.greycat.GreyCat greycat, java.lang.Long group_id, ai.greycat.std.runtime.UserGroupPolicyType type){
+				return new UserGroupPolicy(greycat.libs_by_name.get(ai.greycat.std.name).mapped[48], group_id, type);
 			}
 		}
 		public static final class UserGroup extends GreyCat.Object {
@@ -3323,36 +3353,12 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return (java.lang.Long) ai.greycat.GreyCat.call(greycat,"runtime::SecurityEntity::set", entity);
 			}
 			public static UserGroup create(ai.greycat.GreyCat greycat, java.lang.Long id, java.lang.String name, java.lang.Boolean activated){
-				return new UserGroup(greycat.libs_by_name.get(ai.greycat.std.name).mapped[45], id, name, activated);
+				return new UserGroup(greycat.libs_by_name.get(ai.greycat.std.name).mapped[49], id, name, activated);
 			}
 		}
-		public static final class OpenIDConnect extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::OpenIDConnect";
-			private OpenIDConnect(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String url(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_url(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.String clientId(){
-				return (java.lang.String)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_clientId(java.lang.String v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static ai.greycat.std.runtime.OpenIDConnect config(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.runtime.OpenIDConnect) ai.greycat.GreyCat.call(greycat,"runtime::OpenIDConnect::config");
-			}
-			public static OpenIDConnect create(ai.greycat.GreyCat greycat, java.lang.String url, java.lang.String clientId){
-				return new OpenIDConnect(greycat.libs_by_name.get(ai.greycat.std.name).mapped[46], url, clientId);
-			}
-		}
-		public static final class UserRole extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::UserRole";
-			private UserRole(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class License extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::License";
+			private License(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
 			public java.lang.String name(){
@@ -3360,69 +3366,102 @@ public final class std extends ai.greycat.GreyCat.Library {
 			}
 			public void set_name(java.lang.String v){
 				super.set(super.type.generated_offsets[0],v);
-			}
-			public ai.greycat.std.core.Array<java.lang.String> permissions(){
-				return (ai.greycat.std.core.Array<java.lang.String>)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_permissions(ai.greycat.std.core.Array<java.lang.String> v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.UserRole> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.UserRole>) ai.greycat.GreyCat.call(greycat,"runtime::UserRole::all");
-			}
-			public static void remove(ai.greycat.GreyCat greycat,java.lang.String name) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::UserRole::remove", name);
-			}
-			public static void set(ai.greycat.GreyCat greycat,ai.greycat.std.runtime.UserRole value) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::UserRole::set", value);
-			}
-			public static UserRole create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std.core.Array<java.lang.String> permissions){
-				return new UserRole(greycat.libs_by_name.get(ai.greycat.std.name).mapped[47], name, permissions);
-			}
-		}
-		public static final class PeriodicTask extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::PeriodicTask";
-			private PeriodicTask(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.Long user_id(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_user_id(java.lang.Long v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public java.lang.String args(){
-				return (java.lang.String)super.get(super.type.generated_offsets[2]);
-			}
-			public void set_args(java.lang.String v){
-				super.set(super.type.generated_offsets[2],v);
 			}
 			public ai.greycat.std_n.core.time start(){
-				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[3]);
+				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[1]);
 			}
 			public void set_start(ai.greycat.std_n.core.time v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public ai.greycat.std_n.core.time end(){
+				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[2]);
+			}
+			public void set_end(ai.greycat.std_n.core.time v){
+				super.set(super.type.generated_offsets[2],v);
+			}
+			public java.lang.String company(){
+				return (java.lang.String)super.get(super.type.generated_offsets[3]);
+			}
+			public void set_company(java.lang.String v){
 				super.set(super.type.generated_offsets[3],v);
 			}
-			public ai.greycat.std_n.core.duration every(){
-				return (ai.greycat.std_n.core.duration)super.get(super.type.generated_offsets[4]);
+			public java.lang.Long max_workers(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[4]);
 			}
-			public void set_every(ai.greycat.std_n.core.duration v){
+			public void set_max_workers(java.lang.Long v){
 				super.set(super.type.generated_offsets[4],v);
 			}
-			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask>) ai.greycat.GreyCat.call(greycat,"runtime::PeriodicTask::all");
+			public java.lang.Long max_memory(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[5]);
 			}
-			public static void set(ai.greycat.GreyCat greycat,ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask> tasks) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::PeriodicTask::set", tasks);
+			public void set_max_memory(java.lang.Long v){
+				super.set(super.type.generated_offsets[5],v);
 			}
-			public static PeriodicTask create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Long user_id, java.lang.String args, ai.greycat.std_n.core.time start, ai.greycat.std_n.core.duration every){
-				return new PeriodicTask(greycat.libs_by_name.get(ai.greycat.std.name).mapped[48], name, user_id, args, start, every);
+			public java.lang.Long max_store(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[6]);
+			}
+			public void set_max_store(java.lang.Long v){
+				super.set(super.type.generated_offsets[6],v);
+			}
+			public java.lang.Long extra_1(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[7]);
+			}
+			public void set_extra_1(java.lang.Long v){
+				super.set(super.type.generated_offsets[7],v);
+			}
+			public java.lang.Long extra_2(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[8]);
+			}
+			public void set_extra_2(java.lang.Long v){
+				super.set(super.type.generated_offsets[8],v);
+			}
+			public java.lang.Long extra_3(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[9]);
+			}
+			public void set_extra_3(java.lang.Long v){
+				super.set(super.type.generated_offsets[9],v);
+			}
+			public java.lang.Long extra_4(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[10]);
+			}
+			public void set_extra_4(java.lang.Long v){
+				super.set(super.type.generated_offsets[10],v);
+			}
+			public static License create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std_n.core.time start, ai.greycat.std_n.core.time end, java.lang.String company, java.lang.Long max_workers, java.lang.Long max_memory, java.lang.Long max_store, java.lang.Long extra_1, java.lang.Long extra_2, java.lang.Long extra_3, java.lang.Long extra_4){
+				return new License(greycat.libs_by_name.get(ai.greycat.std.name).mapped[50], name, start, end, company, max_workers, max_memory, max_store, extra_1, extra_2, extra_3, extra_4);
+			}
+		}
+		public static final class TaskStatus extends GreyCat.Enum {
+			public static final java.lang.String name = "runtime::TaskStatus";
+			private TaskStatus(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public static ai.greycat.std.runtime.TaskStatus empty(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
+				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[0]];
+			}
+			public static ai.greycat.std.runtime.TaskStatus waiting(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
+				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[1]];
+			}
+			public static ai.greycat.std.runtime.TaskStatus running(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
+				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[2]];
+			}
+			public static ai.greycat.std.runtime.TaskStatus cancelled(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
+				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[3]];
+			}
+			public static ai.greycat.std.runtime.TaskStatus error(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
+				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[4]];
+			}
+			public static ai.greycat.std.runtime.TaskStatus ended(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
+				return (ai.greycat.std.runtime.TaskStatus) t.enum_values[t.generated_offsets[5]];
+			}
+			public static TaskStatus create(ai.greycat.GreyCat greycat){
+				return new TaskStatus(greycat.libs_by_name.get(ai.greycat.std.name).mapped[51]);
 			}
 		}
 		public static final class User extends GreyCat.Object {
@@ -3524,145 +3563,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return (java.lang.String) ai.greycat.GreyCat.call(greycat,"runtime::User::getToken", id);
 			}
 			public static User create(ai.greycat.GreyCat greycat, java.lang.Long id, java.lang.String name, java.lang.Boolean activated, java.lang.String full_name, java.lang.String email, java.lang.String role, java.lang.Long permissions_flags, ai.greycat.std.core.Array<ai.greycat.std.runtime.UserGroupPolicy> groups, java.lang.Long groups_flags, java.lang.Boolean external){
-				return new User(greycat.libs_by_name.get(ai.greycat.std.name).mapped[49], id, name, activated, full_name, email, role, permissions_flags, groups, groups_flags, external);
-			}
-		}
-		public static final class UserGroupPolicy extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::UserGroupPolicy";
-			private UserGroupPolicy(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.Long group_id(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_group_id(java.lang.Long v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public ai.greycat.std.runtime.UserGroupPolicyType type(){
-				return (ai.greycat.std.runtime.UserGroupPolicyType)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_type(ai.greycat.std.runtime.UserGroupPolicyType v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static UserGroupPolicy create(ai.greycat.GreyCat greycat, java.lang.Long group_id, ai.greycat.std.runtime.UserGroupPolicyType type){
-				return new UserGroupPolicy(greycat.libs_by_name.get(ai.greycat.std.name).mapped[50], group_id, type);
-			}
-		}
-		public static final class UserGroupPolicyType extends GreyCat.Enum {
-			public static final java.lang.String name = "runtime::UserGroupPolicyType";
-			private UserGroupPolicyType(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static ai.greycat.std.runtime.UserGroupPolicyType read(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
-				return (ai.greycat.std.runtime.UserGroupPolicyType) t.enum_values[t.generated_offsets[0]];
-			}
-			public static ai.greycat.std.runtime.UserGroupPolicyType write(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
-				return (ai.greycat.std.runtime.UserGroupPolicyType) t.enum_values[t.generated_offsets[1]];
-			}
-			public static ai.greycat.std.runtime.UserGroupPolicyType execute(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[51];
-				return (ai.greycat.std.runtime.UserGroupPolicyType) t.enum_values[t.generated_offsets[2]];
-			}
-			public static UserGroupPolicyType create(ai.greycat.GreyCat greycat){
-				return new UserGroupPolicyType(greycat.libs_by_name.get(ai.greycat.std.name).mapped[51]);
-			}
-		}
-		public static final class UserCredential extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::UserCredential";
-			private UserCredential(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.Long offset(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_offset(java.lang.Long v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.String pass(){
-				return (java.lang.String)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_pass(java.lang.String v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static UserCredential create(ai.greycat.GreyCat greycat, java.lang.Long offset, java.lang.String pass){
-				return new UserCredential(greycat.libs_by_name.get(ai.greycat.std.name).mapped[52], offset, pass);
-			}
-		}
-		public static final class License extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::License";
-			private License(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public ai.greycat.std_n.core.time start(){
-				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_start(ai.greycat.std_n.core.time v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public ai.greycat.std_n.core.time end(){
-				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[2]);
-			}
-			public void set_end(ai.greycat.std_n.core.time v){
-				super.set(super.type.generated_offsets[2],v);
-			}
-			public java.lang.String company(){
-				return (java.lang.String)super.get(super.type.generated_offsets[3]);
-			}
-			public void set_company(java.lang.String v){
-				super.set(super.type.generated_offsets[3],v);
-			}
-			public java.lang.Long max_workers(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[4]);
-			}
-			public void set_max_workers(java.lang.Long v){
-				super.set(super.type.generated_offsets[4],v);
-			}
-			public java.lang.Long max_memory(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[5]);
-			}
-			public void set_max_memory(java.lang.Long v){
-				super.set(super.type.generated_offsets[5],v);
-			}
-			public java.lang.Long max_store(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[6]);
-			}
-			public void set_max_store(java.lang.Long v){
-				super.set(super.type.generated_offsets[6],v);
-			}
-			public java.lang.Long extra_1(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[7]);
-			}
-			public void set_extra_1(java.lang.Long v){
-				super.set(super.type.generated_offsets[7],v);
-			}
-			public java.lang.Long extra_2(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[8]);
-			}
-			public void set_extra_2(java.lang.Long v){
-				super.set(super.type.generated_offsets[8],v);
-			}
-			public java.lang.Long extra_3(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[9]);
-			}
-			public void set_extra_3(java.lang.Long v){
-				super.set(super.type.generated_offsets[9],v);
-			}
-			public java.lang.Long extra_4(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[10]);
-			}
-			public void set_extra_4(java.lang.Long v){
-				super.set(super.type.generated_offsets[10],v);
-			}
-			public static License create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std_n.core.time start, ai.greycat.std_n.core.time end, java.lang.String company, java.lang.Long max_workers, java.lang.Long max_memory, java.lang.Long max_store, java.lang.Long extra_1, java.lang.Long extra_2, java.lang.Long extra_3, java.lang.Long extra_4){
-				return new License(greycat.libs_by_name.get(ai.greycat.std.name).mapped[53], name, start, end, company, max_workers, max_memory, max_store, extra_1, extra_2, extra_3, extra_4);
+				return new User(greycat.libs_by_name.get(ai.greycat.std.name).mapped[52], id, name, activated, full_name, email, role, permissions_flags, groups, groups_flags, external);
 			}
 		}
 		public static final class StoreStat extends GreyCat.Object {
@@ -3725,7 +3626,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[8],v);
 			}
 			public static StoreStat create(ai.greycat.GreyCat greycat, java.lang.Long capacity_bytes, java.lang.Long allocated_bytes, java.lang.Double allocated_ratio, java.lang.Long remained_bytes, java.lang.Double remained_ratio, java.lang.Long used_bytes, java.lang.Double used_ratio, java.lang.Long available_bytes, java.lang.Double available_ratio){
-				return new StoreStat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[54], capacity_bytes, allocated_bytes, allocated_ratio, remained_bytes, remained_ratio, used_bytes, used_ratio, available_bytes, available_ratio);
+				return new StoreStat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[53], capacity_bytes, allocated_bytes, allocated_ratio, remained_bytes, remained_ratio, used_bytes, used_ratio, available_bytes, available_ratio);
 			}
 		}
 		public static final class System extends GreyCat.Object {
@@ -3734,63 +3635,210 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super(type, attributes);
 			}
 			public static System create(ai.greycat.GreyCat greycat){
-				return new System(greycat.libs_by_name.get(ai.greycat.std.name).mapped[55]);
+				return new System(greycat.libs_by_name.get(ai.greycat.std.name).mapped[54]);
 			}
 		}
-		public static final class SecurityPolicy extends GreyCat.Object {
-			public static final java.lang.String name = "runtime::SecurityPolicy";
-			private SecurityPolicy(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class UserRole extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::UserRole";
+			private UserRole(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
-			public ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> entities(){
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity>)super.get(super.type.generated_offsets[0]);
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
 			}
-			public void set_entities(ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> v){
+			public void set_name(java.lang.String v){
 				super.set(super.type.generated_offsets[0],v);
 			}
-			public ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential> credentials(){
-				return (ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential>)super.get(super.type.generated_offsets[1]);
+			public ai.greycat.std.core.Array<java.lang.String> permissions(){
+				return (ai.greycat.std.core.Array<java.lang.String>)super.get(super.type.generated_offsets[1]);
 			}
-			public void set_credentials(ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential> v){
+			public void set_permissions(ai.greycat.std.core.Array<java.lang.String> v){
 				super.set(super.type.generated_offsets[1],v);
 			}
-			public ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole> roles(){
-				return (ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole>)super.get(super.type.generated_offsets[2]);
+			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.UserRole> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.UserRole>) ai.greycat.GreyCat.call(greycat,"runtime::UserRole::all");
 			}
-			public void set_roles(ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole> v){
+			public static void remove(ai.greycat.GreyCat greycat,java.lang.String name) throws java.io.IOException {
+				ai.greycat.GreyCat.call(greycat,"runtime::UserRole::remove", name);
+			}
+			public static void set(ai.greycat.GreyCat greycat,ai.greycat.std.runtime.UserRole value) throws java.io.IOException {
+				ai.greycat.GreyCat.call(greycat,"runtime::UserRole::set", value);
+			}
+			public static UserRole create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std.core.Array<java.lang.String> permissions){
+				return new UserRole(greycat.libs_by_name.get(ai.greycat.std.name).mapped[55], name, permissions);
+			}
+		}
+		public static final class Task extends GreyCat.Object {
+			public static final java.lang.String name = "runtime::Task";
+			private Task(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.Long id(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_id(java.lang.Long v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.Long user(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_user(java.lang.Long v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public java.lang.Long parent(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[2]);
+			}
+			public void set_parent(java.lang.Long v){
 				super.set(super.type.generated_offsets[2],v);
 			}
-			public ai.greycat.std.runtime.SecurityFields fields(){
-				return (ai.greycat.std.runtime.SecurityFields)super.get(super.type.generated_offsets[3]);
+			public java.lang.String mod(){
+				return (java.lang.String)super.get(super.type.generated_offsets[3]);
 			}
-			public void set_fields(ai.greycat.std.runtime.SecurityFields v){
+			public void set_mod(java.lang.String v){
 				super.set(super.type.generated_offsets[3],v);
 			}
-			public static ai.greycat.std.core.Array<java.lang.String> permissions(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<java.lang.String>) ai.greycat.GreyCat.call(greycat,"runtime::SecurityPolicy::permissions");
+			public java.lang.String type(){
+				return (java.lang.String)super.get(super.type.generated_offsets[4]);
 			}
-			public static SecurityPolicy create(ai.greycat.GreyCat greycat, ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> entities, ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential> credentials, ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole> roles, ai.greycat.std.runtime.SecurityFields fields){
-				return new SecurityPolicy(greycat.libs_by_name.get(ai.greycat.std.name).mapped[56], entities, credentials, roles, fields);
+			public void set_type(java.lang.String v){
+				super.set(super.type.generated_offsets[4],v);
+			}
+			public java.lang.String fun(){
+				return (java.lang.String)super.get(super.type.generated_offsets[5]);
+			}
+			public void set_fun(java.lang.String v){
+				super.set(super.type.generated_offsets[5],v);
+			}
+			public ai.greycat.std_n.core.time creation(){
+				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[6]);
+			}
+			public void set_creation(ai.greycat.std_n.core.time v){
+				super.set(super.type.generated_offsets[6],v);
+			}
+			public ai.greycat.std.runtime.TaskStatus status(){
+				return (ai.greycat.std.runtime.TaskStatus)super.get(super.type.generated_offsets[7]);
+			}
+			public void set_status(ai.greycat.std.runtime.TaskStatus v){
+				super.set(super.type.generated_offsets[7],v);
+			}
+			public ai.greycat.std_n.core.time start(){
+				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[8]);
+			}
+			public void set_start(ai.greycat.std_n.core.time v){
+				super.set(super.type.generated_offsets[8],v);
+			}
+			public java.lang.Double progress(){
+				return (java.lang.Double)super.get(super.type.generated_offsets[9]);
+			}
+			public void set_progress(java.lang.Double v){
+				super.set(super.type.generated_offsets[9],v);
+			}
+			public ai.greycat.std_n.core.duration remaining(){
+				return (ai.greycat.std_n.core.duration)super.get(super.type.generated_offsets[10]);
+			}
+			public void set_remaining(ai.greycat.std_n.core.duration v){
+				super.set(super.type.generated_offsets[10],v);
+			}
+			public ai.greycat.std_n.core.duration duration(){
+				return (ai.greycat.std_n.core.duration)super.get(super.type.generated_offsets[11]);
+			}
+			public void set_duration(ai.greycat.std_n.core.duration v){
+				super.set(super.type.generated_offsets[11],v);
+			}
+			public java.lang.Long sub_waiting(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[12]);
+			}
+			public void set_sub_waiting(java.lang.Long v){
+				super.set(super.type.generated_offsets[12],v);
+			}
+			public java.lang.Long sub_tasks_all(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[13]);
+			}
+			public void set_sub_tasks_all(java.lang.Long v){
+				super.set(super.type.generated_offsets[13],v);
+			}
+			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.Task> running(ai.greycat.GreyCat greycat) throws java.io.IOException {
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.Task>) ai.greycat.GreyCat.call(greycat,"runtime::Task::running");
+			}
+			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.Task> history(ai.greycat.GreyCat greycat,java.lang.Long offset,java.lang.Long max) throws java.io.IOException {
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.Task>) ai.greycat.GreyCat.call(greycat,"runtime::Task::history", offset, max);
+			}
+			public static java.lang.Boolean cancel(ai.greycat.GreyCat greycat,java.lang.Long task_id) throws java.io.IOException {
+				return (java.lang.Boolean) ai.greycat.GreyCat.call(greycat,"runtime::Task::cancel", task_id);
+			}
+			public static ai.greycat.std.runtime.Task info(ai.greycat.GreyCat greycat,java.lang.Long user_id,java.lang.Long task_id) throws java.io.IOException {
+				return (ai.greycat.std.runtime.Task) ai.greycat.GreyCat.call(greycat,"runtime::Task::info", user_id, task_id);
+			}
+			public static Task create(ai.greycat.GreyCat greycat, java.lang.Long id, java.lang.Long user, java.lang.Long parent, java.lang.String mod, java.lang.String type, java.lang.String fun, ai.greycat.std_n.core.time creation, ai.greycat.std.runtime.TaskStatus status, ai.greycat.std_n.core.time start, java.lang.Double progress, ai.greycat.std_n.core.duration remaining, ai.greycat.std_n.core.duration duration, java.lang.Long sub_waiting, java.lang.Long sub_tasks_all){
+				return new Task(greycat.libs_by_name.get(ai.greycat.std.name).mapped[56], id, user, parent, mod, type, fun, creation, status, start, progress, remaining, duration, sub_waiting, sub_tasks_all);
 			}
 		}
 	}
 	public static final class io {
-		public static final class FileWriter extends ai.greycat.std_n.io.FileWriter {
-			public static final java.lang.String name = "io::FileWriter";
-			private FileWriter(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type);
-			}
-			public static FileWriter create(ai.greycat.GreyCat greycat){
-				return new FileWriter(greycat.libs_by_name.get(ai.greycat.std.name).mapped[57]);
-			}
-		}
-		public static final class JsonFormat extends GreyCat.Object {
-			public static final java.lang.String name = "io::JsonFormat";
-			private JsonFormat(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class FileDescriptor extends GreyCat.Object {
+			public static final java.lang.String name = "io::FileDescriptor";
+			private FileDescriptor(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
-			public static JsonFormat create(ai.greycat.GreyCat greycat){
-				return new JsonFormat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[58]);
+			public java.lang.String uri(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_uri(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.Long size(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_size(java.lang.Long v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public ai.greycat.std_n.core.time last_modification(){
+				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[2]);
+			}
+			public void set_last_modification(ai.greycat.std_n.core.time v){
+				super.set(super.type.generated_offsets[2],v);
+			}
+			public static FileDescriptor create(ai.greycat.GreyCat greycat, java.lang.String uri, java.lang.Long size, ai.greycat.std_n.core.time last_modification){
+				return new FileDescriptor(greycat.libs_by_name.get(ai.greycat.std.name).mapped[57], uri, size, last_modification);
+			}
+		}
+		public static final class CsvReader extends ai.greycat.std_n.io.CsvReader {
+			public static final java.lang.String name = "io::CsvReader";
+			private CsvReader(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static CsvReader create(ai.greycat.GreyCat greycat){
+				return new CsvReader(greycat.libs_by_name.get(ai.greycat.std.name).mapped[58]);
+			}
+		}
+		public static final class TextWriter extends ai.greycat.std_n.io.TextWriter {
+			public static final java.lang.String name = "io::TextWriter";
+			private TextWriter(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static TextWriter create(ai.greycat.GreyCat greycat){
+				return new TextWriter(greycat.libs_by_name.get(ai.greycat.std.name).mapped[59]);
+			}
+		}
+		public static final class CsvColumnFloat extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvColumnFloat";
+			private CsvColumnFloat(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_name(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.Boolean mandatory(){
+				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_mandatory(java.lang.Boolean v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public static CsvColumnFloat create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
+				return new CsvColumnFloat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[60], name, mandatory);
 			}
 		}
 		public static final class JSON extends GreyCat.Object {
@@ -3799,37 +3847,30 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super(type, attributes);
 			}
 			public static JSON create(ai.greycat.GreyCat greycat){
-				return new JSON(greycat.libs_by_name.get(ai.greycat.std.name).mapped[59]);
+				return new JSON(greycat.libs_by_name.get(ai.greycat.std.name).mapped[61]);
 			}
 		}
-		public static final class TextEncoder extends GreyCat.Enum {
-			public static final java.lang.String name = "io::TextEncoder";
-			private TextEncoder(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
+		public static final class JsonWriter extends ai.greycat.std_n.io.JsonWriter {
+			public static final java.lang.String name = "io::JsonWriter";
+			private JsonWriter(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
 			}
-			public static ai.greycat.std.io.TextEncoder plain(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[60];
-				return (ai.greycat.std.io.TextEncoder) t.enum_values[t.generated_offsets[0]];
-			}
-			public static ai.greycat.std.io.TextEncoder base64(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[60];
-				return (ai.greycat.std.io.TextEncoder) t.enum_values[t.generated_offsets[1]];
-			}
-			public static ai.greycat.std.io.TextEncoder base64url(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[60];
-				return (ai.greycat.std.io.TextEncoder) t.enum_values[t.generated_offsets[2]];
-			}
-			public static ai.greycat.std.io.TextEncoder hexadecimal(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[60];
-				return (ai.greycat.std.io.TextEncoder) t.enum_values[t.generated_offsets[3]];
-			}
-			public static TextEncoder create(ai.greycat.GreyCat greycat){
-				return new TextEncoder(greycat.libs_by_name.get(ai.greycat.std.name).mapped[60]);
+			public static JsonWriter create(ai.greycat.GreyCat greycat){
+				return new JsonWriter(greycat.libs_by_name.get(ai.greycat.std.name).mapped[62]);
 			}
 		}
-		public static final class CSVColumnBoolean extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVColumnBoolean";
-			private CSVColumnBoolean(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class TextReader extends ai.greycat.std_n.io.TextReader {
+			public static final java.lang.String name = "io::TextReader";
+			private TextReader(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static TextReader create(ai.greycat.GreyCat greycat){
+				return new TextReader(greycat.libs_by_name.get(ai.greycat.std.name).mapped[63]);
+			}
+		}
+		public static final class CsvColumnDate extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvColumnDate";
+			private CsvColumnDate(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
 			public java.lang.String name(){
@@ -3844,148 +3885,40 @@ public final class std extends ai.greycat.GreyCat.Library {
 			public void set_mandatory(java.lang.Boolean v){
 				super.set(super.type.generated_offsets[1],v);
 			}
-			public static CSVColumnBoolean create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
-				return new CSVColumnBoolean(greycat.libs_by_name.get(ai.greycat.std.name).mapped[61], name, mandatory);
+			public java.lang.String format(){
+				return (java.lang.String)super.get(super.type.generated_offsets[2]);
 			}
-		}
-		public static final class CSVColumnInteger extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVColumnInteger";
-			private CSVColumnInteger(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.Boolean mandatory(){
-				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_mandatory(java.lang.Boolean v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static CSVColumnInteger create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
-				return new CSVColumnInteger(greycat.libs_by_name.get(ai.greycat.std.name).mapped[62], name, mandatory);
-			}
-		}
-		public static final class CSVColumnTime extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVColumnTime";
-			private CSVColumnTime(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.Boolean mandatory(){
-				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_mandatory(java.lang.Boolean v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public ai.greycat.std.core.DurationUnit unit(){
-				return (ai.greycat.std.core.DurationUnit)super.get(super.type.generated_offsets[2]);
-			}
-			public void set_unit(ai.greycat.std.core.DurationUnit v){
+			public void set_format(java.lang.String v){
 				super.set(super.type.generated_offsets[2],v);
 			}
-			public static CSVColumnTime create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory, ai.greycat.std.core.DurationUnit unit){
-				return new CSVColumnTime(greycat.libs_by_name.get(ai.greycat.std.name).mapped[63], name, mandatory, unit);
+			public ai.greycat.std.core.TimeZone tz(){
+				return (ai.greycat.std.core.TimeZone)super.get(super.type.generated_offsets[3]);
+			}
+			public void set_tz(ai.greycat.std.core.TimeZone v){
+				super.set(super.type.generated_offsets[3],v);
+			}
+			public java.lang.Boolean as_time(){
+				return (java.lang.Boolean)super.get(super.type.generated_offsets[4]);
+			}
+			public void set_as_time(java.lang.Boolean v){
+				super.set(super.type.generated_offsets[4],v);
+			}
+			public static CsvColumnDate create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory, java.lang.String format, ai.greycat.std.core.TimeZone tz, java.lang.Boolean as_time){
+				return new CsvColumnDate(greycat.libs_by_name.get(ai.greycat.std.name).mapped[64], name, mandatory, format, tz, as_time);
 			}
 		}
-		public static final class CSVColumnFloat extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVColumnFloat";
-			private CSVColumnFloat(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.Boolean mandatory(){
-				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_mandatory(java.lang.Boolean v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static CSVColumnFloat create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
-				return new CSVColumnFloat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[64], name, mandatory);
-			}
-		}
-		public static final class CSVColumnIgnored extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVColumnIgnored";
-			private CSVColumnIgnored(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.Boolean mandatory(){
-				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_mandatory(java.lang.Boolean v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static CSVColumnIgnored create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
-				return new CSVColumnIgnored(greycat.libs_by_name.get(ai.greycat.std.name).mapped[65], name, mandatory);
-			}
-		}
-		public static final class File extends ai.greycat.std_n.io.File {
-			public static final java.lang.String name = "io::File";
-			private File(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class JsonReader extends ai.greycat.std_n.io.JsonReader {
+			public static final java.lang.String name = "io::JsonReader";
+			private JsonReader(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
-			public static File create(ai.greycat.GreyCat greycat){
-				return new File(greycat.libs_by_name.get(ai.greycat.std.name).mapped[66]);
+			public static JsonReader create(ai.greycat.GreyCat greycat){
+				return new JsonReader(greycat.libs_by_name.get(ai.greycat.std.name).mapped[65]);
 			}
 		}
-		public static final class BinaryFormat extends GreyCat.Object {
-			public static final java.lang.String name = "io::BinaryFormat";
-			private BinaryFormat(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static BinaryFormat create(ai.greycat.GreyCat greycat){
-				return new BinaryFormat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[67]);
-			}
-		}
-		public static final class Directory extends ai.greycat.std_n.io.Directory {
-			public static final java.lang.String name = "io::Directory";
-			private Directory(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type);
-			}
-			public static Directory create(ai.greycat.GreyCat greycat){
-				return new Directory(greycat.libs_by_name.get(ai.greycat.std.name).mapped[68]);
-			}
-		}
-		public static final class TextFormat extends GreyCat.Object {
-			public static final java.lang.String name = "io::TextFormat";
-			private TextFormat(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static TextFormat create(ai.greycat.GreyCat greycat){
-				return new TextFormat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[69]);
-			}
-		}
-		public static final class Env extends GreyCat.Object {
-			public static final java.lang.String name = "io::Env";
-			private Env(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static Env create(ai.greycat.GreyCat greycat){
-				return new Env(greycat.libs_by_name.get(ai.greycat.std.name).mapped[70]);
-			}
-		}
-		public static final class CSVColumnString extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVColumnString";
-			private CSVColumnString(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class CsvColumnString extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvColumnString";
+			private CsvColumnString(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
 			public java.lang.String name(){
@@ -4030,13 +3963,52 @@ public final class std extends ai.greycat.GreyCat.Library {
 			public void set_encoder(ai.greycat.std.io.TextEncoder v){
 				super.set(super.type.generated_offsets[6],v);
 			}
-			public static CSVColumnString create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory, java.lang.Boolean trim, java.lang.Boolean try_number, java.lang.Boolean try_json, ai.greycat.std.core.Array<java.lang.String> values, ai.greycat.std.io.TextEncoder encoder){
-				return new CSVColumnString(greycat.libs_by_name.get(ai.greycat.std.name).mapped[71], name, mandatory, trim, try_number, try_json, values, encoder);
+			public static CsvColumnString create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory, java.lang.Boolean trim, java.lang.Boolean try_number, java.lang.Boolean try_json, ai.greycat.std.core.Array<java.lang.String> values, ai.greycat.std.io.TextEncoder encoder){
+				return new CsvColumnString(greycat.libs_by_name.get(ai.greycat.std.name).mapped[66], name, mandatory, trim, try_number, try_json, values, encoder);
 			}
 		}
-		public static final class CSVFormat extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVFormat";
-			private CSVFormat(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class CsvColumnBoolean extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvColumnBoolean";
+			private CsvColumnBoolean(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_name(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.Boolean mandatory(){
+				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_mandatory(java.lang.Boolean v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public static CsvColumnBoolean create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
+				return new CsvColumnBoolean(greycat.libs_by_name.get(ai.greycat.std.name).mapped[67], name, mandatory);
+			}
+		}
+		public static final class Directory extends ai.greycat.std_n.io.Directory {
+			public static final java.lang.String name = "io::Directory";
+			private Directory(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static Directory create(ai.greycat.GreyCat greycat){
+				return new Directory(greycat.libs_by_name.get(ai.greycat.std.name).mapped[68]);
+			}
+		}
+		public static final class File extends ai.greycat.std_n.io.File {
+			public static final java.lang.String name = "io::File";
+			private File(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static File create(ai.greycat.GreyCat greycat){
+				return new File(greycat.libs_by_name.get(ai.greycat.std.name).mapped[69]);
+			}
+		}
+		public static final class CsvFormat extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvFormat";
+			private CsvFormat(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
 			public java.lang.Long header_lines(){
@@ -4075,32 +4047,96 @@ public final class std extends ai.greycat.GreyCat.Library {
 			public void set_thousands_separator(java.lang.Character v){
 				super.set(super.type.generated_offsets[5],v);
 			}
-			public ai.greycat.std.core.Array<ai.greycat.std.io.CSVColumn> columns(){
-				return (ai.greycat.std.core.Array<ai.greycat.std.io.CSVColumn>)super.get(super.type.generated_offsets[6]);
+			public ai.greycat.std.core.Array<ai.greycat.std.io.CsvColumn> columns(){
+				return (ai.greycat.std.core.Array<ai.greycat.std.io.CsvColumn>)super.get(super.type.generated_offsets[6]);
 			}
-			public void set_columns(ai.greycat.std.core.Array<ai.greycat.std.io.CSVColumn> v){
+			public void set_columns(ai.greycat.std.core.Array<ai.greycat.std.io.CsvColumn> v){
 				super.set(super.type.generated_offsets[6],v);
 			}
-			public static CSVFormat create(ai.greycat.GreyCat greycat, java.lang.Long header_lines, java.lang.Boolean infer, java.lang.Character separator, java.lang.Character string_delimiter, java.lang.Character decimal_separator, java.lang.Character thousands_separator, ai.greycat.std.core.Array<ai.greycat.std.io.CSVColumn> columns){
-				return new CSVFormat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[72], header_lines, infer, separator, string_delimiter, decimal_separator, thousands_separator, columns);
+			public static CsvFormat create(ai.greycat.GreyCat greycat, java.lang.Long header_lines, java.lang.Boolean infer, java.lang.Character separator, java.lang.Character string_delimiter, java.lang.Character decimal_separator, java.lang.Character thousands_separator, ai.greycat.std.core.Array<ai.greycat.std.io.CsvColumn> columns){
+				return new CsvFormat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[70], header_lines, infer, separator, string_delimiter, decimal_separator, thousands_separator, columns);
 			}
 		}
-		public static final class FileFormat extends GreyCat.Object {
-			public static final java.lang.String name = "io::FileFormat";
-			private FileFormat(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class TextEncoder extends GreyCat.Enum {
+			public static final java.lang.String name = "io::TextEncoder";
+			private TextEncoder(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
-			public static FileFormat create(ai.greycat.GreyCat greycat){
-				return new FileFormat(greycat.libs_by_name.get(ai.greycat.std.name).mapped[73]);
+			public static ai.greycat.std.io.TextEncoder plain(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[71];
+				return (ai.greycat.std.io.TextEncoder) t.enum_values[t.generated_offsets[0]];
+			}
+			public static ai.greycat.std.io.TextEncoder base64(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[71];
+				return (ai.greycat.std.io.TextEncoder) t.enum_values[t.generated_offsets[1]];
+			}
+			public static ai.greycat.std.io.TextEncoder base64url(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[71];
+				return (ai.greycat.std.io.TextEncoder) t.enum_values[t.generated_offsets[2]];
+			}
+			public static ai.greycat.std.io.TextEncoder hexadecimal(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[71];
+				return (ai.greycat.std.io.TextEncoder) t.enum_values[t.generated_offsets[3]];
+			}
+			public static TextEncoder create(ai.greycat.GreyCat greycat){
+				return new TextEncoder(greycat.libs_by_name.get(ai.greycat.std.name).mapped[71]);
 			}
 		}
-		public static final class AbiWriter extends ai.greycat.std_n.io.AbiWriter {
-			public static final java.lang.String name = "io::AbiWriter";
-			private AbiWriter(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class CsvColumn extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvColumn";
+			private CsvColumn(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_name(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.Boolean mandatory(){
+				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_mandatory(java.lang.Boolean v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public static CsvColumn create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
+				return new CsvColumn(greycat.libs_by_name.get(ai.greycat.std.name).mapped[72], name, mandatory);
+			}
+		}
+		public static final class CsvColumnTime extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvColumnTime";
+			private CsvColumnTime(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_name(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.Boolean mandatory(){
+				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_mandatory(java.lang.Boolean v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public ai.greycat.std.core.DurationUnit unit(){
+				return (ai.greycat.std.core.DurationUnit)super.get(super.type.generated_offsets[2]);
+			}
+			public void set_unit(ai.greycat.std.core.DurationUnit v){
+				super.set(super.type.generated_offsets[2],v);
+			}
+			public static CsvColumnTime create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory, ai.greycat.std.core.DurationUnit unit){
+				return new CsvColumnTime(greycat.libs_by_name.get(ai.greycat.std.name).mapped[73], name, mandatory, unit);
+			}
+		}
+		public static final class CsvWriter extends ai.greycat.std_n.io.CsvWriter {
+			public static final java.lang.String name = "io::CsvWriter";
+			private CsvWriter(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
-			public static AbiWriter create(ai.greycat.GreyCat greycat){
-				return new AbiWriter(greycat.libs_by_name.get(ai.greycat.std.name).mapped[74]);
+			public static CsvWriter create(ai.greycat.GreyCat greycat){
+				return new CsvWriter(greycat.libs_by_name.get(ai.greycat.std.name).mapped[74]);
 			}
 		}
 		public static final class FileEntry extends GreyCat.Object {
@@ -4112,9 +4148,9 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new FileEntry(greycat.libs_by_name.get(ai.greycat.std.name).mapped[75]);
 			}
 		}
-		public static final class CSVColumnDate extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVColumnDate";
-			private CSVColumnDate(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class CsvColumnInteger extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvColumnInteger";
+			private CsvColumnInteger(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
 			public java.lang.String name(){
@@ -4129,26 +4165,38 @@ public final class std extends ai.greycat.GreyCat.Library {
 			public void set_mandatory(java.lang.Boolean v){
 				super.set(super.type.generated_offsets[1],v);
 			}
-			public java.lang.String format(){
-				return (java.lang.String)super.get(super.type.generated_offsets[2]);
+			public static CsvColumnInteger create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
+				return new CsvColumnInteger(greycat.libs_by_name.get(ai.greycat.std.name).mapped[76], name, mandatory);
 			}
-			public void set_format(java.lang.String v){
-				super.set(super.type.generated_offsets[2],v);
+		}
+		public static final class CsvColumnIgnored extends GreyCat.Object {
+			public static final java.lang.String name = "io::CsvColumnIgnored";
+			private CsvColumnIgnored(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
 			}
-			public ai.greycat.std.core.TimeZone tz(){
-				return (ai.greycat.std.core.TimeZone)super.get(super.type.generated_offsets[3]);
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
 			}
-			public void set_tz(ai.greycat.std.core.TimeZone v){
-				super.set(super.type.generated_offsets[3],v);
+			public void set_name(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
 			}
-			public java.lang.Boolean as_time(){
-				return (java.lang.Boolean)super.get(super.type.generated_offsets[4]);
+			public java.lang.Boolean mandatory(){
+				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
 			}
-			public void set_as_time(java.lang.Boolean v){
-				super.set(super.type.generated_offsets[4],v);
+			public void set_mandatory(java.lang.Boolean v){
+				super.set(super.type.generated_offsets[1],v);
 			}
-			public static CSVColumnDate create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory, java.lang.String format, ai.greycat.std.core.TimeZone tz, java.lang.Boolean as_time){
-				return new CSVColumnDate(greycat.libs_by_name.get(ai.greycat.std.name).mapped[76], name, mandatory, format, tz, as_time);
+			public static CsvColumnIgnored create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
+				return new CsvColumnIgnored(greycat.libs_by_name.get(ai.greycat.std.name).mapped[77], name, mandatory);
+			}
+		}
+		public static final class AbiWriter extends ai.greycat.std_n.io.AbiWriter {
+			public static final java.lang.String name = "io::AbiWriter";
+			private AbiWriter(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static AbiWriter create(ai.greycat.GreyCat greycat){
+				return new AbiWriter(greycat.libs_by_name.get(ai.greycat.std.name).mapped[78]);
 			}
 		}
 		public static final class AbiReader extends ai.greycat.std_n.io.AbiReader {
@@ -4157,39 +4205,14 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super(type);
 			}
 			public static AbiReader create(ai.greycat.GreyCat greycat){
-				return new AbiReader(greycat.libs_by_name.get(ai.greycat.std.name).mapped[77]);
+				return new AbiReader(greycat.libs_by_name.get(ai.greycat.std.name).mapped[79]);
 			}
 		}
-		public static final class FileDescriptor extends GreyCat.Object {
-			public static final java.lang.String name = "io::FileDescriptor";
-			private FileDescriptor(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String uri(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_uri(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.Long size(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_size(java.lang.Long v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public ai.greycat.std_n.core.time last_modification(){
-				return (ai.greycat.std_n.core.time)super.get(super.type.generated_offsets[2]);
-			}
-			public void set_last_modification(ai.greycat.std_n.core.time v){
-				super.set(super.type.generated_offsets[2],v);
-			}
-			public static FileDescriptor create(ai.greycat.GreyCat greycat, java.lang.String uri, java.lang.Long size, ai.greycat.std_n.core.time last_modification){
-				return new FileDescriptor(greycat.libs_by_name.get(ai.greycat.std.name).mapped[78], uri, size, last_modification);
-			}
-		}
-		public static final class CSVColumn extends GreyCat.Object {
-			public static final java.lang.String name = "io::CSVColumn";
-			private CSVColumn(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+	}
+	public static final class debug {
+		public static final class TypeAttr extends GreyCat.Object {
+			public static final java.lang.String name = "debug::TypeAttr";
+			private TypeAttr(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
 			public java.lang.String name(){
@@ -4198,18 +4221,49 @@ public final class std extends ai.greycat.GreyCat.Library {
 			public void set_name(java.lang.String v){
 				super.set(super.type.generated_offsets[0],v);
 			}
-			public java.lang.Boolean mandatory(){
-				return (java.lang.Boolean)super.get(super.type.generated_offsets[1]);
+			public ai.greycat.std.debug.TypeRef type(){
+				return (ai.greycat.std.debug.TypeRef)super.get(super.type.generated_offsets[1]);
 			}
-			public void set_mandatory(java.lang.Boolean v){
+			public void set_type(ai.greycat.std.debug.TypeRef v){
 				super.set(super.type.generated_offsets[1],v);
 			}
-			public static CSVColumn create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.Boolean mandatory){
-				return new CSVColumn(greycat.libs_by_name.get(ai.greycat.std.name).mapped[79], name, mandatory);
+			public java.lang.Boolean is_static(){
+				return (java.lang.Boolean)super.get(super.type.generated_offsets[2]);
+			}
+			public void set_is_static(java.lang.Boolean v){
+				super.set(super.type.generated_offsets[2],v);
+			}
+			public static TypeAttr create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std.debug.TypeRef type, java.lang.Boolean is_static){
+				return new TypeAttr(greycat.libs_by_name.get(ai.greycat.std.name).mapped[80], name, type, is_static);
 			}
 		}
-	}
-	public static final class debug {
+		public static final class ModVarDesc extends GreyCat.Object {
+			public static final java.lang.String name = "debug::ModVarDesc";
+			private ModVarDesc(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.String module(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_module(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_name(java.lang.String v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public ai.greycat.std.debug.TypeRef type(){
+				return (ai.greycat.std.debug.TypeRef)super.get(super.type.generated_offsets[2]);
+			}
+			public void set_type(ai.greycat.std.debug.TypeRef v){
+				super.set(super.type.generated_offsets[2],v);
+			}
+			public static ModVarDesc create(ai.greycat.GreyCat greycat, java.lang.String module, java.lang.String name, ai.greycat.std.debug.TypeRef type){
+				return new ModVarDesc(greycat.libs_by_name.get(ai.greycat.std.name).mapped[81], module, name, type);
+			}
+		}
 		public static final class ModDesc extends GreyCat.Object {
 			public static final java.lang.String name = "debug::ModDesc";
 			private ModDesc(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
@@ -4246,92 +4300,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[4],v);
 			}
 			public static ModDesc create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.String lib, ai.greycat.std.core.Array<ai.greycat.std.debug.FnDesc> functions, ai.greycat.std.core.Array<ai.greycat.std.debug.TypeDesc> types, ai.greycat.std.core.Array<ai.greycat.std.debug.ModVarDesc> vars){
-				return new ModDesc(greycat.libs_by_name.get(ai.greycat.std.name).mapped[80], name, lib, functions, types, vars);
-			}
-		}
-		public static final class TypeAttr extends GreyCat.Object {
-			public static final java.lang.String name = "debug::TypeAttr";
-			private TypeAttr(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public ai.greycat.std.debug.TypeRef type(){
-				return (ai.greycat.std.debug.TypeRef)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_type(ai.greycat.std.debug.TypeRef v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public java.lang.Boolean is_static(){
-				return (java.lang.Boolean)super.get(super.type.generated_offsets[2]);
-			}
-			public void set_is_static(java.lang.Boolean v){
-				super.set(super.type.generated_offsets[2],v);
-			}
-			public static TypeAttr create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std.debug.TypeRef type, java.lang.Boolean is_static){
-				return new TypeAttr(greycat.libs_by_name.get(ai.greycat.std.name).mapped[81], name, type, is_static);
-			}
-		}
-		public static final class TypeRef extends GreyCat.Object {
-			public static final java.lang.String name = "debug::TypeRef";
-			private TypeRef(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.String module(){
-				return (java.lang.String)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_module(java.lang.String v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public ai.greycat.std.core.Array<ai.greycat.std.debug.TypeRef> generics(){
-				return (ai.greycat.std.core.Array<ai.greycat.std.debug.TypeRef>)super.get(super.type.generated_offsets[2]);
-			}
-			public void set_generics(ai.greycat.std.core.Array<ai.greycat.std.debug.TypeRef> v){
-				super.set(super.type.generated_offsets[2],v);
-			}
-			public java.lang.Boolean nullable(){
-				return (java.lang.Boolean)super.get(super.type.generated_offsets[3]);
-			}
-			public void set_nullable(java.lang.Boolean v){
-				super.set(super.type.generated_offsets[3],v);
-			}
-			public static TypeRef create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.String module, ai.greycat.std.core.Array<ai.greycat.std.debug.TypeRef> generics, java.lang.Boolean nullable){
-				return new TypeRef(greycat.libs_by_name.get(ai.greycat.std.name).mapped[82], name, module, generics, nullable);
-			}
-		}
-		public static final class FnMode extends GreyCat.Enum {
-			public static final java.lang.String name = "debug::FnMode";
-			private FnMode(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static ai.greycat.std.debug.FnMode read_only(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[83];
-				return (ai.greycat.std.debug.FnMode) t.enum_values[t.generated_offsets[0]];
-			}
-			public static ai.greycat.std.debug.FnMode copy_on_write(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[83];
-				return (ai.greycat.std.debug.FnMode) t.enum_values[t.generated_offsets[1]];
-			}
-			public static ai.greycat.std.debug.FnMode volatile_(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[83];
-				return (ai.greycat.std.debug.FnMode) t.enum_values[t.generated_offsets[2]];
-			}
-			public static ai.greycat.std.debug.FnMode write(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[83];
-				return (ai.greycat.std.debug.FnMode) t.enum_values[t.generated_offsets[3]];
-			}
-			public static FnMode create(ai.greycat.GreyCat greycat){
-				return new FnMode(greycat.libs_by_name.get(ai.greycat.std.name).mapped[83]);
+				return new ModDesc(greycat.libs_by_name.get(ai.greycat.std.name).mapped[82], name, lib, functions, types, vars);
 			}
 		}
 		public static final class FnDesc extends GreyCat.Object {
@@ -4412,7 +4381,86 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[11],v);
 			}
 			public static FnDesc create(ai.greycat.GreyCat greycat, java.lang.String module, java.lang.String name, java.lang.String parent_type, ai.greycat.std.core.Array<ai.greycat.std.debug.FnParam> params, ai.greycat.std.debug.TypeRef return_type, java.lang.Boolean is_static, java.lang.Boolean is_task, java.lang.Boolean is_exclusive, java.lang.Boolean is_reserved, java.lang.Boolean is_exposed, ai.greycat.std.debug.FnMode mode, ai.greycat.std.core.Array<java.lang.String> permissions){
-				return new FnDesc(greycat.libs_by_name.get(ai.greycat.std.name).mapped[84], module, name, parent_type, params, return_type, is_static, is_task, is_exclusive, is_reserved, is_exposed, mode, permissions);
+				return new FnDesc(greycat.libs_by_name.get(ai.greycat.std.name).mapped[83], module, name, parent_type, params, return_type, is_static, is_task, is_exclusive, is_reserved, is_exposed, mode, permissions);
+			}
+		}
+		public static final class FnMode extends GreyCat.Enum {
+			public static final java.lang.String name = "debug::FnMode";
+			private FnMode(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public static ai.greycat.std.debug.FnMode read_only(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[84];
+				return (ai.greycat.std.debug.FnMode) t.enum_values[t.generated_offsets[0]];
+			}
+			public static ai.greycat.std.debug.FnMode copy_on_write(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[84];
+				return (ai.greycat.std.debug.FnMode) t.enum_values[t.generated_offsets[1]];
+			}
+			public static ai.greycat.std.debug.FnMode volatile_(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[84];
+				return (ai.greycat.std.debug.FnMode) t.enum_values[t.generated_offsets[2]];
+			}
+			public static ai.greycat.std.debug.FnMode write(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[84];
+				return (ai.greycat.std.debug.FnMode) t.enum_values[t.generated_offsets[3]];
+			}
+			public static FnMode create(ai.greycat.GreyCat greycat){
+				return new FnMode(greycat.libs_by_name.get(ai.greycat.std.name).mapped[84]);
+			}
+		}
+		public static final class FnParam extends GreyCat.Object {
+			public static final java.lang.String name = "debug::FnParam";
+			private FnParam(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_name(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public ai.greycat.std.debug.TypeRef type(){
+				return (ai.greycat.std.debug.TypeRef)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_type(ai.greycat.std.debug.TypeRef v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public static FnParam create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std.debug.TypeRef type){
+				return new FnParam(greycat.libs_by_name.get(ai.greycat.std.name).mapped[85], name, type);
+			}
+		}
+		public static final class TypeRef extends GreyCat.Object {
+			public static final java.lang.String name = "debug::TypeRef";
+			private TypeRef(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.String name(){
+				return (java.lang.String)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_name(java.lang.String v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.String module(){
+				return (java.lang.String)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_module(java.lang.String v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public ai.greycat.std.core.Array<ai.greycat.std.debug.TypeRef> generics(){
+				return (ai.greycat.std.core.Array<ai.greycat.std.debug.TypeRef>)super.get(super.type.generated_offsets[2]);
+			}
+			public void set_generics(ai.greycat.std.core.Array<ai.greycat.std.debug.TypeRef> v){
+				super.set(super.type.generated_offsets[2],v);
+			}
+			public java.lang.Boolean nullable(){
+				return (java.lang.Boolean)super.get(super.type.generated_offsets[3]);
+			}
+			public void set_nullable(java.lang.Boolean v){
+				super.set(super.type.generated_offsets[3],v);
+			}
+			public static TypeRef create(ai.greycat.GreyCat greycat, java.lang.String name, java.lang.String module, ai.greycat.std.core.Array<ai.greycat.std.debug.TypeRef> generics, java.lang.Boolean nullable){
+				return new TypeRef(greycat.libs_by_name.get(ai.greycat.std.name).mapped[86], name, module, generics, nullable);
 			}
 		}
 		public static final class TypeDesc extends GreyCat.Object {
@@ -4457,55 +4505,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[5],v);
 			}
 			public static TypeDesc create(ai.greycat.GreyCat greycat, java.lang.String module, java.lang.String name, ai.greycat.std.core.Array<ai.greycat.std.debug.FnDesc> methods, ai.greycat.std.core.Array<ai.greycat.std.debug.TypeAttr> attrs, java.lang.Boolean is_abstract, java.lang.Boolean is_enum){
-				return new TypeDesc(greycat.libs_by_name.get(ai.greycat.std.name).mapped[85], module, name, methods, attrs, is_abstract, is_enum);
-			}
-		}
-		public static final class FnParam extends GreyCat.Object {
-			public static final java.lang.String name = "debug::FnParam";
-			private FnParam(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public ai.greycat.std.debug.TypeRef type(){
-				return (ai.greycat.std.debug.TypeRef)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_type(ai.greycat.std.debug.TypeRef v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static FnParam create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std.debug.TypeRef type){
-				return new FnParam(greycat.libs_by_name.get(ai.greycat.std.name).mapped[86], name, type);
-			}
-		}
-		public static final class ModVarDesc extends GreyCat.Object {
-			public static final java.lang.String name = "debug::ModVarDesc";
-			private ModVarDesc(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.String module(){
-				return (java.lang.String)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_module(java.lang.String v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.String name(){
-				return (java.lang.String)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_name(java.lang.String v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public ai.greycat.std.debug.TypeRef type(){
-				return (ai.greycat.std.debug.TypeRef)super.get(super.type.generated_offsets[2]);
-			}
-			public void set_type(ai.greycat.std.debug.TypeRef v){
-				super.set(super.type.generated_offsets[2],v);
-			}
-			public static ModVarDesc create(ai.greycat.GreyCat greycat, java.lang.String module, java.lang.String name, ai.greycat.std.debug.TypeRef type){
-				return new ModVarDesc(greycat.libs_by_name.get(ai.greycat.std.name).mapped[87], module, name, type);
+				return new TypeDesc(greycat.libs_by_name.get(ai.greycat.std.name).mapped[87], module, name, methods, attrs, is_abstract, is_enum);
 			}
 		}
 		public static ai.greycat.std.core.Array<ai.greycat.std.debug.ModDesc> modules(ai.greycat.GreyCat greycat) throws java.io.IOException {
@@ -4588,22 +4588,31 @@ public final class std extends ai.greycat.GreyCat.Library {
 		}
 	}
 	public static final class util {
+		public static final class HistogramI64 extends ai.greycat.std_n.util.HistogramI64 {
+			public static final java.lang.String name = "util::HistogramI64";
+			private HistogramI64(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static HistogramI64 create(ai.greycat.GreyCat greycat){
+				return new HistogramI64(greycat.libs_by_name.get(ai.greycat.std.name).mapped[89]);
+			}
+		}
 		public static final class Gaussian extends ai.greycat.std_n.util.Gaussian {
 			public static final java.lang.String name = "util::Gaussian";
 			private Gaussian(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
 			public static Gaussian create(ai.greycat.GreyCat greycat){
-				return new Gaussian(greycat.libs_by_name.get(ai.greycat.std.name).mapped[89]);
+				return new Gaussian(greycat.libs_by_name.get(ai.greycat.std.name).mapped[90]);
 			}
 		}
-		public static final class Quantizer extends ai.greycat.std_n.util.Quantizer {
-			public static final java.lang.String name = "util::Quantizer";
-			private Quantizer(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class Queue<T> extends ai.greycat.std_n.util.Queue {
+			public static final java.lang.String name = "util::Queue";
+			private Queue(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
-			public static Quantizer create(ai.greycat.GreyCat greycat){
-				return new Quantizer(greycat.libs_by_name.get(ai.greycat.std.name).mapped[90]);
+			public static Queue create(ai.greycat.GreyCat greycat){
+				return new Queue(greycat.libs_by_name.get(ai.greycat.std.name).mapped[91]);
 			}
 		}
 		public static final class ByteArray extends ai.greycat.std_n.util.ByteArray {
@@ -4612,16 +4621,43 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super(type);
 			}
 			public static ByteArray create(ai.greycat.GreyCat greycat){
-				return new ByteArray(greycat.libs_by_name.get(ai.greycat.std.name).mapped[91]);
+				return new ByteArray(greycat.libs_by_name.get(ai.greycat.std.name).mapped[92]);
 			}
 		}
-		public static final class GaussianProfile extends ai.greycat.std_n.util.GaussianProfile {
-			public static final java.lang.String name = "util::GaussianProfile";
-			private GaussianProfile(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class SlidingWindow extends ai.greycat.std_n.util.SlidingWindow {
+			public static final java.lang.String name = "util::SlidingWindow";
+			private SlidingWindow(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
-			public static GaussianProfile create(ai.greycat.GreyCat greycat){
-				return new GaussianProfile(greycat.libs_by_name.get(ai.greycat.std.name).mapped[92]);
+			public static SlidingWindow create(ai.greycat.GreyCat greycat){
+				return new SlidingWindow(greycat.libs_by_name.get(ai.greycat.std.name).mapped[93]);
+			}
+		}
+		public static final class Iban extends ai.greycat.std_n.util.Iban {
+			public static final java.lang.String name = "util::Iban";
+			private Iban(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static Iban create(ai.greycat.GreyCat greycat){
+				return new Iban(greycat.libs_by_name.get(ai.greycat.std.name).mapped[94]);
+			}
+		}
+		public static final class Assert extends GreyCat.Object {
+			public static final java.lang.String name = "util::Assert";
+			private Assert(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public static Assert create(ai.greycat.GreyCat greycat){
+				return new Assert(greycat.libs_by_name.get(ai.greycat.std.name).mapped[95]);
+			}
+		}
+		public static final class HistogramF64 extends ai.greycat.std_n.util.HistogramF64 {
+			public static final java.lang.String name = "util::HistogramF64";
+			private HistogramF64(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static HistogramF64 create(ai.greycat.GreyCat greycat){
+				return new HistogramF64(greycat.libs_by_name.get(ai.greycat.std.name).mapped[96]);
 			}
 		}
 		public static final class BoxPlotF64 extends GreyCat.Object {
@@ -4744,37 +4780,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[18],v);
 			}
 			public static BoxPlotF64 create(ai.greycat.GreyCat greycat, java.lang.Object min, java.lang.Object max, java.lang.Object whiskerLow, java.lang.Object whiskerHigh, java.lang.Object percentile1, java.lang.Object percentile5, java.lang.Object percentile25, java.lang.Object percentile50, java.lang.Object percentile75, java.lang.Object percentile95, java.lang.Object percentile99, java.lang.Long countOutliersLow, java.lang.Long countOutliersHigh, java.lang.Double percentageOutliersLow, java.lang.Double percentageOutliersHigh, java.lang.Double sum, java.lang.Double avg, java.lang.Double std, java.lang.Long size){
-				return new BoxPlotF64(greycat.libs_by_name.get(ai.greycat.std.name).mapped[93], min, max, whiskerLow, whiskerHigh, percentile1, percentile5, percentile25, percentile50, percentile75, percentile95, percentile99, countOutliersLow, countOutliersHigh, percentageOutliersLow, percentageOutliersHigh, sum, avg, std, size);
-			}
-		}
-		public static final class HistogramI64 extends ai.greycat.std_n.util.HistogramI64 {
-			public static final java.lang.String name = "util::HistogramI64";
-			private HistogramI64(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type);
-			}
-			public static HistogramI64 create(ai.greycat.GreyCat greycat){
-				return new HistogramI64(greycat.libs_by_name.get(ai.greycat.std.name).mapped[94]);
-			}
-		}
-		public static final class Random extends GreyCat.Object {
-			public static final java.lang.String name = "util::Random";
-			private Random(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.Long seed(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[0]);
-			}
-			public void set_seed(java.lang.Long v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.Double v(){
-				return (java.lang.Double)super.get(super.type.generated_offsets[1]);
-			}
-			public void set_v(java.lang.Double v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public static Random create(ai.greycat.GreyCat greycat, java.lang.Long seed, java.lang.Double v){
-				return new Random(greycat.libs_by_name.get(ai.greycat.std.name).mapped[95], seed, v);
+				return new BoxPlotF64(greycat.libs_by_name.get(ai.greycat.std.name).mapped[97], min, max, whiskerLow, whiskerHigh, percentile1, percentile5, percentile25, percentile50, percentile75, percentile95, percentile99, countOutliersLow, countOutliersHigh, percentageOutliersLow, percentageOutliersHigh, sum, avg, std, size);
 			}
 		}
 		public static final class NdEncoding extends GreyCat.Object {
@@ -4783,50 +4789,16 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super(type, attributes);
 			}
 			public static NdEncoding create(ai.greycat.GreyCat greycat){
-				return new NdEncoding(greycat.libs_by_name.get(ai.greycat.std.name).mapped[96]);
+				return new NdEncoding(greycat.libs_by_name.get(ai.greycat.std.name).mapped[98]);
 			}
 		}
-		public static final class HistogramBucket extends GreyCat.Enum {
-			public static final java.lang.String name = "util::HistogramBucket";
-			private HistogramBucket(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static ai.greycat.std.util.HistogramBucket from(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[97];
-				return (ai.greycat.std.util.HistogramBucket) t.enum_values[t.generated_offsets[0]];
-			}
-			public static ai.greycat.std.util.HistogramBucket to(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[97];
-				return (ai.greycat.std.util.HistogramBucket) t.enum_values[t.generated_offsets[1]];
-			}
-			public static ai.greycat.std.util.HistogramBucket count(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[97];
-				return (ai.greycat.std.util.HistogramBucket) t.enum_values[t.generated_offsets[2]];
-			}
-			public static ai.greycat.std.util.HistogramBucket percentage(ai.greycat.GreyCat greycat){
-				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[97];
-				return (ai.greycat.std.util.HistogramBucket) t.enum_values[t.generated_offsets[3]];
-			}
-			public static HistogramBucket create(ai.greycat.GreyCat greycat){
-				return new HistogramBucket(greycat.libs_by_name.get(ai.greycat.std.name).mapped[97]);
-			}
-		}
-		public static final class Iban extends ai.greycat.std_n.util.Iban {
-			public static final java.lang.String name = "util::Iban";
-			private Iban(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class Buffer extends ai.greycat.std_n.util.Buffer {
+			public static final java.lang.String name = "util::Buffer";
+			private Buffer(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
-			public static Iban create(ai.greycat.GreyCat greycat){
-				return new Iban(greycat.libs_by_name.get(ai.greycat.std.name).mapped[98]);
-			}
-		}
-		public static final class HistogramF64 extends ai.greycat.std_n.util.HistogramF64 {
-			public static final java.lang.String name = "util::HistogramF64";
-			private HistogramF64(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type);
-			}
-			public static HistogramF64 create(ai.greycat.GreyCat greycat){
-				return new HistogramF64(greycat.libs_by_name.get(ai.greycat.std.name).mapped[99]);
+			public static Buffer create(ai.greycat.GreyCat greycat){
+				return new Buffer(greycat.libs_by_name.get(ai.greycat.std.name).mapped[99]);
 			}
 		}
 		public static final class Crypto extends GreyCat.Object {
@@ -4838,154 +4810,13 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return new Crypto(greycat.libs_by_name.get(ai.greycat.std.name).mapped[100]);
 			}
 		}
-		public static final class TimeWindow extends ai.greycat.std_n.util.TimeWindow {
-			public static final java.lang.String name = "util::TimeWindow";
-			private TimeWindow(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class ProgressTracker extends ai.greycat.std_n.util.ProgressTracker {
+			public static final java.lang.String name = "util::ProgressTracker";
+			private ProgressTracker(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
-			public static TimeWindow create(ai.greycat.GreyCat greycat){
-				return new TimeWindow(greycat.libs_by_name.get(ai.greycat.std.name).mapped[101]);
-			}
-		}
-		public static final class SlidingWindow extends ai.greycat.std_n.util.SlidingWindow {
-			public static final java.lang.String name = "util::SlidingWindow";
-			private SlidingWindow(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type);
-			}
-			public static SlidingWindow create(ai.greycat.GreyCat greycat){
-				return new SlidingWindow(greycat.libs_by_name.get(ai.greycat.std.name).mapped[102]);
-			}
-		}
-		public static final class Histogram<T> extends GreyCat.Object {
-			public static final java.lang.String name = "util::Histogram";
-			private Histogram(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public static Histogram create(ai.greycat.GreyCat greycat){
-				return new Histogram(greycat.libs_by_name.get(ai.greycat.std.name).mapped[103]);
-			}
-		}
-		public static final class BoxPlotI64 extends GreyCat.Object {
-			public static final java.lang.String name = "util::BoxPlotI64";
-			private BoxPlotI64(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type, attributes);
-			}
-			public java.lang.Object min(){
-				return super.get(super.type.generated_offsets[0]);
-			}
-			public void set_min(java.lang.Object v){
-				super.set(super.type.generated_offsets[0],v);
-			}
-			public java.lang.Object max(){
-				return super.get(super.type.generated_offsets[1]);
-			}
-			public void set_max(java.lang.Object v){
-				super.set(super.type.generated_offsets[1],v);
-			}
-			public java.lang.Object whiskerLow(){
-				return super.get(super.type.generated_offsets[2]);
-			}
-			public void set_whiskerLow(java.lang.Object v){
-				super.set(super.type.generated_offsets[2],v);
-			}
-			public java.lang.Object whiskerHigh(){
-				return super.get(super.type.generated_offsets[3]);
-			}
-			public void set_whiskerHigh(java.lang.Object v){
-				super.set(super.type.generated_offsets[3],v);
-			}
-			public java.lang.Object percentile1(){
-				return super.get(super.type.generated_offsets[4]);
-			}
-			public void set_percentile1(java.lang.Object v){
-				super.set(super.type.generated_offsets[4],v);
-			}
-			public java.lang.Object percentile5(){
-				return super.get(super.type.generated_offsets[5]);
-			}
-			public void set_percentile5(java.lang.Object v){
-				super.set(super.type.generated_offsets[5],v);
-			}
-			public java.lang.Object percentile25(){
-				return super.get(super.type.generated_offsets[6]);
-			}
-			public void set_percentile25(java.lang.Object v){
-				super.set(super.type.generated_offsets[6],v);
-			}
-			public java.lang.Object percentile50(){
-				return super.get(super.type.generated_offsets[7]);
-			}
-			public void set_percentile50(java.lang.Object v){
-				super.set(super.type.generated_offsets[7],v);
-			}
-			public java.lang.Object percentile75(){
-				return super.get(super.type.generated_offsets[8]);
-			}
-			public void set_percentile75(java.lang.Object v){
-				super.set(super.type.generated_offsets[8],v);
-			}
-			public java.lang.Object percentile95(){
-				return super.get(super.type.generated_offsets[9]);
-			}
-			public void set_percentile95(java.lang.Object v){
-				super.set(super.type.generated_offsets[9],v);
-			}
-			public java.lang.Object percentile99(){
-				return super.get(super.type.generated_offsets[10]);
-			}
-			public void set_percentile99(java.lang.Object v){
-				super.set(super.type.generated_offsets[10],v);
-			}
-			public java.lang.Long countOutliersLow(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[11]);
-			}
-			public void set_countOutliersLow(java.lang.Long v){
-				super.set(super.type.generated_offsets[11],v);
-			}
-			public java.lang.Long countOutliersHigh(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[12]);
-			}
-			public void set_countOutliersHigh(java.lang.Long v){
-				super.set(super.type.generated_offsets[12],v);
-			}
-			public java.lang.Double percentageOutliersLow(){
-				return (java.lang.Double)super.get(super.type.generated_offsets[13]);
-			}
-			public void set_percentageOutliersLow(java.lang.Double v){
-				super.set(super.type.generated_offsets[13],v);
-			}
-			public java.lang.Double percentageOutliersHigh(){
-				return (java.lang.Double)super.get(super.type.generated_offsets[14]);
-			}
-			public void set_percentageOutliersHigh(java.lang.Double v){
-				super.set(super.type.generated_offsets[14],v);
-			}
-			public java.lang.Double sum(){
-				return (java.lang.Double)super.get(super.type.generated_offsets[15]);
-			}
-			public void set_sum(java.lang.Double v){
-				super.set(super.type.generated_offsets[15],v);
-			}
-			public java.lang.Double avg(){
-				return (java.lang.Double)super.get(super.type.generated_offsets[16]);
-			}
-			public void set_avg(java.lang.Double v){
-				super.set(super.type.generated_offsets[16],v);
-			}
-			public java.lang.Double std(){
-				return (java.lang.Double)super.get(super.type.generated_offsets[17]);
-			}
-			public void set_std(java.lang.Double v){
-				super.set(super.type.generated_offsets[17],v);
-			}
-			public java.lang.Long size(){
-				return (java.lang.Long)super.get(super.type.generated_offsets[18]);
-			}
-			public void set_size(java.lang.Long v){
-				super.set(super.type.generated_offsets[18],v);
-			}
-			public static BoxPlotI64 create(ai.greycat.GreyCat greycat, java.lang.Object min, java.lang.Object max, java.lang.Object whiskerLow, java.lang.Object whiskerHigh, java.lang.Object percentile1, java.lang.Object percentile5, java.lang.Object percentile25, java.lang.Object percentile50, java.lang.Object percentile75, java.lang.Object percentile95, java.lang.Object percentile99, java.lang.Long countOutliersLow, java.lang.Long countOutliersHigh, java.lang.Double percentageOutliersLow, java.lang.Double percentageOutliersHigh, java.lang.Double sum, java.lang.Double avg, java.lang.Double std, java.lang.Long size){
-				return new BoxPlotI64(greycat.libs_by_name.get(ai.greycat.std.name).mapped[104], min, max, whiskerLow, whiskerHigh, percentile1, percentile5, percentile25, percentile50, percentile75, percentile95, percentile99, countOutliersLow, countOutliersHigh, percentageOutliersLow, percentageOutliersHigh, sum, avg, std, size);
+			public static ProgressTracker create(ai.greycat.GreyCat greycat){
+				return new ProgressTracker(greycat.libs_by_name.get(ai.greycat.std.name).mapped[101]);
 			}
 		}
 		public static final class BoxPlot<T> extends GreyCat.Object {
@@ -5108,43 +4939,212 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[18],v);
 			}
 			public static BoxPlot create(ai.greycat.GreyCat greycat, java.lang.Object min, java.lang.Object max, java.lang.Object whiskerLow, java.lang.Object whiskerHigh, java.lang.Object percentile1, java.lang.Object percentile5, java.lang.Object percentile25, java.lang.Object percentile50, java.lang.Object percentile75, java.lang.Object percentile95, java.lang.Object percentile99, java.lang.Long countOutliersLow, java.lang.Long countOutliersHigh, java.lang.Double percentageOutliersLow, java.lang.Double percentageOutliersHigh, java.lang.Double sum, java.lang.Double avg, java.lang.Double std, java.lang.Long size){
-				return new BoxPlot(greycat.libs_by_name.get(ai.greycat.std.name).mapped[105], min, max, whiskerLow, whiskerHigh, percentile1, percentile5, percentile25, percentile50, percentile75, percentile95, percentile99, countOutliersLow, countOutliersHigh, percentageOutliersLow, percentageOutliersHigh, sum, avg, std, size);
+				return new BoxPlot(greycat.libs_by_name.get(ai.greycat.std.name).mapped[102], min, max, whiskerLow, whiskerHigh, percentile1, percentile5, percentile25, percentile50, percentile75, percentile95, percentile99, countOutliersLow, countOutliersHigh, percentageOutliersLow, percentageOutliersHigh, sum, avg, std, size);
 			}
 		}
-		public static final class Buffer extends ai.greycat.std_n.util.Buffer {
-			public static final java.lang.String name = "util::Buffer";
-			private Buffer(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class TimeWindow extends ai.greycat.std_n.util.TimeWindow {
+			public static final java.lang.String name = "util::TimeWindow";
+			private TimeWindow(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
-			public static Buffer create(ai.greycat.GreyCat greycat){
-				return new Buffer(greycat.libs_by_name.get(ai.greycat.std.name).mapped[106]);
+			public static TimeWindow create(ai.greycat.GreyCat greycat){
+				return new TimeWindow(greycat.libs_by_name.get(ai.greycat.std.name).mapped[103]);
 			}
 		}
-		public static final class Assert extends GreyCat.Object {
-			public static final java.lang.String name = "util::Assert";
-			private Assert(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class Random extends GreyCat.Object {
+			public static final java.lang.String name = "util::Random";
+			private Random(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type, attributes);
 			}
-			public static Assert create(ai.greycat.GreyCat greycat){
-				return new Assert(greycat.libs_by_name.get(ai.greycat.std.name).mapped[107]);
+			public java.lang.Long seed(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[0]);
+			}
+			public void set_seed(java.lang.Long v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.Double v(){
+				return (java.lang.Double)super.get(super.type.generated_offsets[1]);
+			}
+			public void set_v(java.lang.Double v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public static Random create(ai.greycat.GreyCat greycat, java.lang.Long seed, java.lang.Double v){
+				return new Random(greycat.libs_by_name.get(ai.greycat.std.name).mapped[104], seed, v);
 			}
 		}
-		public static final class Queue<T> extends ai.greycat.std_n.util.Queue {
-			public static final java.lang.String name = "util::Queue";
-			private Queue(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
-				super(type);
+		public static final class Histogram<T> extends GreyCat.Object {
+			public static final java.lang.String name = "util::Histogram";
+			private Histogram(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
 			}
-			public static Queue create(ai.greycat.GreyCat greycat){
-				return new Queue(greycat.libs_by_name.get(ai.greycat.std.name).mapped[108]);
+			public static Histogram create(ai.greycat.GreyCat greycat){
+				return new Histogram(greycat.libs_by_name.get(ai.greycat.std.name).mapped[105]);
 			}
 		}
-		public static final class ProgressTracker extends ai.greycat.std_n.util.ProgressTracker {
-			public static final java.lang.String name = "util::ProgressTracker";
-			private ProgressTracker(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+		public static final class BoxPlotI64 extends GreyCat.Object {
+			public static final java.lang.String name = "util::BoxPlotI64";
+			private BoxPlotI64(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public java.lang.Object min(){
+				return super.get(super.type.generated_offsets[0]);
+			}
+			public void set_min(java.lang.Object v){
+				super.set(super.type.generated_offsets[0],v);
+			}
+			public java.lang.Object max(){
+				return super.get(super.type.generated_offsets[1]);
+			}
+			public void set_max(java.lang.Object v){
+				super.set(super.type.generated_offsets[1],v);
+			}
+			public java.lang.Object whiskerLow(){
+				return super.get(super.type.generated_offsets[2]);
+			}
+			public void set_whiskerLow(java.lang.Object v){
+				super.set(super.type.generated_offsets[2],v);
+			}
+			public java.lang.Object whiskerHigh(){
+				return super.get(super.type.generated_offsets[3]);
+			}
+			public void set_whiskerHigh(java.lang.Object v){
+				super.set(super.type.generated_offsets[3],v);
+			}
+			public java.lang.Object percentile1(){
+				return super.get(super.type.generated_offsets[4]);
+			}
+			public void set_percentile1(java.lang.Object v){
+				super.set(super.type.generated_offsets[4],v);
+			}
+			public java.lang.Object percentile5(){
+				return super.get(super.type.generated_offsets[5]);
+			}
+			public void set_percentile5(java.lang.Object v){
+				super.set(super.type.generated_offsets[5],v);
+			}
+			public java.lang.Object percentile25(){
+				return super.get(super.type.generated_offsets[6]);
+			}
+			public void set_percentile25(java.lang.Object v){
+				super.set(super.type.generated_offsets[6],v);
+			}
+			public java.lang.Object percentile50(){
+				return super.get(super.type.generated_offsets[7]);
+			}
+			public void set_percentile50(java.lang.Object v){
+				super.set(super.type.generated_offsets[7],v);
+			}
+			public java.lang.Object percentile75(){
+				return super.get(super.type.generated_offsets[8]);
+			}
+			public void set_percentile75(java.lang.Object v){
+				super.set(super.type.generated_offsets[8],v);
+			}
+			public java.lang.Object percentile95(){
+				return super.get(super.type.generated_offsets[9]);
+			}
+			public void set_percentile95(java.lang.Object v){
+				super.set(super.type.generated_offsets[9],v);
+			}
+			public java.lang.Object percentile99(){
+				return super.get(super.type.generated_offsets[10]);
+			}
+			public void set_percentile99(java.lang.Object v){
+				super.set(super.type.generated_offsets[10],v);
+			}
+			public java.lang.Long countOutliersLow(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[11]);
+			}
+			public void set_countOutliersLow(java.lang.Long v){
+				super.set(super.type.generated_offsets[11],v);
+			}
+			public java.lang.Long countOutliersHigh(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[12]);
+			}
+			public void set_countOutliersHigh(java.lang.Long v){
+				super.set(super.type.generated_offsets[12],v);
+			}
+			public java.lang.Double percentageOutliersLow(){
+				return (java.lang.Double)super.get(super.type.generated_offsets[13]);
+			}
+			public void set_percentageOutliersLow(java.lang.Double v){
+				super.set(super.type.generated_offsets[13],v);
+			}
+			public java.lang.Double percentageOutliersHigh(){
+				return (java.lang.Double)super.get(super.type.generated_offsets[14]);
+			}
+			public void set_percentageOutliersHigh(java.lang.Double v){
+				super.set(super.type.generated_offsets[14],v);
+			}
+			public java.lang.Double sum(){
+				return (java.lang.Double)super.get(super.type.generated_offsets[15]);
+			}
+			public void set_sum(java.lang.Double v){
+				super.set(super.type.generated_offsets[15],v);
+			}
+			public java.lang.Double avg(){
+				return (java.lang.Double)super.get(super.type.generated_offsets[16]);
+			}
+			public void set_avg(java.lang.Double v){
+				super.set(super.type.generated_offsets[16],v);
+			}
+			public java.lang.Double std(){
+				return (java.lang.Double)super.get(super.type.generated_offsets[17]);
+			}
+			public void set_std(java.lang.Double v){
+				super.set(super.type.generated_offsets[17],v);
+			}
+			public java.lang.Long size(){
+				return (java.lang.Long)super.get(super.type.generated_offsets[18]);
+			}
+			public void set_size(java.lang.Long v){
+				super.set(super.type.generated_offsets[18],v);
+			}
+			public static BoxPlotI64 create(ai.greycat.GreyCat greycat, java.lang.Object min, java.lang.Object max, java.lang.Object whiskerLow, java.lang.Object whiskerHigh, java.lang.Object percentile1, java.lang.Object percentile5, java.lang.Object percentile25, java.lang.Object percentile50, java.lang.Object percentile75, java.lang.Object percentile95, java.lang.Object percentile99, java.lang.Long countOutliersLow, java.lang.Long countOutliersHigh, java.lang.Double percentageOutliersLow, java.lang.Double percentageOutliersHigh, java.lang.Double sum, java.lang.Double avg, java.lang.Double std, java.lang.Long size){
+				return new BoxPlotI64(greycat.libs_by_name.get(ai.greycat.std.name).mapped[106], min, max, whiskerLow, whiskerHigh, percentile1, percentile5, percentile25, percentile50, percentile75, percentile95, percentile99, countOutliersLow, countOutliersHigh, percentageOutliersLow, percentageOutliersHigh, sum, avg, std, size);
+			}
+		}
+		public static final class Quantizer extends ai.greycat.std_n.util.Quantizer {
+			public static final java.lang.String name = "util::Quantizer";
+			private Quantizer(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
 				super(type);
 			}
-			public static ProgressTracker create(ai.greycat.GreyCat greycat){
-				return new ProgressTracker(greycat.libs_by_name.get(ai.greycat.std.name).mapped[109]);
+			public static Quantizer create(ai.greycat.GreyCat greycat){
+				return new Quantizer(greycat.libs_by_name.get(ai.greycat.std.name).mapped[107]);
+			}
+		}
+		public static final class GaussianProfile extends ai.greycat.std_n.util.GaussianProfile {
+			public static final java.lang.String name = "util::GaussianProfile";
+			private GaussianProfile(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type);
+			}
+			public static GaussianProfile create(ai.greycat.GreyCat greycat){
+				return new GaussianProfile(greycat.libs_by_name.get(ai.greycat.std.name).mapped[108]);
+			}
+		}
+		public static final class HistogramBucket extends GreyCat.Enum {
+			public static final java.lang.String name = "util::HistogramBucket";
+			private HistogramBucket(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {
+				super(type, attributes);
+			}
+			public static ai.greycat.std.util.HistogramBucket from(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[109];
+				return (ai.greycat.std.util.HistogramBucket) t.enum_values[t.generated_offsets[0]];
+			}
+			public static ai.greycat.std.util.HistogramBucket to(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[109];
+				return (ai.greycat.std.util.HistogramBucket) t.enum_values[t.generated_offsets[1]];
+			}
+			public static ai.greycat.std.util.HistogramBucket count(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[109];
+				return (ai.greycat.std.util.HistogramBucket) t.enum_values[t.generated_offsets[2]];
+			}
+			public static ai.greycat.std.util.HistogramBucket percentage(ai.greycat.GreyCat greycat){
+				final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.std.name).mapped[109];
+				return (ai.greycat.std.util.HistogramBucket) t.enum_values[t.generated_offsets[3]];
+			}
+			public static HistogramBucket create(ai.greycat.GreyCat greycat){
+				return new HistogramBucket(greycat.libs_by_name.get(ai.greycat.std.name).mapped[109]);
 			}
 		}
 		public static ai.greycat.std.core.Array<java.lang.Object> resolveAll(ai.greycat.GreyCat greycat,ai.greycat.std.core.Array<ai.greycat.std.core.node> nodes) throws java.io.IOException {
@@ -5219,94 +5219,99 @@ public final class std extends ai.greycat.GreyCat.Library {
 		loaders.put(core.ti5d.name, ai.greycat.std_n.core.ti5d::load);
 		factories.put(core.tf4d.name, core.tf4d::new);
 		loaders.put(core.tf4d.name, ai.greycat.std_n.core.tf4d::load);
-		factories.put(runtime.Task.name, runtime.Task::new);
-		factories.put(runtime.SecurityEntity.name, runtime.SecurityEntity::new);
-		factories.put(runtime.TaskStatus.name, runtime.TaskStatus::new);
-		factories.put(runtime.Runtime.name, runtime.Runtime::new);
-		factories.put(runtime.RuntimeInfo.name, runtime.RuntimeInfo::new);
-		factories.put(runtime.SecurityFields.name, runtime.SecurityFields::new);
-		factories.put(runtime.UserGroup.name, runtime.UserGroup::new);
-		factories.put(runtime.OpenIDConnect.name, runtime.OpenIDConnect::new);
-		factories.put(runtime.UserRole.name, runtime.UserRole::new);
 		factories.put(runtime.PeriodicTask.name, runtime.PeriodicTask::new);
-		factories.put(runtime.User.name, runtime.User::new);
-		factories.put(runtime.UserGroupPolicy.name, runtime.UserGroupPolicy::new);
 		factories.put(runtime.UserGroupPolicyType.name, runtime.UserGroupPolicyType::new);
+		factories.put(runtime.Runtime.name, runtime.Runtime::new);
+		factories.put(runtime.SecurityEntity.name, runtime.SecurityEntity::new);
+		factories.put(runtime.RuntimeInfo.name, runtime.RuntimeInfo::new);
+		factories.put(runtime.SecurityPolicy.name, runtime.SecurityPolicy::new);
+		factories.put(runtime.SecurityFields.name, runtime.SecurityFields::new);
 		factories.put(runtime.UserCredential.name, runtime.UserCredential::new);
+		factories.put(runtime.OpenIDConnect.name, runtime.OpenIDConnect::new);
+		factories.put(runtime.UserGroupPolicy.name, runtime.UserGroupPolicy::new);
+		factories.put(runtime.UserGroup.name, runtime.UserGroup::new);
 		factories.put(runtime.License.name, runtime.License::new);
+		factories.put(runtime.TaskStatus.name, runtime.TaskStatus::new);
+		factories.put(runtime.User.name, runtime.User::new);
 		factories.put(runtime.StoreStat.name, runtime.StoreStat::new);
 		factories.put(runtime.System.name, runtime.System::new);
-		factories.put(runtime.SecurityPolicy.name, runtime.SecurityPolicy::new);
-		factories.put(io.FileWriter.name, io.FileWriter::new);
-		loaders.put(io.FileWriter.name, ai.greycat.std_n.io.FileWriter::load);
-		factories.put(io.JsonFormat.name, io.JsonFormat::new);
+		factories.put(runtime.UserRole.name, runtime.UserRole::new);
+		factories.put(runtime.Task.name, runtime.Task::new);
+		factories.put(io.FileDescriptor.name, io.FileDescriptor::new);
+		factories.put(io.CsvReader.name, io.CsvReader::new);
+		loaders.put(io.CsvReader.name, ai.greycat.std_n.io.CsvReader::load);
+		factories.put(io.TextWriter.name, io.TextWriter::new);
+		loaders.put(io.TextWriter.name, ai.greycat.std_n.io.TextWriter::load);
+		factories.put(io.CsvColumnFloat.name, io.CsvColumnFloat::new);
 		factories.put(io.JSON.name, io.JSON::new);
-		factories.put(io.TextEncoder.name, io.TextEncoder::new);
-		factories.put(io.CSVColumnBoolean.name, io.CSVColumnBoolean::new);
-		factories.put(io.CSVColumnInteger.name, io.CSVColumnInteger::new);
-		factories.put(io.CSVColumnTime.name, io.CSVColumnTime::new);
-		factories.put(io.CSVColumnFloat.name, io.CSVColumnFloat::new);
-		factories.put(io.CSVColumnIgnored.name, io.CSVColumnIgnored::new);
-		factories.put(io.File.name, io.File::new);
-		loaders.put(io.File.name, ai.greycat.std_n.io.File::load);
-		factories.put(io.BinaryFormat.name, io.BinaryFormat::new);
+		factories.put(io.JsonWriter.name, io.JsonWriter::new);
+		loaders.put(io.JsonWriter.name, ai.greycat.std_n.io.JsonWriter::load);
+		factories.put(io.TextReader.name, io.TextReader::new);
+		loaders.put(io.TextReader.name, ai.greycat.std_n.io.TextReader::load);
+		factories.put(io.CsvColumnDate.name, io.CsvColumnDate::new);
+		factories.put(io.JsonReader.name, io.JsonReader::new);
+		loaders.put(io.JsonReader.name, ai.greycat.std_n.io.JsonReader::load);
+		factories.put(io.CsvColumnString.name, io.CsvColumnString::new);
+		factories.put(io.CsvColumnBoolean.name, io.CsvColumnBoolean::new);
 		factories.put(io.Directory.name, io.Directory::new);
 		loaders.put(io.Directory.name, ai.greycat.std_n.io.Directory::load);
-		factories.put(io.TextFormat.name, io.TextFormat::new);
-		factories.put(io.Env.name, io.Env::new);
-		factories.put(io.CSVColumnString.name, io.CSVColumnString::new);
-		factories.put(io.CSVFormat.name, io.CSVFormat::new);
-		factories.put(io.FileFormat.name, io.FileFormat::new);
+		factories.put(io.File.name, io.File::new);
+		loaders.put(io.File.name, ai.greycat.std_n.io.File::load);
+		factories.put(io.CsvFormat.name, io.CsvFormat::new);
+		factories.put(io.TextEncoder.name, io.TextEncoder::new);
+		factories.put(io.CsvColumn.name, io.CsvColumn::new);
+		factories.put(io.CsvColumnTime.name, io.CsvColumnTime::new);
+		factories.put(io.CsvWriter.name, io.CsvWriter::new);
+		loaders.put(io.CsvWriter.name, ai.greycat.std_n.io.CsvWriter::load);
+		factories.put(io.FileEntry.name, io.FileEntry::new);
+		factories.put(io.CsvColumnInteger.name, io.CsvColumnInteger::new);
+		factories.put(io.CsvColumnIgnored.name, io.CsvColumnIgnored::new);
 		factories.put(io.AbiWriter.name, io.AbiWriter::new);
 		loaders.put(io.AbiWriter.name, ai.greycat.std_n.io.AbiWriter::load);
-		factories.put(io.FileEntry.name, io.FileEntry::new);
-		factories.put(io.CSVColumnDate.name, io.CSVColumnDate::new);
 		factories.put(io.AbiReader.name, io.AbiReader::new);
 		loaders.put(io.AbiReader.name, ai.greycat.std_n.io.AbiReader::load);
-		factories.put(io.FileDescriptor.name, io.FileDescriptor::new);
-		factories.put(io.CSVColumn.name, io.CSVColumn::new);
-		factories.put(debug.ModDesc.name, debug.ModDesc::new);
 		factories.put(debug.TypeAttr.name, debug.TypeAttr::new);
-		factories.put(debug.TypeRef.name, debug.TypeRef::new);
-		factories.put(debug.FnMode.name, debug.FnMode::new);
-		factories.put(debug.FnDesc.name, debug.FnDesc::new);
-		factories.put(debug.TypeDesc.name, debug.TypeDesc::new);
-		factories.put(debug.FnParam.name, debug.FnParam::new);
 		factories.put(debug.ModVarDesc.name, debug.ModVarDesc::new);
+		factories.put(debug.ModDesc.name, debug.ModDesc::new);
+		factories.put(debug.FnDesc.name, debug.FnDesc::new);
+		factories.put(debug.FnMode.name, debug.FnMode::new);
+		factories.put(debug.FnParam.name, debug.FnParam::new);
+		factories.put(debug.TypeRef.name, debug.TypeRef::new);
+		factories.put(debug.TypeDesc.name, debug.TypeDesc::new);
 		factories.put(math.MathConstants.name, math.MathConstants::new);
-		factories.put(util.Gaussian.name, util.Gaussian::new);
-		loaders.put(util.Gaussian.name, ai.greycat.std_n.util.Gaussian::load);
-		factories.put(util.Quantizer.name, util.Quantizer::new);
-		loaders.put(util.Quantizer.name, ai.greycat.std_n.util.Quantizer::load);
-		factories.put(util.ByteArray.name, util.ByteArray::new);
-		loaders.put(util.ByteArray.name, ai.greycat.std_n.util.ByteArray::load);
-		factories.put(util.GaussianProfile.name, util.GaussianProfile::new);
-		loaders.put(util.GaussianProfile.name, ai.greycat.std_n.util.GaussianProfile::load);
-		factories.put(util.BoxPlotF64.name, util.BoxPlotF64::new);
 		factories.put(util.HistogramI64.name, util.HistogramI64::new);
 		loaders.put(util.HistogramI64.name, ai.greycat.std_n.util.HistogramI64::load);
-		factories.put(util.Random.name, util.Random::new);
-		factories.put(util.NdEncoding.name, util.NdEncoding::new);
-		factories.put(util.HistogramBucket.name, util.HistogramBucket::new);
-		factories.put(util.Iban.name, util.Iban::new);
-		loaders.put(util.Iban.name, ai.greycat.std_n.util.Iban::load);
-		factories.put(util.HistogramF64.name, util.HistogramF64::new);
-		loaders.put(util.HistogramF64.name, ai.greycat.std_n.util.HistogramF64::load);
-		factories.put(util.Crypto.name, util.Crypto::new);
-		factories.put(util.TimeWindow.name, util.TimeWindow::new);
-		loaders.put(util.TimeWindow.name, ai.greycat.std_n.util.TimeWindow::load);
-		factories.put(util.SlidingWindow.name, util.SlidingWindow::new);
-		loaders.put(util.SlidingWindow.name, ai.greycat.std_n.util.SlidingWindow::load);
-		factories.put(util.Histogram.name, util.Histogram::new);
-		factories.put(util.BoxPlotI64.name, util.BoxPlotI64::new);
-		factories.put(util.BoxPlot.name, util.BoxPlot::new);
-		factories.put(util.Buffer.name, util.Buffer::new);
-		loaders.put(util.Buffer.name, ai.greycat.std_n.util.Buffer::load);
-		factories.put(util.Assert.name, util.Assert::new);
+		factories.put(util.Gaussian.name, util.Gaussian::new);
+		loaders.put(util.Gaussian.name, ai.greycat.std_n.util.Gaussian::load);
 		factories.put(util.Queue.name, util.Queue::new);
 		loaders.put(util.Queue.name, ai.greycat.std_n.util.Queue::load);
+		factories.put(util.ByteArray.name, util.ByteArray::new);
+		loaders.put(util.ByteArray.name, ai.greycat.std_n.util.ByteArray::load);
+		factories.put(util.SlidingWindow.name, util.SlidingWindow::new);
+		loaders.put(util.SlidingWindow.name, ai.greycat.std_n.util.SlidingWindow::load);
+		factories.put(util.Iban.name, util.Iban::new);
+		loaders.put(util.Iban.name, ai.greycat.std_n.util.Iban::load);
+		factories.put(util.Assert.name, util.Assert::new);
+		factories.put(util.HistogramF64.name, util.HistogramF64::new);
+		loaders.put(util.HistogramF64.name, ai.greycat.std_n.util.HistogramF64::load);
+		factories.put(util.BoxPlotF64.name, util.BoxPlotF64::new);
+		factories.put(util.NdEncoding.name, util.NdEncoding::new);
+		factories.put(util.Buffer.name, util.Buffer::new);
+		loaders.put(util.Buffer.name, ai.greycat.std_n.util.Buffer::load);
+		factories.put(util.Crypto.name, util.Crypto::new);
 		factories.put(util.ProgressTracker.name, util.ProgressTracker::new);
 		loaders.put(util.ProgressTracker.name, ai.greycat.std_n.util.ProgressTracker::load);
+		factories.put(util.BoxPlot.name, util.BoxPlot::new);
+		factories.put(util.TimeWindow.name, util.TimeWindow::new);
+		loaders.put(util.TimeWindow.name, ai.greycat.std_n.util.TimeWindow::load);
+		factories.put(util.Random.name, util.Random::new);
+		factories.put(util.Histogram.name, util.Histogram::new);
+		factories.put(util.BoxPlotI64.name, util.BoxPlotI64::new);
+		factories.put(util.Quantizer.name, util.Quantizer::new);
+		loaders.put(util.Quantizer.name, ai.greycat.std_n.util.Quantizer::load);
+		factories.put(util.GaussianProfile.name, util.GaussianProfile::new);
+		loaders.put(util.GaussianProfile.name, ai.greycat.std_n.util.GaussianProfile::load);
+		factories.put(util.HistogramBucket.name, util.HistogramBucket::new);
 	}
 	@Override
 	public void init(ai.greycat.GreyCat greycat) {
@@ -5336,7 +5341,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 		this.mapped[15].resolveGeneratedOffsetWithValues("i32", 4L,"i64", 8L,"f32", 4L,"f64", 8L,"c64", 8L,"c128", 16L);
 		this.mapped[16] = greycat.types_by_name.get(core.Table.name);
 		this.mapped[17] = greycat.types_by_name.get(core.geo.name);
-		this.mapped[17].static_values = new java.lang.Object[]{greycat.createGeo(-85.05112876,-179.999999958),greycat.createGeo(85.05112876,179.999999958)};
+		this.mapped[17].static_values = new java.lang.Object[]{greycat.createGeo(-85.0511287602,-179.9999999581),greycat.createGeo(85.0511287602,179.9999999581)};
 		this.mapped[18] = greycat.types_by_name.get(core.ti6d.name);
 		this.mapped[19] = greycat.types_by_name.get(core.Tensor.name);
 		this.mapped[20] = greycat.types_by_name.get(core.GeoCircle.name);
@@ -5363,117 +5368,117 @@ public final class std extends ai.greycat.GreyCat.Library {
 		this.mapped[36] = greycat.types_by_name.get(core.nodeGeo.name);
 		this.mapped[37] = greycat.types_by_name.get(core.ti5d.name);
 		this.mapped[38] = greycat.types_by_name.get(core.tf4d.name);
-		this.mapped[39] = greycat.types_by_name.get(runtime.Task.name);
-		this.mapped[39].resolveGeneratedOffsets("id","user","parent","mod","type","fun","progress","remaining","creation","start","duration","status","sub_waiting","sub_tasks_all");
-		this.mapped[40] = greycat.types_by_name.get(runtime.SecurityEntity.name);
-		this.mapped[40].resolveGeneratedOffsets("id","name","activated");
-		this.mapped[41] = greycat.types_by_name.get(runtime.TaskStatus.name);
-		this.mapped[41].resolveGeneratedOffsetWithValues("empty", 0L,"waiting", 1L,"running", 2L,"cancelled", 3L,"error", 4L,"ended", 5L);
-		this.mapped[42] = greycat.types_by_name.get(runtime.Runtime.name);
+		this.mapped[39] = greycat.types_by_name.get(runtime.PeriodicTask.name);
+		this.mapped[39].resolveGeneratedOffsets("name","user_id","args","start","every");
+		this.mapped[40] = greycat.types_by_name.get(runtime.UserGroupPolicyType.name);
+		this.mapped[40].resolveGeneratedOffsetWithValues("read", 0L,"write", 1L,"execute", 2L);
+		this.mapped[41] = greycat.types_by_name.get(runtime.Runtime.name);
+		this.mapped[42] = greycat.types_by_name.get(runtime.SecurityEntity.name);
+		this.mapped[42].resolveGeneratedOffsets("id","name","activated");
 		this.mapped[43] = greycat.types_by_name.get(runtime.RuntimeInfo.name);
 		this.mapped[43].resolveGeneratedOffsets("version","arch","timezone","license","io_threads","bg_threads","fg_threads","mem_total","mem_worker","nb_ctx","store_stats");
-		this.mapped[44] = greycat.types_by_name.get(runtime.SecurityFields.name);
-		this.mapped[44].resolveGeneratedOffsets("email","name","first_name","last_name","roles","groups");
-		this.mapped[45] = greycat.types_by_name.get(runtime.UserGroup.name);
-		this.mapped[45].resolveGeneratedOffsets("id","name","activated");
-		this.mapped[46] = greycat.types_by_name.get(runtime.OpenIDConnect.name);
-		this.mapped[46].resolveGeneratedOffsets("url","clientId");
-		this.mapped[47] = greycat.types_by_name.get(runtime.UserRole.name);
-		this.mapped[47].resolveGeneratedOffsets("name","permissions");
-		this.mapped[48] = greycat.types_by_name.get(runtime.PeriodicTask.name);
-		this.mapped[48].resolveGeneratedOffsets("name","user_id","args","start","every");
-		this.mapped[49] = greycat.types_by_name.get(runtime.User.name);
-		this.mapped[49].resolveGeneratedOffsets("id","name","activated","full_name","email","role","permissions_flags","groups","groups_flags","external");
-		this.mapped[50] = greycat.types_by_name.get(runtime.UserGroupPolicy.name);
-		this.mapped[50].resolveGeneratedOffsets("group_id","type");
-		this.mapped[51] = greycat.types_by_name.get(runtime.UserGroupPolicyType.name);
-		this.mapped[51].resolveGeneratedOffsetWithValues("read", 0L,"write", 1L,"execute", 2L);
-		this.mapped[52] = greycat.types_by_name.get(runtime.UserCredential.name);
-		this.mapped[52].resolveGeneratedOffsets("offset","pass");
-		this.mapped[53] = greycat.types_by_name.get(runtime.License.name);
-		this.mapped[53].resolveGeneratedOffsets("name","start","end","company","max_workers","max_memory","max_store","extra_1","extra_2","extra_3","extra_4");
-		this.mapped[54] = greycat.types_by_name.get(runtime.StoreStat.name);
-		this.mapped[54].resolveGeneratedOffsets("capacity_bytes","allocated_bytes","allocated_ratio","remained_bytes","remained_ratio","used_bytes","used_ratio","available_bytes","available_ratio");
-		this.mapped[55] = greycat.types_by_name.get(runtime.System.name);
-		this.mapped[56] = greycat.types_by_name.get(runtime.SecurityPolicy.name);
-		this.mapped[56].resolveGeneratedOffsets("entities","credentials","roles","fields");
-		this.mapped[57] = greycat.types_by_name.get(io.FileWriter.name);
-		this.mapped[58] = greycat.types_by_name.get(io.JsonFormat.name);
-		this.mapped[59] = greycat.types_by_name.get(io.JSON.name);
-		this.mapped[60] = greycat.types_by_name.get(io.TextEncoder.name);
-		this.mapped[60].resolveGeneratedOffsetWithValues("plain", null,"base64", null,"base64url", null,"hexadecimal", null);
-		this.mapped[61] = greycat.types_by_name.get(io.CSVColumnBoolean.name);
-		this.mapped[61].resolveGeneratedOffsets("name","mandatory");
-		this.mapped[62] = greycat.types_by_name.get(io.CSVColumnInteger.name);
-		this.mapped[62].resolveGeneratedOffsets("name","mandatory");
-		this.mapped[63] = greycat.types_by_name.get(io.CSVColumnTime.name);
-		this.mapped[63].resolveGeneratedOffsets("name","mandatory","unit");
-		this.mapped[64] = greycat.types_by_name.get(io.CSVColumnFloat.name);
-		this.mapped[64].resolveGeneratedOffsets("name","mandatory");
-		this.mapped[65] = greycat.types_by_name.get(io.CSVColumnIgnored.name);
-		this.mapped[65].resolveGeneratedOffsets("name","mandatory");
-		this.mapped[66] = greycat.types_by_name.get(io.File.name);
-		this.mapped[67] = greycat.types_by_name.get(io.BinaryFormat.name);
+		this.mapped[44] = greycat.types_by_name.get(runtime.SecurityPolicy.name);
+		this.mapped[44].resolveGeneratedOffsets("entities","credentials","roles","fields");
+		this.mapped[45] = greycat.types_by_name.get(runtime.SecurityFields.name);
+		this.mapped[45].resolveGeneratedOffsets("email","name","first_name","last_name","roles","groups");
+		this.mapped[46] = greycat.types_by_name.get(runtime.UserCredential.name);
+		this.mapped[46].resolveGeneratedOffsets("offset","pass");
+		this.mapped[47] = greycat.types_by_name.get(runtime.OpenIDConnect.name);
+		this.mapped[47].resolveGeneratedOffsets("url","clientId");
+		this.mapped[48] = greycat.types_by_name.get(runtime.UserGroupPolicy.name);
+		this.mapped[48].resolveGeneratedOffsets("group_id","type");
+		this.mapped[49] = greycat.types_by_name.get(runtime.UserGroup.name);
+		this.mapped[49].resolveGeneratedOffsets("id","name","activated");
+		this.mapped[50] = greycat.types_by_name.get(runtime.License.name);
+		this.mapped[50].resolveGeneratedOffsets("name","start","end","company","max_workers","max_memory","max_store","extra_1","extra_2","extra_3","extra_4");
+		this.mapped[51] = greycat.types_by_name.get(runtime.TaskStatus.name);
+		this.mapped[51].resolveGeneratedOffsetWithValues("empty", 0L,"waiting", 1L,"running", 2L,"cancelled", 3L,"error", 4L,"ended", 5L);
+		this.mapped[52] = greycat.types_by_name.get(runtime.User.name);
+		this.mapped[52].resolveGeneratedOffsets("id","name","activated","full_name","email","role","permissions_flags","groups","groups_flags","external");
+		this.mapped[53] = greycat.types_by_name.get(runtime.StoreStat.name);
+		this.mapped[53].resolveGeneratedOffsets("capacity_bytes","allocated_bytes","allocated_ratio","remained_bytes","remained_ratio","used_bytes","used_ratio","available_bytes","available_ratio");
+		this.mapped[54] = greycat.types_by_name.get(runtime.System.name);
+		this.mapped[55] = greycat.types_by_name.get(runtime.UserRole.name);
+		this.mapped[55].resolveGeneratedOffsets("name","permissions");
+		this.mapped[56] = greycat.types_by_name.get(runtime.Task.name);
+		this.mapped[56].resolveGeneratedOffsets("id","user","parent","mod","type","fun","creation","status","start","progress","remaining","duration","sub_waiting","sub_tasks_all");
+		this.mapped[57] = greycat.types_by_name.get(io.FileDescriptor.name);
+		this.mapped[57].resolveGeneratedOffsets("uri","size","last_modification");
+		this.mapped[58] = greycat.types_by_name.get(io.CsvReader.name);
+		this.mapped[59] = greycat.types_by_name.get(io.TextWriter.name);
+		this.mapped[60] = greycat.types_by_name.get(io.CsvColumnFloat.name);
+		this.mapped[60].resolveGeneratedOffsets("name","mandatory");
+		this.mapped[61] = greycat.types_by_name.get(io.JSON.name);
+		this.mapped[62] = greycat.types_by_name.get(io.JsonWriter.name);
+		this.mapped[63] = greycat.types_by_name.get(io.TextReader.name);
+		this.mapped[64] = greycat.types_by_name.get(io.CsvColumnDate.name);
+		this.mapped[64].resolveGeneratedOffsets("name","mandatory","format","tz","as_time");
+		this.mapped[65] = greycat.types_by_name.get(io.JsonReader.name);
+		this.mapped[66] = greycat.types_by_name.get(io.CsvColumnString.name);
+		this.mapped[66].resolveGeneratedOffsets("name","mandatory","trim","try_number","try_json","values","encoder");
+		this.mapped[67] = greycat.types_by_name.get(io.CsvColumnBoolean.name);
+		this.mapped[67].resolveGeneratedOffsets("name","mandatory");
 		this.mapped[68] = greycat.types_by_name.get(io.Directory.name);
-		this.mapped[69] = greycat.types_by_name.get(io.TextFormat.name);
-		this.mapped[70] = greycat.types_by_name.get(io.Env.name);
-		this.mapped[71] = greycat.types_by_name.get(io.CSVColumnString.name);
-		this.mapped[71].resolveGeneratedOffsets("name","mandatory","trim","try_number","try_json","values","encoder");
-		this.mapped[72] = greycat.types_by_name.get(io.CSVFormat.name);
-		this.mapped[72].resolveGeneratedOffsets("header_lines","infer","separator","string_delimiter","decimal_separator","thousands_separator","columns");
-		this.mapped[73] = greycat.types_by_name.get(io.FileFormat.name);
-		this.mapped[74] = greycat.types_by_name.get(io.AbiWriter.name);
+		this.mapped[69] = greycat.types_by_name.get(io.File.name);
+		this.mapped[70] = greycat.types_by_name.get(io.CsvFormat.name);
+		this.mapped[70].resolveGeneratedOffsets("header_lines","infer","separator","string_delimiter","decimal_separator","thousands_separator","columns");
+		this.mapped[71] = greycat.types_by_name.get(io.TextEncoder.name);
+		this.mapped[71].resolveGeneratedOffsetWithValues("plain", null,"base64", null,"base64url", null,"hexadecimal", null);
+		this.mapped[72] = greycat.types_by_name.get(io.CsvColumn.name);
+		this.mapped[72].resolveGeneratedOffsets("name","mandatory");
+		this.mapped[73] = greycat.types_by_name.get(io.CsvColumnTime.name);
+		this.mapped[73].resolveGeneratedOffsets("name","mandatory","unit");
+		this.mapped[74] = greycat.types_by_name.get(io.CsvWriter.name);
 		this.mapped[75] = greycat.types_by_name.get(io.FileEntry.name);
-		this.mapped[76] = greycat.types_by_name.get(io.CSVColumnDate.name);
-		this.mapped[76].resolveGeneratedOffsets("name","mandatory","format","tz","as_time");
-		this.mapped[77] = greycat.types_by_name.get(io.AbiReader.name);
-		this.mapped[78] = greycat.types_by_name.get(io.FileDescriptor.name);
-		this.mapped[78].resolveGeneratedOffsets("uri","size","last_modification");
-		this.mapped[79] = greycat.types_by_name.get(io.CSVColumn.name);
-		this.mapped[79].resolveGeneratedOffsets("name","mandatory");
-		this.mapped[80] = greycat.types_by_name.get(debug.ModDesc.name);
-		this.mapped[80].resolveGeneratedOffsets("name","lib","functions","types","vars");
-		this.mapped[81] = greycat.types_by_name.get(debug.TypeAttr.name);
-		this.mapped[81].resolveGeneratedOffsets("name","type","is_static");
-		this.mapped[82] = greycat.types_by_name.get(debug.TypeRef.name);
-		this.mapped[82].resolveGeneratedOffsets("name","module","generics","nullable");
-		this.mapped[83] = greycat.types_by_name.get(debug.FnMode.name);
-		this.mapped[83].resolveGeneratedOffsetWithValues("read_only", null,"copy_on_write", null,"volatile", null,"write", null);
-		this.mapped[84] = greycat.types_by_name.get(debug.FnDesc.name);
-		this.mapped[84].resolveGeneratedOffsets("module","name","parent_type","params","return_type","is_static","is_task","is_exclusive","is_reserved","is_exposed","mode","permissions");
-		this.mapped[85] = greycat.types_by_name.get(debug.TypeDesc.name);
-		this.mapped[85].resolveGeneratedOffsets("module","name","methods","attrs","is_abstract","is_enum");
-		this.mapped[86] = greycat.types_by_name.get(debug.FnParam.name);
-		this.mapped[86].resolveGeneratedOffsets("name","type");
-		this.mapped[87] = greycat.types_by_name.get(debug.ModVarDesc.name);
-		this.mapped[87].resolveGeneratedOffsets("module","name","type");
+		this.mapped[76] = greycat.types_by_name.get(io.CsvColumnInteger.name);
+		this.mapped[76].resolveGeneratedOffsets("name","mandatory");
+		this.mapped[77] = greycat.types_by_name.get(io.CsvColumnIgnored.name);
+		this.mapped[77].resolveGeneratedOffsets("name","mandatory");
+		this.mapped[78] = greycat.types_by_name.get(io.AbiWriter.name);
+		this.mapped[79] = greycat.types_by_name.get(io.AbiReader.name);
+		this.mapped[80] = greycat.types_by_name.get(debug.TypeAttr.name);
+		this.mapped[80].resolveGeneratedOffsets("name","type","is_static");
+		this.mapped[81] = greycat.types_by_name.get(debug.ModVarDesc.name);
+		this.mapped[81].resolveGeneratedOffsets("module","name","type");
+		this.mapped[82] = greycat.types_by_name.get(debug.ModDesc.name);
+		this.mapped[82].resolveGeneratedOffsets("name","lib","functions","types","vars");
+		this.mapped[83] = greycat.types_by_name.get(debug.FnDesc.name);
+		this.mapped[83].resolveGeneratedOffsets("module","name","parent_type","params","return_type","is_static","is_task","is_exclusive","is_reserved","is_exposed","mode","permissions");
+		this.mapped[84] = greycat.types_by_name.get(debug.FnMode.name);
+		this.mapped[84].resolveGeneratedOffsetWithValues("read_only", null,"copy_on_write", null,"volatile", null,"write", null);
+		this.mapped[85] = greycat.types_by_name.get(debug.FnParam.name);
+		this.mapped[85].resolveGeneratedOffsets("name","type");
+		this.mapped[86] = greycat.types_by_name.get(debug.TypeRef.name);
+		this.mapped[86].resolveGeneratedOffsets("name","module","generics","nullable");
+		this.mapped[87] = greycat.types_by_name.get(debug.TypeDesc.name);
+		this.mapped[87].resolveGeneratedOffsets("module","name","methods","attrs","is_abstract","is_enum");
 		this.mapped[88] = greycat.types_by_name.get(math.MathConstants.name);
-		this.mapped[88].static_values = new java.lang.Object[]{2.718281828,1.442695041,0.434294482,0.693147181,2.302585093,3.141592654,1.570796327,0.785398163,0.318309886,0.636619772,1.128379167,1.414213562,0.707106781};
-		this.mapped[89] = greycat.types_by_name.get(util.Gaussian.name);
-		this.mapped[90] = greycat.types_by_name.get(util.Quantizer.name);
-		this.mapped[91] = greycat.types_by_name.get(util.ByteArray.name);
-		this.mapped[92] = greycat.types_by_name.get(util.GaussianProfile.name);
-		this.mapped[93] = greycat.types_by_name.get(util.BoxPlotF64.name);
-		this.mapped[93].resolveGeneratedOffsets("min","max","whiskerLow","whiskerHigh","percentile1","percentile5","percentile25","percentile50","percentile75","percentile95","percentile99","countOutliersLow","countOutliersHigh","percentageOutliersLow","percentageOutliersHigh","sum","avg","std","size");
-		this.mapped[94] = greycat.types_by_name.get(util.HistogramI64.name);
-		this.mapped[95] = greycat.types_by_name.get(util.Random.name);
-		this.mapped[95].resolveGeneratedOffsets("seed","v");
-		this.mapped[96] = greycat.types_by_name.get(util.NdEncoding.name);
-		this.mapped[97] = greycat.types_by_name.get(util.HistogramBucket.name);
-		this.mapped[97].resolveGeneratedOffsetWithValues("from", 0L,"to", 1L,"count", 2L,"percentage", 3L);
-		this.mapped[98] = greycat.types_by_name.get(util.Iban.name);
-		this.mapped[99] = greycat.types_by_name.get(util.HistogramF64.name);
+		this.mapped[88].static_values = new java.lang.Object[]{2.7182818285,1.4426950409,0.4342944819,0.6931471806,2.302585093,3.1415926536,1.5707963268,0.7853981634,0.3183098862,0.6366197724,1.1283791671,1.4142135624,0.7071067812};
+		this.mapped[89] = greycat.types_by_name.get(util.HistogramI64.name);
+		this.mapped[90] = greycat.types_by_name.get(util.Gaussian.name);
+		this.mapped[91] = greycat.types_by_name.get(util.Queue.name);
+		this.mapped[92] = greycat.types_by_name.get(util.ByteArray.name);
+		this.mapped[93] = greycat.types_by_name.get(util.SlidingWindow.name);
+		this.mapped[94] = greycat.types_by_name.get(util.Iban.name);
+		this.mapped[95] = greycat.types_by_name.get(util.Assert.name);
+		this.mapped[96] = greycat.types_by_name.get(util.HistogramF64.name);
+		this.mapped[97] = greycat.types_by_name.get(util.BoxPlotF64.name);
+		this.mapped[97].resolveGeneratedOffsets("min","max","whiskerLow","whiskerHigh","percentile1","percentile5","percentile25","percentile50","percentile75","percentile95","percentile99","countOutliersLow","countOutliersHigh","percentageOutliersLow","percentageOutliersHigh","sum","avg","std","size");
+		this.mapped[98] = greycat.types_by_name.get(util.NdEncoding.name);
+		this.mapped[99] = greycat.types_by_name.get(util.Buffer.name);
 		this.mapped[100] = greycat.types_by_name.get(util.Crypto.name);
-		this.mapped[101] = greycat.types_by_name.get(util.TimeWindow.name);
-		this.mapped[102] = greycat.types_by_name.get(util.SlidingWindow.name);
-		this.mapped[103] = greycat.types_by_name.get(util.Histogram.name);
-		this.mapped[104] = greycat.types_by_name.get(util.BoxPlotI64.name);
-		this.mapped[104].resolveGeneratedOffsets("min","max","whiskerLow","whiskerHigh","percentile1","percentile5","percentile25","percentile50","percentile75","percentile95","percentile99","countOutliersLow","countOutliersHigh","percentageOutliersLow","percentageOutliersHigh","sum","avg","std","size");
-		this.mapped[105] = greycat.types_by_name.get(util.BoxPlot.name);
-		this.mapped[105].resolveGeneratedOffsets("min","max","whiskerLow","whiskerHigh","percentile1","percentile5","percentile25","percentile50","percentile75","percentile95","percentile99","countOutliersLow","countOutliersHigh","percentageOutliersLow","percentageOutliersHigh","sum","avg","std","size");
-		this.mapped[106] = greycat.types_by_name.get(util.Buffer.name);
-		this.mapped[107] = greycat.types_by_name.get(util.Assert.name);
-		this.mapped[108] = greycat.types_by_name.get(util.Queue.name);
-		this.mapped[109] = greycat.types_by_name.get(util.ProgressTracker.name);
+		this.mapped[101] = greycat.types_by_name.get(util.ProgressTracker.name);
+		this.mapped[102] = greycat.types_by_name.get(util.BoxPlot.name);
+		this.mapped[102].resolveGeneratedOffsets("min","max","whiskerLow","whiskerHigh","percentile1","percentile5","percentile25","percentile50","percentile75","percentile95","percentile99","countOutliersLow","countOutliersHigh","percentageOutliersLow","percentageOutliersHigh","sum","avg","std","size");
+		this.mapped[103] = greycat.types_by_name.get(util.TimeWindow.name);
+		this.mapped[104] = greycat.types_by_name.get(util.Random.name);
+		this.mapped[104].resolveGeneratedOffsets("seed","v");
+		this.mapped[105] = greycat.types_by_name.get(util.Histogram.name);
+		this.mapped[106] = greycat.types_by_name.get(util.BoxPlotI64.name);
+		this.mapped[106].resolveGeneratedOffsets("min","max","whiskerLow","whiskerHigh","percentile1","percentile5","percentile25","percentile50","percentile75","percentile95","percentile99","countOutliersLow","countOutliersHigh","percentageOutliersLow","percentageOutliersHigh","sum","avg","std","size");
+		this.mapped[107] = greycat.types_by_name.get(util.Quantizer.name);
+		this.mapped[108] = greycat.types_by_name.get(util.GaussianProfile.name);
+		this.mapped[109] = greycat.types_by_name.get(util.HistogramBucket.name);
+		this.mapped[109].resolveGeneratedOffsetWithValues("from", 0L,"to", 1L,"count", 2L,"percentage", 3L);
 	}
 }

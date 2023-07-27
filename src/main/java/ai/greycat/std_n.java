@@ -26,12 +26,12 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
+                stream.write_vu64(ref);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 core.node res = (core.node) type.factory.build(type);
-                res.ref = stream.read_i64();
+                res.ref = stream.read_vu64();
                 return res;
             }
 
@@ -51,12 +51,12 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
+                stream.write_vu64(ref);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 core.nodeTime res = (nodeTime) type.factory.build(type);
-                res.ref = stream.read_i64();
+                res.ref = stream.read_vu64();
                 return res;
             }
         }
@@ -78,12 +78,12 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
+                stream.write_vu64(ref);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 core.nodeIndex res = (nodeIndex) type.factory.build(type);
-                res.ref = stream.read_i64();
+                res.ref = stream.read_vu64();
                 return res;
             }
         }
@@ -102,12 +102,12 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
+                stream.write_vu64(ref);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 core.nodeList res = (nodeList) type.factory.build(type);
-                res.ref = stream.read_i64();
+                res.ref = stream.read_vu64();
                 return res;
             }
 
@@ -127,12 +127,12 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(ref);
+                stream.write_vu64(ref);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 core.nodeGeo res = (core.nodeGeo) type.factory.build(type);
-                res.ref = stream.read_i64();
+                res.ref = stream.read_vu64();
                 return res;
             }
 
@@ -1955,6 +1955,57 @@ class std_n {
     }
 
     public static final class io {
+
+        protected static class AbiReader extends GreyCat.Object {
+
+            protected AbiReader(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+        }
+
+        protected static class AbiWriter extends GreyCat.Object {
+
+            protected AbiWriter(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+        }
+
+        protected static class CsvReader extends GreyCat.Object {
+
+            protected CsvReader(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+
+        }
+
+        protected static class CsvWriter extends GreyCat.Object {
+
+            protected CsvWriter(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+
+        }
+
         protected static class Directory extends GreyCat.Object {
 
             protected Directory(GreyCat.Type type) {
@@ -1991,9 +2042,9 @@ class std_n {
             }
         }
 
-        protected static class AbiWriter extends GreyCat.Object {
+        protected static class JsonReader extends GreyCat.Object {
 
-            protected AbiWriter(GreyCat.Type type) {
+            protected JsonReader(GreyCat.Type type) {
                 super(type, null);
                 throw new RuntimeException("unsupported");
             }
@@ -2001,11 +2052,12 @@ class std_n {
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 throw new IOException("unsupported");
             }
+
         }
 
-        protected static class AbiReader extends GreyCat.Object {
+        protected static class JsonWriter extends GreyCat.Object {
 
-            protected AbiReader(GreyCat.Type type) {
+            protected JsonWriter(GreyCat.Type type) {
                 super(type, null);
                 throw new RuntimeException("unsupported");
             }
@@ -2013,6 +2065,33 @@ class std_n {
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 throw new IOException("unsupported");
             }
+
+        }
+
+        protected static class TextReader extends GreyCat.Object {
+
+            protected TextReader(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+
+        }
+
+        protected static class TextWriter extends GreyCat.Object {
+
+            protected TextWriter(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+
         }
 
     }
