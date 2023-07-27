@@ -266,14 +266,18 @@ public final class GreyCat {
             if (is.read(tmp, 0, 2) == -1) {
                 throw new IOException();
             }
-            return ((tmp[1] << 24) >>> 16) + ((tmp[0] << 24) >>> 24);
+            return ((tmp[1] << 24) >>> 16) +
+                    ((tmp[0] << 24) >>> 24);
         }
 
         int read_i32() throws IOException {
             if (is.read(tmp, 0, 4) == -1) {
                 throw new IOException();
             }
-            return (tmp[3] << 24) + ((tmp[2] << 24) >>> 8) + ((tmp[1] << 24) >>> 16) + ((tmp[0] << 24) >>> 24);
+            return (tmp[3] << 24) +
+                    ((tmp[2] << 24) >>> 8) +
+                    ((tmp[1] << 24) >>> 16) +
+                    ((tmp[0] << 24) >>> 24);
         }
 
         int read_vu32() throws IOException {
@@ -330,7 +334,14 @@ public final class GreyCat {
             if (is.read(tmp, 0, 8) == -1) {
                 throw new IOException();
             }
-            return ((long) tmp[7] << 56) + (((long) tmp[6] << 56) >>> 8) + (((long) tmp[5] << 56) >>> 16) + (((long) tmp[4] << 56) >>> 24) + (((long) tmp[3] << 56) >>> 32) + (((long) tmp[2] << 56) >>> 40) + (((long) tmp[1] << 56) >>> 48) + (((long) tmp[0] << 56) >>> 56);
+            return ((long) tmp[7] << 56) +
+                    (((long) tmp[6] << 56) >>> 8) +
+                    (((long) tmp[5] << 56) >>> 16) +
+                    (((long) tmp[4] << 56) >>> 24) +
+                    (((long) tmp[3] << 56) >>> 32) +
+                    (((long) tmp[2] << 56) >>> 40) +
+                    (((long) tmp[1] << 56) >>> 48) +
+                    (((long) tmp[0] << 56) >>> 56);
         }
 
         long read_vi64() throws IOException {

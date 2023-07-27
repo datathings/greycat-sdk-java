@@ -84,7 +84,7 @@ fn write_core(out: AbiWriter) {
   out.write(-9223372036854775808);
   out.write(13.37);
   out.write("Hello world");
-  // out.write("${"Hello world"}");
+  out.write("${"Not"} ${"a"} ${"symbol"}");
   out.write(42_geo);
   out.write(GeoBox::new(13_geo, 37_geo));
   out.write(nodeList<int>::new());

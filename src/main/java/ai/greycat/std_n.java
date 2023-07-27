@@ -337,7 +337,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "ti2d{ x0: " + x0 + ", x1: " + x1 + " }";
+                return "ti2d{x0=" + x0 + ",x1=" + x1 + "}";
             }
 
             long interleave() {
@@ -380,7 +380,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "ti3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + " }";
+                return "ti3d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + "}";
             }
 
             long interleave() {
@@ -424,7 +424,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "ti4d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + " }";
+                return "ti4d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + ",x3=" + x3 + "}";
             }
 
             long interleave() {
@@ -474,7 +474,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "ti5d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + ", x4: " + x4 + " }";
+                return "ti5d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + ",x3=" + x3 + ",x4=" + x4 + "}";
             }
 
             long interleave() {
@@ -523,7 +523,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "ti6d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + ", x4: " + x4 + ", x5: " + x5 + " }";
+                return "ti6d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + ",x3=" + x3 + ",x4=" + x4 + ",x5=" + x5 + "}";
             }
 
             long interleave() {
@@ -578,8 +578,8 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "ti10d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + ", x4: " + x4 +
-                        ", x5: " + x5 + ", x6: " + x6 + ", x7: " + x7 + ", x8: " + x8 + ", x9: " + x9 + " }";
+                return "ti10d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + ",x3=" + x3 + ",x4=" + x4 +
+                        ",x5=" + x5 + ",x6=" + x6 + ",x7=" + x7 + ",x8=" + x8 + ",x9=" + x9 + "}";
             }
 
             long interleave() {
@@ -632,7 +632,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "tf2d{ x0: " + x0 + ", x1: " + x1 + " }";
+                return "tf2d{x0=" + x0 + ",x1=" + x1 + "}";
             }
 
             long interleave() {
@@ -675,7 +675,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "tf3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + " }";
+                return "tf3d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + "}";
             }
 
             long interleave() {
@@ -719,7 +719,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                return "tf3d{ x0: " + x0 + ", x1: " + x1 + ", x2: " + x2 + ", x3: " + x3 + " }";
+                return "tf3d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + ",x3=" + x3 + "}";
             }
 
             long interleave() {
