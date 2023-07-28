@@ -1068,7 +1068,7 @@ class std_n {
                     final int metaColType = stream.read_vu32();
                     final int metaType = stream.read_vu32();
                     final boolean metaIndex = stream.read_bool();
-                    meta[col] = new core.Table.TableColumnMeta(metaColType, metaType, 0, 0.0, 0.0, 0L, 0L, metaIndex, 0);
+                    meta[col] = new core.Table.TableColumnMeta(metaColType, metaType, metaIndex);
                 }
                 final Object[] data = new Object[cols * rows];
                 for (int c = 0; c < cols; c++) {
@@ -1119,24 +1119,12 @@ class std_n {
             public static final class TableColumnMeta {
                 public final int colType;
                 public final int type;
-                public final int size;
-                public final double sum;
-                public final double sumSq;
-                public final long min;
-                public final long max;
                 public final boolean index;
-                public final int tz;
 
-                public TableColumnMeta(int colType, int type, int size, double sum, double sumSq, long min, long max, boolean index, int tz) {
+                public TableColumnMeta(int colType, int type, boolean index) {
                     this.colType = colType;
                     this.type = type;
-                    this.size = size;
-                    this.sum = sum;
-                    this.sumSq = sumSq;
-                    this.min = min;
-                    this.max = max;
                     this.index = index;
-                    this.tz = tz;
                 }
             }
         }
