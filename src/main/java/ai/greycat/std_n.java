@@ -1956,9 +1956,9 @@ class std_n {
 
     public static final class io {
 
-        protected static class AbiReader extends GreyCat.Object {
+        protected static class GcbReader extends GreyCat.Object {
 
-            protected AbiReader(GreyCat.Type type) {
+            protected GcbReader(GreyCat.Type type) {
                 super(type, null);
                 throw new RuntimeException("unsupported");
             }
@@ -1968,9 +1968,9 @@ class std_n {
             }
         }
 
-        protected static class AbiWriter extends GreyCat.Object {
+        protected static class GcbWriter extends GreyCat.Object {
 
-            protected AbiWriter(GreyCat.Type type) {
+            protected GcbWriter(GreyCat.Type type) {
                 super(type, null);
                 throw new RuntimeException("unsupported");
             }

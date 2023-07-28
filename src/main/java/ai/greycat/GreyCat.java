@@ -1148,7 +1148,7 @@ public final class GreyCat {
         symbols = new String[symbolsCount + 1];
         symbols[0] = null;
         for (int offset = 1; offset < (symbolsCount + 1); ++offset) {
-            String symbol = abiStream.read_string(abiStream.read_i32());
+            String symbol = abiStream.read_string(abiStream.read_vu32());
             symbols[offset] = symbol;
             symbols_off_by_value.put(symbol, offset);
         }
@@ -1160,9 +1160,9 @@ public final class GreyCat {
         StringBuilder builder = new StringBuilder();
         for (i = 0; i < typesSize; i++) {
             /* build type qualified name */
-            final String moduleName = symbols[abiStream.read_i32()];
-            final String typeName = symbols[abiStream.read_i32()];
-            final String libName = symbols[abiStream.read_i32()];
+            final String moduleName = symbols[abiStream.read_vu32()];
+            final String typeName = symbols[abiStream.read_vu32()];
+            final String libName = symbols[abiStream.read_vu32()];
             builder.setLength(0);
             if (moduleName != null) {
                 builder.append(moduleName);
@@ -1170,28 +1170,30 @@ public final class GreyCat {
             }
             builder.append(typeName);
             final String fqn = builder.toString();
-            int attributesLen = abiStream.read_i32();
-            abiStream.read_i32();/* unused field */
-            abiStream.read_i32();/* unused field */
-            int mappedAbiTypeOffset = abiStream.read_i32();
-            int maskedAbiTypeOffset = abiStream.read_i32();
-            int nullableNbBytes = abiStream.read_i32();
-            boolean isNative = abiStream.read_bool();
-            boolean isAbstract = abiStream.read_bool();
-            boolean isEnum = abiStream.read_bool();
-            boolean isMasked = abiStream.read_bool();
+            int attributesLen = abiStream.read_vu32();
+            abiStream.read_vu32();/* unused field */
+            abiStream.read_vu32();/* unused field */
+            int mappedAbiTypeOffset = abiStream.read_vu32();
+            int maskedAbiTypeOffset = abiStream.read_vu32();
+            int nullableNbBytes = abiStream.read_vu32();
+            byte flags = abiStream.read_i8();
+            boolean isNative = 0 != (flags & 1);
+            boolean isAbstract = 0 != (flags & (1 << 1));
+            boolean isEnum = 0 != (flags & (1 << 2));
+            boolean isMasked = 0 != (flags & (1 << 3));
             final Type.Attribute[] typeAttributes = new Type.Attribute[attributesLen];
             for (int enumOffset = 0; enumOffset < attributesLen; ++enumOffset) {
-                final String name = symbols[abiStream.read_i32()];
-                final int abiType = abiStream.read_i32();
+                final String name = symbols[abiStream.read_vu32()];
+                final int abiType = abiStream.read_vu32();
 //                final String typeModuleName = symbols[abiStream.read_i32()];
 //                final String attributeTypeName = symbols[abiStream.read_i32()];
-                final int progTypeOffset = abiStream.read_i32();
-                final int mappedAnyOffset = abiStream.read_i32();
-                final int mappedAttOffset = abiStream.read_i32();
+                final int progTypeOffset = abiStream.read_vu32();
+                final int mappedAnyOffset = abiStream.read_vu32();
+                final int mappedAttOffset = abiStream.read_vu32();
                 final byte sbiType = abiStream.read_i8();
-                final boolean nullable = abiStream.read_bool();
-                final boolean mapped = abiStream.read_bool();
+                final byte attFlags = abiStream.read_i8();
+                final boolean nullable = 0 != (attFlags & 1);
+                final boolean mapped = 0 != (attFlags & (1 << 1));
                 typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset, mappedAttOffset, sbiType, nullable, mapped);
             }
             Type abiType = new Type(i, fqn, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isEnum, isNative, typeAttributes, factories.get(fqn), loaders.get(fqn), this);
@@ -1206,10 +1208,10 @@ public final class GreyCat {
         final int functionSizes = abiStream.read_i32();
         for (i = 0; i < functionSizes; i++) {
             /* build type qualified name */
-            final String moduleName = symbols[abiStream.read_i32()];
-            final String typeName = symbols[abiStream.read_i32()];
-            final String functionName = symbols[abiStream.read_i32()];
-            final String libName = symbols[abiStream.read_i32()];
+            final String moduleName = symbols[abiStream.read_vu32()];
+            final String typeName = symbols[abiStream.read_vu32()];
+            final String functionName = symbols[abiStream.read_vu32()];
+            final String libName = symbols[abiStream.read_vu32()];
             builder.setLength(0);
             if (moduleName != null) {
                 builder.append(moduleName);
@@ -1222,14 +1224,13 @@ public final class GreyCat {
             builder.append(functionName);
             final String fqn = builder.toString();
 
-            int nb_params = abiStream.read_i32();
+            int nb_params = abiStream.read_vu32();
             for (int j = 0; j < nb_params; j++) {
                 abiStream.read_i8();
-                abiStream.read_i32();
-                abiStream.read_i32();
+                abiStream.read_vu32();
+                abiStream.read_vu32();
             }
-            abiStream.read_i32();
-            abiStream.read_i8();
+            abiStream.read_vu32();
             abiStream.read_i8();
 
             Function fn = new Function(fqn);
@@ -1459,7 +1460,7 @@ public final class GreyCat {
         b.append("store");
         b.append(File.separator);
         b.append("abi");
-        return new Stream(this, new FileInputStream(new URL(b.toString()).getFile()));
+        return new Stream(this, new BufferedInputStream(new FileInputStream(new URL(b.toString()).getFile())));
     }
 
     private Stream getAbi(String runtime_url) throws IOException {

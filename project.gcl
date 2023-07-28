@@ -14,16 +14,15 @@ use runtime;
 use util;
 
 fn fail() {
-  var out = AbiWriter::new("fail.gcb");
-  out.write(null);
+  var out = GcbWriter::new("fail.gcb");
 }
 
 fn main() {
-  var out = AbiWriter::new("out.gcb");
+  var out = GcbWriter::new("out.gcb");
   write_std(out);
 }
 
-fn write_std(out: AbiWriter) {
+fn write_std(out: GcbWriter) {
   write_core(out);
   write_debug(out);
   write_io(out);
@@ -32,7 +31,7 @@ fn write_std(out: AbiWriter) {
   write_util(out);
 }
 
-fn write_core(out: AbiWriter) {
+fn write_core(out: GcbWriter) {
   out.write(null);
   out.write(true);
   out.write('*');
@@ -95,6 +94,7 @@ fn write_core(out: AbiWriter) {
   out.write(SamplingMode::adaptative);
   out.write(DurationUnit::days);
   out.write(TensorType::c128);
+  /*
   out.write(Table<node>::new(0, false));
   var table_without_meta = Table::new(2, false);
   var table_with_meta = Table::new(2, true);
@@ -106,6 +106,7 @@ fn write_core(out: AbiWriter) {
   }
   out.write(table_without_meta);
   out.write(table_with_meta);
+  */
   out.write(Tensor::new());
   var tensor = Tensor::new();
   tensor.init(TensorType::f64, [3, 3, 3]);
@@ -148,7 +149,7 @@ fn write_core(out: AbiWriter) {
   out.write(tf4d::new(13.37, 12.42, -13.37, -12.42));
 }
 
-fn write_debug(out: AbiWriter) {
+fn write_debug(out: GcbWriter) {
   out.write(TypeAttr{
     name: "",
     is_static: false,
@@ -205,7 +206,7 @@ fn write_debug(out: AbiWriter) {
   });
 }
 
-fn write_io(out: AbiWriter) {
+fn write_io(out: GcbWriter) {
 /*
   // out.write(out); // unsupported
   // out.write(AbiReader::new("out.gcb")); // segfault
@@ -240,7 +241,7 @@ fn write_io(out: AbiWriter) {
 */
 }
 
-fn write_math(out: AbiWriter) {
+fn write_math(out: GcbWriter) {
   out.write(MathConstants::e);
   out.write(MathConstants::log_2e);
   out.write(MathConstants::log_10e);
@@ -256,7 +257,7 @@ fn write_math(out: AbiWriter) {
   out.write(MathConstants::sqrt1_2);
 }
 
-fn write_runtime(out: AbiWriter) {
+fn write_runtime(out: GcbWriter) {
   out.write(Task{
     id: 13,
     user: 37,
@@ -347,7 +348,7 @@ fn write_runtime(out: AbiWriter) {
     });
 }
 
-fn write_util(out: AbiWriter) {
+fn write_util(out: GcbWriter) {
   out.write(Random{
       seed: 42,
       v: 13.37,
