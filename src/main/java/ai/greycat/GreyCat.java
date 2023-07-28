@@ -149,7 +149,7 @@ public final class GreyCat {
         }
 
         private final byte[] tmp = new byte[8];
-        private InputStream is;
+        private BufferedInputStream is;
         private OutputStream os;
 
         final GreyCat greycat;
@@ -159,7 +159,7 @@ public final class GreyCat {
             this.os = os;
         }
 
-        Stream(GreyCat greycat, InputStream is) {
+        Stream(GreyCat greycat, BufferedInputStream is) {
             this.greycat = greycat;
             this.is = is;
         }
@@ -1074,7 +1074,7 @@ public final class GreyCat {
             connection.setRequestProperty("Content-Type", "application/octet-stream");
             int status = connection.getResponseCode();
             if (200 > status || 300 <= status) {
-                Stream stream = new Stream(greycat, connection.getErrorStream());
+                Stream stream = new Stream(greycat, new BufferedInputStream(connection.getErrorStream()));
                 java.lang.Object result = stream.read();
                 stream.close();
                 throw new IOException(result.toString());
@@ -1385,7 +1385,7 @@ public final class GreyCat {
         }
         int status = connection.getResponseCode();
         if (200 > status || 300 <= status) {
-            Stream stream = new Stream(greycat, connection.getErrorStream());
+            Stream stream = new Stream(greycat, new BufferedInputStream(connection.getErrorStream()));
             stream.readAbiHeader();
             java.lang.Object result = stream.read();
             stream.close();
@@ -1445,7 +1445,7 @@ public final class GreyCat {
             throw new RuntimeException(builder.toString());
         }
         this.is_remote = true;
-        return new Stream(this, connection.getInputStream());
+        return new Stream(this, new BufferedInputStream(connection.getInputStream()));
     }
 
     private Stream getLocalAbi(String runtime_url) throws IOException {
