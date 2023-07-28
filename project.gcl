@@ -94,19 +94,13 @@ fn write_core(out: GcbWriter) {
   out.write(SamplingMode::adaptative);
   out.write(DurationUnit::days);
   out.write(TensorType::c128);
-  /*
-  out.write(Table<node>::new(0, false));
-  var table_without_meta = Table::new(2, false);
-  var table_with_meta = Table::new(2, true);
+  out.write(Table<node>::new(0));
+  var table = Table::new(2);
   for (var row = 0; row < 10; ++row) {
-    table_without_meta.set(row, 0, row);
-    table_without_meta.set(row, 1, row + 1);
-    table_with_meta.set(row, 0, row * 2);
-    table_with_meta.set(row, 1, row * row);
+    table.set(row, 0, row);
+    table.set(row, 1, row + 1);
   }
-  out.write(table_without_meta);
-  out.write(table_with_meta);
-  */
+  out.write(table);
   out.write(Tensor::new());
   var tensor = Tensor::new();
   tensor.init(TensorType::f64, [3, 3, 3]);

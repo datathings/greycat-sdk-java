@@ -1008,47 +1008,105 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i32(cols);
-                stream.write_i32(rows);
-                stream.write_bool(meta != null);
-                if (meta != null) {
-                    int i = 0;
-                    while (i < meta.length) {
-                        core.Table.TableColumnMeta colMeta = meta[i];
-                        stream.write_i32(colMeta.colType);
-                        stream.write_i32(colMeta.type);
-                        stream.write_i32(colMeta.size);
-                        stream.write_f64(colMeta.sum);
-                        stream.write_f64(colMeta.sumSq);
-                        stream.write_i64(colMeta.min);
-                        stream.write_i64(colMeta.max);
-                        stream.write_bool(colMeta.index);
-                        stream.write_i32(colMeta.tz);
-                        i++;
-                    }
+                stream.write_vu32(cols);
+                stream.write_vu32(rows);
+                for (int i = 0; i < meta.length; ++i) {
+                    core.Table.TableColumnMeta colMeta = meta[i];
+                    stream.write_vu32(colMeta.colType);
+                    stream.write_vu32(colMeta.type);
+                    stream.write_bool(colMeta.index);
                 }
-                int i = 0;
-                while (i < data.length) {
-                    stream.write(data[i]);
-                    i++;
+                for (int c = 0; c < cols; ++c) {
+                    switch (meta[c].colType) {
+                        case GreyCat.PrimitiveType.NULL:
+                            break;
+                        case GreyCat.PrimitiveType.INT:
+                            for (int r = 0; r < rows; ++r) {
+                                Object i = data[c + r];
+                                if (i instanceof Long) {
+                                    stream.write_vi64((long) i);
+                                } else if (i instanceof Integer) {
+                                    stream.write_vi64((int) i);
+                                } else if (i instanceof Short) {
+                                    stream.write_vi64((short) i);
+                                } else {
+                                    stream.write_vi64((byte) i);
+                                }
+                            }
+                            break;
+                        case GreyCat.PrimitiveType.FLOAT:
+                            for (int r = 0; r < rows; ++r) {
+                                Object f = data[c + r];
+                                if (f instanceof Double) {
+                                    stream.write_f64((double) f);
+                                } else {
+                                    stream.write_f64((float) f);
+                                }
+                            }
+                            break;
+                        case GreyCat.PrimitiveType.TIME:
+                        case GreyCat.PrimitiveType.DURATION:
+                        case GreyCat.PrimitiveType.ENUM:
+                            for (int r = 0; r < rows; ++r) {
+                                ((GreyCat.Object) data[c + r]).save(stream);
+                            }
+                            break;
+                        default:
+                            for (int r = 0; r < rows; ++r) {
+                                stream.write(data[c + r]);
+                            }
+                            break;
+                    }
                 }
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int cols = stream.read_i32();
-                final int rows = stream.read_i32();
-                final boolean useMeta = 0 != stream.read_i8();
-                core.Table.TableColumnMeta[] meta = null;
-                if (useMeta) {
-                    meta = new core.Table.TableColumnMeta[cols];
-                    for (int col = 0; col < cols; col++) {
-                        meta[col] = new core.Table.TableColumnMeta(stream.read_i32(), stream.read_i32(), stream.read_i32(), stream.read_f64(), stream.read_f64(), stream.read_i64(), stream.read_i64(), stream.read_bool(), stream.read_i32());
-                    }
+                final int cols = stream.read_vu32();
+                final int rows = stream.read_vu32();
+                core.Table.TableColumnMeta[] meta = new core.Table.TableColumnMeta[cols];
+                for (int col = 0; col < cols; col++) {
+                    final int metaColType = stream.read_vu32();
+                    final int metaType = stream.read_vu32();
+                    final boolean metaIndex = stream.read_bool();
+                    meta[col] = new core.Table.TableColumnMeta(metaColType, metaType, 0, 0.0, 0.0, 0L, 0L, metaIndex, 0);
                 }
-                final int capacity = cols * rows;
-                final Object[] data = new Object[capacity];
-                for (int offset = 0; offset < capacity; offset++) {
-                    data[offset] = stream.read();
+                final Object[] data = new Object[cols * rows];
+                for (int c = 0; c < cols; c++) {
+                    switch (meta[c].colType) {
+                        case GreyCat.PrimitiveType.NULL:
+                            break;
+                        case GreyCat.PrimitiveType.INT:
+                            for (int r = 0; r < rows; ++r) {
+                                data[c + r] = stream.read_vi64();
+                            }
+                            break;
+                        case GreyCat.PrimitiveType.FLOAT:
+                            for (int r = 0; r < rows; ++r) {
+                                data[c + r] = stream.read_f64();
+                            }
+                            break;
+                        case GreyCat.PrimitiveType.TIME:
+                            for (int r = 0; r < rows; ++r) {
+                                data[c + r] = time.load(type.greycat.types[type.greycat.type_offset_core_time], stream);
+                            }
+                            break;
+                        case GreyCat.PrimitiveType.DURATION:
+                            for (int r = 0; r < rows; ++r) {
+                                data[c + r] = duration.load(type.greycat.types[type.greycat.type_offset_core_duration], stream);
+                            }
+                            break;
+                        case GreyCat.PrimitiveType.ENUM:
+                            for (int r = 0; r < rows; ++r) {
+                                GreyCat.Type enumType = type.greycat.types[meta[c].type];
+                                data[c + r] = enumType.loader.load(enumType, stream);
+                            }
+                            break;
+                        default:
+                            for (int r = 0; r < rows; ++r) {
+                                data[c + r] = stream.read();
+                            }
+                            break;
+                    }
                 }
                 core.Table<java.lang.Object> t = (Table<java.lang.Object>) type.factory.build(type);
                 t.cols = cols;
