@@ -14,15 +14,15 @@ public final class GreyCat {
 
         private final Stream stream;
 
-        private AbiReader(Stream stream) {
+        private AbiReader(final Stream stream) {
             this.stream = stream;
         }
 
-        public java.lang.Object read() throws IOException {
+        public final java.lang.Object read() throws IOException {
             return stream.read();
         }
 
-        public int available() {
+        public final int available() {
             try {
                 return stream.is.available();
             } catch (IOException ex) {
@@ -35,7 +35,7 @@ public final class GreyCat {
 
         private final Stream stream;
 
-        private AbiWriter(Stream stream) {
+        private AbiWriter(final Stream stream) {
             this.stream = stream;
         }
 
@@ -56,7 +56,7 @@ public final class GreyCat {
         return new AbiWriter(s);
     }
 
-    static final class Stream {
+    static final protected class Stream {
 
         private final static byte ASCII_MAX = 127;
 
@@ -951,7 +951,7 @@ public final class GreyCat {
             for (int offset = 0; offset < type.attributes.length; ++offset) {
                 field = type.attributes[offset];
                 if (field.nullable) {
-                    nullable_bitset[nullable_offset >> 3] |= (null == get(offset) ? 0 : 1) << (nullable_offset & 7);
+                    nullable_bitset[nullable_offset >> 3] |= (byte) ((null == get(offset) ? 0 : 1) << (nullable_offset & 7));
                     ++nullable_offset;
                 }
             }
@@ -964,7 +964,6 @@ public final class GreyCat {
                 if (field.nullable && null == value) {
                     continue;
                 }
-
                 switch (field.sbiType) {
                     case PrimitiveType.NULL:
                         break;
@@ -1111,7 +1110,6 @@ public final class GreyCat {
     public final int type_offset_core_tf2d;
     public final int type_offset_core_tf3d;
     public final int type_offset_core_tf4d;
-
     private boolean is_remote = false;
     private final int abi_magic;
     private final int abi_version;
@@ -1185,8 +1183,6 @@ public final class GreyCat {
             for (int enumOffset = 0; enumOffset < attributesLen; ++enumOffset) {
                 final String name = symbols[abiStream.read_vu32()];
                 final int abiType = abiStream.read_vu32();
-//                final String typeModuleName = symbols[abiStream.read_i32()];
-//                final String attributeTypeName = symbols[abiStream.read_i32()];
                 final int progTypeOffset = abiStream.read_vu32();
                 final int mappedAnyOffset = abiStream.read_vu32();
                 final int mappedAttOffset = abiStream.read_vu32();
@@ -1223,7 +1219,6 @@ public final class GreyCat {
             }
             builder.append(functionName);
             final String fqn = builder.toString();
-
             int nb_params = abiStream.read_vu32();
             for (int j = 0; j < nb_params; j++) {
                 abiStream.read_i8();
@@ -1232,30 +1227,25 @@ public final class GreyCat {
             }
             abiStream.read_vu32();
             abiStream.read_i8();
-
             Function fn = new Function(fqn);
             functions_by_name.put(fqn, fn);
         }
-
         /* pre-resolve String type avoid runtime over-head */
         Type tmp = types_by_name.get("core::String");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_string = tmp.offset;
-
         tmp = types_by_name.get("core::duration");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_duration = tmp.offset;
-
         tmp = types_by_name.get("core::time");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_time = tmp.offset;
-
         tmp = types_by_name.get("core::geo");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
@@ -1273,79 +1263,66 @@ public final class GreyCat {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_index = tmp.offset;
-
         tmp = types_by_name.get("core::nodeTime");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_time = tmp.offset;
-
         tmp = types_by_name.get("core::nodeGeo");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_geo = tmp.offset;
-
         tmp = types_by_name.get("core::node");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node = tmp.offset;
-
         tmp = types_by_name.get("core::ti2d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_ti2d = tmp.offset;
-
         tmp = types_by_name.get("core::ti3d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_ti3d = tmp.offset;
-
         tmp = types_by_name.get("core::ti4d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_ti4d = tmp.offset;
-
         tmp = types_by_name.get("core::ti5d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_ti5d = tmp.offset;
-
         tmp = types_by_name.get("core::ti6d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_ti6d = tmp.offset;
-
         tmp = types_by_name.get("core::ti10d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_ti10d = tmp.offset;
-
         tmp = types_by_name.get("core::tf2d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_tf2d = tmp.offset;
-
         tmp = types_by_name.get("core::tf3d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_tf3d = tmp.offset;
-
         tmp = types_by_name.get("core::tf4d");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_tf4d = tmp.offset;
-
         abiStream.close();
         for (Library lib : libs_by_name.values()) {
             lib.init(this);
