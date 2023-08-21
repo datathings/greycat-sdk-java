@@ -138,6 +138,16 @@ class std_n {
 
         }
 
+        protected static class function extends GreyCat.Object {
+            protected function(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                throw new RuntimeException("unsupported");
+            }
+        }
+
         protected static class geo extends GreyCat.Object {
             private static final double GC_CORE_GEO_LAT_EPS = 0.00000001;
             private static final double GC_CORE_GEO_LAT_MIN = -85.05112878;
@@ -962,9 +972,16 @@ class std_n {
                 stream.write_vu32(rows);
                 for (int i = 0; i < meta.length; ++i) {
                     core.Table.TableColumnMeta colMeta = meta[i];
-                    stream.write_vu32(colMeta.colType);
-                    stream.write_vu32(colMeta.type);
+                    stream.write_i8(colMeta.colType);
                     stream.write_bool(colMeta.index);
+                    switch (colMeta.colType) {
+                        case GreyCat.PrimitiveType.OBJECT:
+                        case GreyCat.PrimitiveType.ENUM:
+                            stream.write_vu32(colMeta.type);
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 for (int c = 0; c < cols; ++c) {
                     switch (meta[c].colType) {
@@ -1015,9 +1032,18 @@ class std_n {
                 final int rows = stream.read_vu32();
                 core.Table.TableColumnMeta[] meta = new core.Table.TableColumnMeta[cols];
                 for (int col = 0; col < cols; col++) {
-                    final int metaColType = stream.read_vu32();
-                    final int metaType = stream.read_vu32();
-                    final boolean metaIndex = stream.read_bool();
+                    final byte metaColType= stream.read_i8();
+                    final boolean metaIndex= stream.read_bool();
+                    final int metaType;
+                    switch (metaColType) {
+                        case GreyCat.PrimitiveType.OBJECT:
+                        case GreyCat.PrimitiveType.ENUM:
+                            metaType = stream.read_vu32();
+                            break;
+                        default:
+                            metaType = -1;
+                            break;
+                    }
                     meta[col] = new core.Table.TableColumnMeta(metaColType, metaType, metaIndex);
                 }
                 final Object[] data = new Object[cols * rows];
@@ -1067,11 +1093,11 @@ class std_n {
             }
 
             public static final class TableColumnMeta {
-                public final int colType;
+                public final byte colType;
                 public final int type;
                 public final boolean index;
 
-                public TableColumnMeta(int colType, int type, boolean index) {
+                public TableColumnMeta(byte colType, int type, boolean index) {
                     this.colType = colType;
                     this.type = type;
                     this.index = index;
@@ -1420,7 +1446,7 @@ class std_n {
 
         }
 
-        protected static class HistogramF64 extends GreyCat.Object {
+        protected static class HistogramFloat extends GreyCat.Object {
             public double realMin;
             public double realMax;
             public double min;
@@ -1444,7 +1470,7 @@ class std_n {
             public long totalCount;
             public long[] counts;
 
-            protected HistogramF64(GreyCat.Type type) {
+            protected HistogramFloat(GreyCat.Type type) {
                 super(type, null);
             }
 
@@ -1504,7 +1530,7 @@ class std_n {
                 for (int offset = 0; offset < countsLen; offset++) {
                     counts[offset] = stream.read_i64();
                 }
-                util.HistogramF64 h = (HistogramF64) type.factory.build(type);
+                HistogramFloat h = (HistogramFloat) type.factory.build(type);
                 h.realMin = realMin;
                 h.realMax = realMax;
                 h.min = min;
@@ -1531,7 +1557,7 @@ class std_n {
             }
         }
 
-        protected static class HistogramI64 extends GreyCat.Object {
+        protected static class HistogramInt extends GreyCat.Object {
             public long realMin;
             public long realMax;
             public long min;
@@ -1555,7 +1581,7 @@ class std_n {
             public long totalCount;
             public long[] counts;
 
-            protected HistogramI64(GreyCat.Type type) {
+            protected HistogramInt(GreyCat.Type type) {
                 super(type, null);
             }
 
@@ -1615,7 +1641,7 @@ class std_n {
                 for (int offset = 0; offset < countsLen; offset++) {
                     counts[offset] = stream.read_i64();
                 }
-                util.HistogramI64 h = (HistogramI64) type.factory.build(type);
+                HistogramInt h = (HistogramInt) type.factory.build(type);
                 h.realMin = realMin;
                 h.realMax = realMax;
                 h.min = min;

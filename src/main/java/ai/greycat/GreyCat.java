@@ -1427,7 +1427,7 @@ public final class GreyCat {
 
     private Stream getLocalAbi(String runtime_url) throws IOException {
         StringBuilder b = new StringBuilder();
-        if (!runtime_url.startsWith("file")) {
+        if (!runtime_url.startsWith("file://")) {
             b.append("file://");
         }
         b.append(runtime_url);
