@@ -12,7 +12,7 @@ class std_n {
 
         // Primitive types
 
-        protected static class node extends GreyCat.Object {
+        protected static class node<T> extends GreyCat.Object {
             public long ref;
 
             protected node(GreyCat.Type type) {
@@ -37,7 +37,7 @@ class std_n {
 
         }
 
-        protected static class nodeTime extends GreyCat.Object {
+        protected static class nodeTime<T> extends GreyCat.Object {
             public long ref;
 
             protected nodeTime(GreyCat.Type type) {
@@ -61,7 +61,7 @@ class std_n {
             }
         }
 
-        protected static class nodeIndex extends GreyCat.Object {
+        protected static class nodeIndex<T, U> extends GreyCat.Object {
             @SuppressWarnings("unused")
             public static final java.lang.String type_name = "core::nodeIndex";
 
@@ -88,7 +88,7 @@ class std_n {
             }
         }
 
-        protected static class nodeList extends GreyCat.Object {
+        protected static class nodeList<T> extends GreyCat.Object {
             public long ref;
 
             protected nodeList(GreyCat.Type type) {
@@ -113,7 +113,7 @@ class std_n {
 
         }
 
-        protected static class nodeGeo extends GreyCat.Object {
+        protected static class nodeGeo<T> extends GreyCat.Object {
             public long ref;
 
             protected nodeGeo(GreyCat.Type type) {

@@ -2,6 +2,10 @@ package ai.greycat;
 
 public class Sandbox {
 
+    enum Ballec {
+        OLOL
+    }
+
     public static void main(String... args) throws Exception {
         GreyCat greycat = new GreyCat("/home/agarnier/datathings/greycat/sdk/java", new std()/*, new algebra()*/);
         GreyCat.AbiReader reader = greycat.openAbiRead("/home/agarnier/datathings/greycat/sdk/java/out.gcb");
