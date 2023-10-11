@@ -477,8 +477,13 @@ class std_n {
             }
 
             long interleave() {
-                return interleave64_5d(((int) x0) + UINT12_MIN, ((int) x1) + UINT12_MIN, ((int) x2) + UINT12_MIN,
-                        ((int) x3) + UINT12_MIN, ((int) x4) + UINT12_MIN);
+                return interleave64_5d(
+                        ((int) x0) + UINT12_MIN,
+                        ((int) x1) + UINT12_MIN,
+                        ((int) x2) + UINT12_MIN,
+                        ((int) x3) + UINT12_MIN,
+                        ((int) x4) + UINT12_MIN
+                );
             }
 
             private void deinterleave(long interleaved) {
@@ -551,9 +556,9 @@ class std_n {
 
             public byte x0, x1, x2, x3, x4, x5, x6, x7, x8, x9;
 
-            private final static byte INT10_MIN = -31 - 1;
-            private final static byte INT10_MAX = 31;
-            private final static char UINT10_MIN = 224;
+            private final static byte INT6_MIN = -31 - 1;
+            private final static byte INT6_MAX = 31;
+            private final static char UINT6_MIN = 224;
 
             protected ti10d(GreyCat.Type type) {
                 super(type, null);
@@ -583,25 +588,25 @@ class std_n {
 
             long interleave() {
                 return interleave64_5d(
-                        interleave64_2d((((char) x0) + UINT10_MIN) & 0x3f, (((char) x5) + UINT10_MIN) & 0x3f),
-                        interleave64_2d((((char) x1) + UINT10_MIN) & 0x3f, (((char) x6) + UINT10_MIN) & 0x3f),
-                        interleave64_2d((((char) x2) + UINT10_MIN) & 0x3f, (((char) x7) + UINT10_MIN) & 0x3f),
-                        interleave64_2d((((char) x3) + UINT10_MIN) & 0x3f, (((char) x8) + UINT10_MIN) & 0x3f),
-                        interleave64_2d((((char) x4) + UINT10_MIN) & 0x3f, (((char) x9) + UINT10_MIN) & 0x3f)
+                        interleave64_2d((((char) x0) + UINT6_MIN) & 0x3f, (((char) x5) + UINT6_MIN) & 0x3f),
+                        interleave64_2d((((char) x1) + UINT6_MIN) & 0x3f, (((char) x6) + UINT6_MIN) & 0x3f),
+                        interleave64_2d((((char) x2) + UINT6_MIN) & 0x3f, (((char) x7) + UINT6_MIN) & 0x3f),
+                        interleave64_2d((((char) x3) + UINT6_MIN) & 0x3f, (((char) x8) + UINT6_MIN) & 0x3f),
+                        interleave64_2d((((char) x4) + UINT6_MIN) & 0x3f, (((char) x9) + UINT6_MIN) & 0x3f)
                 );
             }
 
             private void deinterleave(long interleaved) {
-                x0 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved)) & 0x3f) + INT10_MIN);
-                x1 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 1)) & 0x3f) + INT10_MIN);
-                x2 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 2)) & 0x3f) + INT10_MIN);
-                x3 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 3)) & 0x3f) + INT10_MIN);
-                x4 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 4)) & 0x3f) + INT10_MIN);
-                x5 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 5)) & 0x3f) + INT10_MIN);
-                x6 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 6)) & 0x3f) + INT10_MIN);
-                x7 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 7)) & 0x3f) + INT10_MIN);
-                x8 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 8)) & 0x3f) + INT10_MIN);
-                x9 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 9)) & 0x3f) + INT10_MIN);
+                x0 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved)) & 0x3f) + INT6_MIN);
+                x1 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 1)) & 0x3f) + INT6_MIN);
+                x2 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 2)) & 0x3f) + INT6_MIN);
+                x3 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 3)) & 0x3f) + INT6_MIN);
+                x4 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 4)) & 0x3f) + INT6_MIN);
+                x5 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 5)) & 0x3f) + INT6_MIN);
+                x6 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 6)) & 0x3f) + INT6_MIN);
+                x7 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 7)) & 0x3f) + INT6_MIN);
+                x8 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 8)) & 0x3f) + INT6_MIN);
+                x9 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 9)) & 0x3f) + INT6_MIN);
             }
         }
 
@@ -989,7 +994,7 @@ class std_n {
                             break;
                         case GreyCat.PrimitiveType.INT:
                             for (int r = 0; r < rows; ++r) {
-                                Object i = data[c + r];
+                                Object i = data[c * rows + r];
                                 if (i instanceof Long) {
                                     stream.write_vi64((long) i);
                                 } else if (i instanceof Integer) {
@@ -1003,7 +1008,7 @@ class std_n {
                             break;
                         case GreyCat.PrimitiveType.FLOAT:
                             for (int r = 0; r < rows; ++r) {
-                                Object f = data[c + r];
+                                Object f = data[c * rows + r];
                                 if (f instanceof Double) {
                                     stream.write_f64((double) f);
                                 } else {
@@ -1015,12 +1020,12 @@ class std_n {
                         case GreyCat.PrimitiveType.DURATION:
                         case GreyCat.PrimitiveType.ENUM:
                             for (int r = 0; r < rows; ++r) {
-                                ((GreyCat.Object) data[c + r]).save(stream);
+                                ((GreyCat.Object) data[c * rows + r]).save(stream);
                             }
                             break;
                         default:
                             for (int r = 0; r < rows; ++r) {
-                                stream.write(data[c + r]);
+                                stream.write(data[c * rows + r]);
                             }
                             break;
                     }
@@ -1053,33 +1058,33 @@ class std_n {
                             break;
                         case GreyCat.PrimitiveType.INT:
                             for (int r = 0; r < rows; ++r) {
-                                data[c + r] = stream.read_vi64();
+                                data[c * rows + r] = stream.read_vi64();
                             }
                             break;
                         case GreyCat.PrimitiveType.FLOAT:
                             for (int r = 0; r < rows; ++r) {
-                                data[c + r] = stream.read_f64();
+                                data[c * rows + r] = stream.read_f64();
                             }
                             break;
                         case GreyCat.PrimitiveType.TIME:
                             for (int r = 0; r < rows; ++r) {
-                                data[c + r] = time.load(type.greycat.types[type.greycat.type_offset_core_time], stream);
+                                data[c * rows + r] = time.load(type.greycat.types[type.greycat.type_offset_core_time], stream);
                             }
                             break;
                         case GreyCat.PrimitiveType.DURATION:
                             for (int r = 0; r < rows; ++r) {
-                                data[c + r] = duration.load(type.greycat.types[type.greycat.type_offset_core_duration], stream);
+                                data[c * rows + r] = duration.load(type.greycat.types[type.greycat.type_offset_core_duration], stream);
                             }
                             break;
                         case GreyCat.PrimitiveType.ENUM:
                             for (int r = 0; r < rows; ++r) {
                                 GreyCat.Type enumType = type.greycat.types[meta[c].type];
-                                data[c + r] = enumType.loader.load(enumType, stream);
+                                data[c * rows + r] = enumType.loader.load(enumType, stream);
                             }
                             break;
                         default:
                             for (int r = 0; r < rows; ++r) {
-                                data[c + r] = stream.read();
+                                data[c * rows + r] = stream.read();
                             }
                             break;
                     }
@@ -1172,8 +1177,6 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                stream.write_vu32(type.offset);
                 if (attributes == null) {
                     stream.write_i32(0);
                 } else {
@@ -1280,7 +1283,7 @@ class std_n {
         }
 
         private static int deinterleave64_3d(long interleaved) {
-            long x = interleaved & core.B_3D[0];
+            long x = interleaved & B_3D[0];
             x = (x ^ (x >>> S_3D[0])) & B_3D[1];
             x = (x ^ (x >>> S_3D[1])) & B_3D[2];
             x = (x ^ (x >>> S_3D[2])) & B_3D[3];

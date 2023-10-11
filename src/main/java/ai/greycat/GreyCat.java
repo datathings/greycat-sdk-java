@@ -18,11 +18,11 @@ public final class GreyCat {
             this.stream = stream;
         }
 
-        public final java.lang.Object read() throws IOException {
+        public java.lang.Object read() throws IOException {
             return stream.read();
         }
 
-        public final int available() {
+        public int available() {
             try {
                 return stream.is.available();
             } catch (IOException ex) {
@@ -451,7 +451,7 @@ public final class GreyCat {
             return new String(read_i8_array(len), StandardCharsets.UTF_8);
         }
 
-        java.lang.Object read_string_lit() throws IOException {
+        String read_string_lit() throws IOException {
             int offset = read_vu32();
             if (0 == (offset & 1)) {
                 throw new IOException("wrong state");
@@ -726,7 +726,11 @@ public final class GreyCat {
                 switch (loadType) {
                     case PrimitiveType.ENUM: {
                         Type fieldType = type.greycat.types[att.abiType];
-                        loadedField = enum_loader.load(fieldType, stream);
+                        if (att.sbiType == PrimitiveType.UNDEFINED) {
+                            loadedField = enum_loader.load(type.greycat.types[stream.read_vu32()], stream);
+                        } else {
+                            loadedField = enum_loader.load(fieldType, stream);
+                        }
                         break;
                     }
                     case PrimitiveType.OBJECT: {
@@ -851,9 +855,8 @@ public final class GreyCat {
         public String toString() {
             if (value == null) {
                 return type.name + "." + key;
-            } else {
-                return type.name + "." + key + "{value=" + value + '}';
             }
+            return type.name + "." + key + "{value=" + value + '}';
         }
     }
 
@@ -1335,7 +1338,7 @@ public final class GreyCat {
         }
         GreyCat.Function fn = greycat.functions_by_name.get(fqn);
         if (fn == null) {
-            for (String name : greycat.functions_by_name.keySet()) {
+            for (String name : greycat.functions_by_name.keySet()) { // TODO: remove
                 System.out.println(name);
             }
             throw new RuntimeException("Function not found with name " + fqn);
