@@ -14,10 +14,7 @@ before_script:
 build:
   stage: build
   script:
-    - export PROJECT_VERSION_SIMPLE=`git2version -s`
-    - mvn versions:set -DnewVersion=${PROJECT_VERSION_SIMPLE}
-    - mvn clean package
-    - mkdir -p dist dist/sdk dist/sdk/java && cp target/sdk-${PROJECT_VERSION_SIMPLE}.jar dist/sdk/java/sdk.jar
+    - ./build.sh
   artifacts:
     when: on_success
     expire_in: '30 days'
