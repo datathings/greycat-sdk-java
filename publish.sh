@@ -18,12 +18,12 @@ cat << EOF > /root/.m2/settings.xml
       <id>deploy</id>
       <configuration>
         <httpConfiguration>
-          <put>
+          <all>
             <headers>
               <name>Authorization</name>
               <value>${token}</value>
             </headers>
-          </put>
+          </all>
         </httpConfiguration>
       </configuration>
     </server>
