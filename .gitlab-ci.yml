@@ -1,3 +1,5 @@
+image: oci.datathings.com/greycat/build/java:1.0.7-main
+
 variables:
   GIT_STRATEGY: clone
   GIT_DEPTH: "0"
@@ -6,15 +8,28 @@ stages:
   - build
   - publish
 
+before_script:
+  - export VERSION=`git2version -s`
+
 build:
   stage: build
-  image: oci.datathings.com/greycat/build/java:1.0.7-main
   script:
     - export PROJECT_VERSION_SIMPLE=`git2version -s`
     - mvn versions:set -DnewVersion=${PROJECT_VERSION_SIMPLE}
     - mvn clean package
     - mkdir -p dist dist/sdk dist/sdk/java && cp target/sdk-${PROJECT_VERSION_SIMPLE}.jar dist/sdk/java/sdk.jar
   artifacts:
-    expire_in: 1 week
+    when: on_success
+    expire_in: '30 days'
     paths:
+      - dist
+
+publish:
+  stage: publish
+  when: manual
+  script:
+    - ./publish.sh
+  artifacts:
+    expire_in: 1 week
+    path:
       - dist
