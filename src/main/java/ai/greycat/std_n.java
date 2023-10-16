@@ -2,6 +2,7 @@ package ai.greycat;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -775,6 +776,10 @@ class std_n {
                 return array;
             }
 
+            public final java.util.Iterator<T> iterator() {
+                return ((java.util.stream.Stream<T>) java.util.Arrays.stream(attributes)).iterator();
+            }
+
             @Override
             public java.lang.String toString() {
                 StringBuilder b = new StringBuilder();
@@ -1037,8 +1042,8 @@ class std_n {
                 final int rows = stream.read_vu32();
                 core.Table.TableColumnMeta[] meta = new core.Table.TableColumnMeta[cols];
                 for (int col = 0; col < cols; col++) {
-                    final byte metaColType= stream.read_i8();
-                    final boolean metaIndex= stream.read_bool();
+                    final byte metaColType = stream.read_i8();
+                    final boolean metaIndex = stream.read_bool();
                     final int metaType;
                     switch (metaColType) {
                         case GreyCat.PrimitiveType.OBJECT:

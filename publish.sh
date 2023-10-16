@@ -18,14 +18,14 @@ cat << EOF > /root/.m2/settings.xml
       <id>deploy</id>
       <configuration>
         <httpConfiguration>
-          <all>
+          <put>
             <headers>
               <property>
                 <name>Authorization</name>
                 <value>${token}</value>
                 </property>
             </headers>
-          </all>
+          </put>
         </httpConfiguration>
       </configuration>
     </server>
@@ -35,5 +35,4 @@ EOF
 
 cd dist
 
-mvn deploy:deploy-file -Dfile=sdk.jar -DpomFile=sdk.pom -DrepositoryId=deploy -Durl=https://get.greycat.io/files/sdk/java/"${CI_COMMIT_REF_NAME}"/"${VERSION_MAJOR_MINOR}"/ ||
-mvn -X deploy:deploy-file -Dfile=sdk.jar -DpomFile=sdk.pom -DrepositoryId=deploy -Durl=https://get.greycat.io/files/sdk/java/"${CI_COMMIT_REF_NAME}"/"${VERSION_MAJOR_MINOR}"/
+mvn deploy:deploy-file -Dfile=sdk.jar -DpomFile=sdk.pom -DrepositoryId=deploy -Durl=https://get.greycat.io/files/sdk/java/"${CI_COMMIT_REF_NAME}"/"${VERSION_MAJOR_MINOR}"/
