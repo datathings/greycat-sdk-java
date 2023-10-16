@@ -33,4 +33,5 @@ EOF
 
 cd dist
 
+mvn deploy:deploy-file -Dfile=sdk.jar -DpomFile=sdk.pom -DrepositoryId=deploy -Durl=https://get.greycat.io/files/sdk/java/"${CI_COMMIT_REF_NAME}"/"${VERSION_MAJOR_MINOR}"/ ||
 mvn -X deploy:deploy-file -Dfile=sdk.jar -DpomFile=sdk.pom -DrepositoryId=deploy -Durl=https://get.greycat.io/files/sdk/java/"${CI_COMMIT_REF_NAME}"/"${VERSION_MAJOR_MINOR}"/
