@@ -20,8 +20,10 @@ cat << EOF > /root/.m2/settings.xml
         <httpConfiguration>
           <all>
             <headers>
-              <name>Authorization</name>
-              <value>${token}</value>
+              <property>
+                <name>Authorization</name>
+                <value>${token}</value>
+                </property>
             </headers>
           </all>
         </httpConfiguration>
