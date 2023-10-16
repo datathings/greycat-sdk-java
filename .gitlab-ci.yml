@@ -31,5 +31,5 @@ publish:
     - ./publish.sh
   artifacts:
     expire_in: 1 week
-    path:
+    paths:
       - dist
