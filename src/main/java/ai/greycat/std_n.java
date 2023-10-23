@@ -780,6 +780,23 @@ class std_n {
                 return ((java.util.stream.Stream<T>) java.util.Arrays.stream(attributes)).iterator();
             }
 
+            public final T[] toArray() {
+                return (T[]) attributes;
+            }
+
+            public final java.util.List<T> toList() {
+                return (java.util.List<T>) java.util.Arrays.asList(attributes);
+            }
+
+            public final void setValues(T... array) {
+                attributes = array;
+            }
+
+            public final void setValues(java.util.List<T> list) {
+                attributes = new Object[list.size()];
+                list.toArray(attributes);
+            }
+
             @Override
             public java.lang.String toString() {
                 StringBuilder b = new StringBuilder();
