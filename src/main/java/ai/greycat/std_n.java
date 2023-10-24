@@ -2,17 +2,14 @@ package ai.greycat;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 
-@SuppressWarnings({"unchecked", "unused"})
 class std_n {
 
     public static final class core {
 
         // Primitive types
 
+        @SuppressWarnings("unused")
         protected static class node<T> extends GreyCat.Object {
             public long ref;
 
@@ -30,14 +27,15 @@ class std_n {
                 stream.write_vu64(ref);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.node res = (core.node) type.factory.build(type);
+            static core.node<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.node<?> res = (core.node<?>) type.factory.build(type);
                 res.ref = stream.read_vu64();
                 return res;
             }
 
         }
 
+        @SuppressWarnings("unused")
         protected static class nodeTime<T> extends GreyCat.Object {
             public long ref;
 
@@ -55,15 +53,15 @@ class std_n {
                 stream.write_vu64(ref);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeTime res = (nodeTime) type.factory.build(type);
+            static core.nodeTime<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeTime<?> res = (core.nodeTime<?>) type.factory.build(type);
                 res.ref = stream.read_vu64();
                 return res;
             }
         }
 
+        @SuppressWarnings("unused")
         protected static class nodeIndex<T, U> extends GreyCat.Object {
-            @SuppressWarnings("unused")
             public static final java.lang.String type_name = "core::nodeIndex";
 
             public long ref;
@@ -82,13 +80,14 @@ class std_n {
                 stream.write_vu64(ref);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeIndex res = (nodeIndex) type.factory.build(type);
+            static core.nodeIndex<?, ?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeIndex<?, ?> res = (core.nodeIndex<?, ?>) type.factory.build(type);
                 res.ref = stream.read_vu64();
                 return res;
             }
         }
 
+        @SuppressWarnings("unused")
         protected static class nodeList<T> extends GreyCat.Object {
             public long ref;
 
@@ -106,14 +105,15 @@ class std_n {
                 stream.write_vu64(ref);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeList res = (nodeList) type.factory.build(type);
+            static core.nodeList<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeList<?> res = (core.nodeList<?>) type.factory.build(type);
                 res.ref = stream.read_vu64();
                 return res;
             }
 
         }
 
+        @SuppressWarnings("unused")
         protected static class nodeGeo<T> extends GreyCat.Object {
             public long ref;
 
@@ -131,8 +131,8 @@ class std_n {
                 stream.write_vu64(ref);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeGeo res = (core.nodeGeo) type.factory.build(type);
+            static core.nodeGeo<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeGeo<?> res = (core.nodeGeo<?>) type.factory.build(type);
                 res.ref = stream.read_vu64();
                 return res;
             }
@@ -144,7 +144,7 @@ class std_n {
                 super(type, null);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+            static java.lang.Object load(@SuppressWarnings("unused") GreyCat.Type type, @SuppressWarnings("unused") GreyCat.Stream stream) throws IOException {
                 throw new RuntimeException("unsupported");
             }
         }
@@ -355,6 +355,7 @@ class std_n {
             public int x0, x1, x2;
 
             private final static int INT21_MIN = -1048575 - 1;
+            @SuppressWarnings("unused")
             private final static int INT_21_MAX = 1048575;
             private final static long UINT21_MIN = 4293918720L;
 
@@ -388,8 +389,8 @@ class std_n {
             }
 
             private void deinterleave(long interleaved) {
-                final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL, 0xffff00000000ffffL, 0x0001fffffL};
-                final int[] S = {2, 4, 8, 16, 32};
+                @SuppressWarnings("unused") final long[] B = {0x10c30c30c30c30c3L, 0x100f00f00f00f00fL, 0x001f0000ff0000ffL, 0xffff00000000ffffL, 0x0001fffffL};
+                @SuppressWarnings("unused") final int[] S = {2, 4, 8, 16, 32};
 
                 x0 = (int) ((long) deinterleave64_3d(interleaved) + INT21_MIN);
                 x1 = (int) ((long) deinterleave64_3d(interleaved >>> 1) + INT21_MIN);
@@ -449,6 +450,7 @@ class std_n {
             public short x0, x1, x2, x3, x4;
 
             private final static short INT12_MIN = -2047 - 1;
+            @SuppressWarnings("unused")
             private final static short INT12_MAX = 2047;
             private final static int UINT12_MIN = 63488;
 
@@ -488,8 +490,8 @@ class std_n {
             }
 
             private void deinterleave(long interleaved) {
-                final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
-                final int[] S = {4, 8, 16, 32};
+                @SuppressWarnings("unused") final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
+                @SuppressWarnings("unused") final int[] S = {4, 8, 16, 32};
 
                 x0 = (short) ((long) deinterleave64_5d(interleaved) + INT12_MIN);
                 x1 = (short) ((long) deinterleave64_5d(interleaved >>> 1) + INT12_MIN);
@@ -503,6 +505,7 @@ class std_n {
 
             public short x0, x1, x2, x3, x4, x5;
             private final static short INT10_MIN = -511 - 1;
+            @SuppressWarnings("unused")
             private final static short INT10_MAX = 511;
             private final static int UINT10_MIN = 65024;
 
@@ -558,6 +561,7 @@ class std_n {
             public byte x0, x1, x2, x3, x4, x5, x6, x7, x8, x9;
 
             private final static byte INT6_MIN = -31 - 1;
+            @SuppressWarnings("unused")
             private final static byte INT6_MAX = 31;
             private final static char UINT6_MIN = 224;
 
@@ -761,6 +765,7 @@ class std_n {
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
                 stream.write_vu32(attributes.length);
+                //noinspection ForLoopReplaceableByForEach
                 for (int offset = 0; offset < attributes.length; ++offset) {
                     stream.write(attributes[offset]);
                 }
@@ -768,7 +773,7 @@ class std_n {
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 final int size = stream.read_vu32();
-                final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
+                @SuppressWarnings("unchecked") final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
                 array.attributes = new java.lang.Object[size];
                 for (int offset = 0; offset < size; offset++) {
                     array.set(offset, stream.read());
@@ -776,25 +781,98 @@ class std_n {
                 return array;
             }
 
-            public final java.util.Iterator<T> iterator() {
-                return ((java.util.stream.Stream<T>) java.util.Arrays.stream(attributes)).iterator();
-            }
-
-            public final T[] toArray() {
-                return (T[]) attributes;
-            }
-
-            public final java.util.List<T> toList() {
-                return (java.util.List<T>) java.util.Arrays.asList(attributes);
-            }
-
-            public final void setValues(T... array) {
+            @SuppressWarnings("unused")
+            public final void setAll(T[] array) {
                 attributes = array;
             }
 
-            public final void setValues(java.util.List<T> list) {
-                attributes = new Object[list.size()];
-                list.toArray(attributes);
+            @SuppressWarnings("unused")
+            public final void setAll(java.util.Collection<T> collection) {
+                attributes = new Object[collection.size()];
+                collection.toArray(attributes);
+            }
+
+            @SuppressWarnings("unused")
+            public final void setAll(java.util.Iterator<T> it) {
+                attributes = new Object[4096];
+                int index = 0;
+                while (it.hasNext()) {
+                    if (index == 4096) {
+                        attributes = java.util.Arrays.copyOf(attributes, attributes.length + 4096);
+                    }
+                    attributes[index++] = it.next();
+                }
+                attributes = java.util.Arrays.copyOf(attributes, index);
+            }
+
+            @SuppressWarnings("unused")
+            public final T[] toArray() {
+                //noinspection unchecked
+                return (T[]) attributes;
+            }
+
+            @SuppressWarnings("unused")
+            public final java.util.List<T> toList() {
+                //noinspection unchecked
+                return (java.util.List<T>) java.util.Arrays.asList(attributes);
+            }
+
+            @SuppressWarnings("unused")
+            public final java.util.Iterator<T> iterator() {
+                //noinspection unchecked
+                return ((java.util.stream.Stream<T>) java.util.Arrays.stream(attributes)).iterator();
+            }
+
+            @SuppressWarnings("unused")
+            public final void add(T value) {
+                attributes = java.util.Arrays.copyOf(attributes, attributes.length + 1);
+                attributes[attributes.length - 1] = value;
+            }
+
+            @SuppressWarnings("unused")
+            public final void addAll(T[] values) {
+                int currentLength = attributes.length;
+                attributes = java.util.Arrays.copyOf(attributes, currentLength + values.length);
+                java.lang.System.arraycopy(values, 0, attributes, currentLength, values.length);
+            }
+
+            public final T get(int index) {
+                //noinspection unchecked
+                return (T) attributes[index];
+            }
+
+            @SuppressWarnings("unused")
+            public final T setAt(int index, T value) {
+                attributes[index] = value;
+                return value;
+            }
+
+            @SuppressWarnings("unused")
+            public final void swap(int i, int j) {
+                Object buf = attributes[i];
+                attributes[i] = attributes[j];
+                attributes[j] = attributes[i];
+            }
+
+            @SuppressWarnings("unused")
+            public final int size() {
+                return attributes.length;
+            }
+
+            @SuppressWarnings("unused")
+            public final int indexOf(T value) {
+                for (int index = 0; index < attributes.length; ++index) {
+                    if (value == attributes[index]) {
+                        return index;
+                    }
+                }
+                return -1;
+            }
+
+            @SuppressWarnings("unused")
+            public final void remove(int i) {
+                java.lang.System.arraycopy(attributes, i + 1, attributes, i, attributes.length - i - 1);
+                attributes = java.util.Arrays.copyOf(attributes, attributes.length - 1);
             }
 
             @Override
@@ -915,9 +993,10 @@ class std_n {
         }
 
         protected static class Map<T, U> extends GreyCat.Object {
+            @SuppressWarnings("unused")
             public static final java.lang.String type_name = "core::Map";
 
-            private final java.util.Map<Object, Object> map = new HashMap<>();
+            private final java.util.Map<T, U> map = new java.util.HashMap<>();
 
             protected Map(GreyCat.Type type) {
                 super(type, null);
@@ -926,13 +1005,14 @@ class std_n {
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
                 stream.write_vu32(size());
-                for (Object key : map.keySet()) {
+                for (T key : keys()) {
                     stream.write(key);
                     stream.write(get(key));
                 }
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                //noinspection unchecked
                 final core.Map<Object, Object> map = (Map<Object, Object>) type.factory.build(type);
                 final int mapLength = stream.read_vu32();
                 for (int offset = 0; offset < mapLength; offset++) {
@@ -941,27 +1021,35 @@ class std_n {
                 return map;
             }
 
-            public int size() {
+            public final int size() {
                 return map.size();
             }
 
-            @SuppressWarnings("unchecked")
-            public U get(Object o) {
-                return (U) map.get(o);
+            public final U get(T key) {
+                return map.get(key);
             }
 
-            public void set(T t, U u) {
-                map.put(t, u);
+            public final void set(T key, U value) {
+                map.put(key, value);
             }
 
             @SuppressWarnings({"unused", "FieldCanBeLocal"})
-            public void remove(Object o) {
-                map.remove(o);
+            public final void remove(T key) {
+                map.remove(key);
             }
 
             @SuppressWarnings({"unused"})
-            public void clear() {
+            public final void clear() {
                 map.clear();
+            }
+
+            public final java.util.Set<T> keys() {
+                return map.keySet();
+            }
+
+            @SuppressWarnings("unused")
+            public final java.util.Collection<U> values() {
+                return map.values();
             }
         }
 
@@ -997,6 +1085,7 @@ class std_n {
             protected final void save(GreyCat.Stream stream) throws IOException {
                 stream.write_vu32(cols);
                 stream.write_vu32(rows);
+                //noinspection ForLoopReplaceableByForEach
                 for (int i = 0; i < meta.length; ++i) {
                     core.Table.TableColumnMeta colMeta = meta[i];
                     stream.write_i8(colMeta.colType);
@@ -1111,7 +1200,7 @@ class std_n {
                             break;
                     }
                 }
-                core.Table<java.lang.Object> t = (Table<java.lang.Object>) type.factory.build(type);
+                @SuppressWarnings("unchecked") core.Table<java.lang.Object> t = (Table<java.lang.Object>) type.factory.build(type);
                 t.cols = cols;
                 t.rows = rows;
                 t.meta = meta;
@@ -1179,7 +1268,7 @@ class std_n {
                         bin_size *= 16;
                         break;
                     default:
-                        throw new IllegalArgumentException("" + tensorType);
+                        throw new IllegalArgumentException(java.lang.String.valueOf(tensorType));
                 }
                 core.Tensor res = (Tensor) type.factory.build(type);
                 res.shape = shape;
@@ -1372,7 +1461,7 @@ class std_n {
                 throw new RuntimeException("unsupported");
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+            static java.lang.Object load(@SuppressWarnings("unused") GreyCat.Type type, @SuppressWarnings("unused") GreyCat.Stream stream) throws IOException {
                 throw new IOException("unsupported");
             }
         }
@@ -1397,6 +1486,7 @@ class std_n {
             }
         }
 
+        @SuppressWarnings("unused")
         protected static class Gaussian extends GreyCat.Object {
             public double sum;
             public double sumSq;
@@ -1693,6 +1783,7 @@ class std_n {
             }
         }
 
+        @SuppressWarnings("unused")
         protected static class ProgressTracker extends GreyCat.Object {
             public long initialTime;
             public long lastTime;
@@ -1784,7 +1875,7 @@ class std_n {
 
         protected static class Queue<T> extends GreyCat.Object {
 
-            private final java.util.Queue<T> queue = new LinkedList<>();
+            private final java.util.Queue<T> queue = new java.util.LinkedList<>();
 
             protected Queue(GreyCat.Type type) {
                 super(type, null);
@@ -1808,7 +1899,7 @@ class std_n {
                 final int capacity = stream.read_vu32();
                 stream.read_vi64(); // head - values;
                 stream.read_vi64(); // tail - values;
-                final util.Queue<Object> queue = (Queue<Object>) type.factory.build(type);
+                @SuppressWarnings("unchecked") final util.Queue<Object> queue = (Queue<Object>) type.factory.build(type);
                 int offset;
                 for (offset = 0; offset < size; offset++) {
                     queue.enqueue(stream.read());
