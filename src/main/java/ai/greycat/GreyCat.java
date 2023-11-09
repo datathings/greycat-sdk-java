@@ -4,8 +4,13 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public final class GreyCat {
     public static final short abi_proto = 1;
@@ -1095,6 +1100,7 @@ public final class GreyCat {
     public final java.util.Map<String, Type> types_by_name = new HashMap<>();
     public final java.util.Map<String, Function> functions_by_name = new HashMap<>();
     private final String runtime_url;
+    private String token;
     public final int type_offset_core_string;
     public final int type_offset_core_duration;
     public final int type_offset_core_time;
@@ -1117,23 +1123,34 @@ public final class GreyCat {
     private final int abi_magic;
     private final int abi_version;
 
-    public GreyCat(String url, Library... libraries) throws Exception {
-        libs_by_name = new HashMap<>();
-        std std = new std();
-        libs_by_name.put(std.name(), std);
-        int i = 0;
-        while (i < libraries.length) {
-            final Library lib = libraries[i];
-            libs_by_name.put(lib.name(), lib);
-            i++;
+    public GreyCat(String url, List<Library> libraries, String username, String password, boolean use_cookie) throws Exception {
+        this.runtime_url = url;
+        this.token = null;
+
+        if (username != null && password != null) {
+            login(username, password, use_cookie);
         }
-        final java.util.Map<String, Loader> loaders = new HashMap<>();
-        final java.util.Map<String, Factory> factories = new HashMap<>();
-        for (Library lib : libs_by_name.values()) {
+
+        this.libs_by_name = new HashMap<>();
+        std std = new std();
+        this.libs_by_name.put(std.name(), std);
+
+        if (libraries != null) {
+            for (Library lib : libraries) {
+                this.libs_by_name.put(lib.name(), lib);
+            }
+        }
+
+        Map<String, Loader> loaders = new HashMap<>();
+        Map<String, Factory> factories = new HashMap<>();
+
+        for (Library lib : this.libs_by_name.values()) {
             lib.configure(loaders, factories);
         }
-        this.runtime_url = url;
+
+        this.is_remote = false;
         final Stream abiStream = getAbi(url);
+
         // step 0: verify abi version
         int abi_major = abiStream.read_i16();
         if (abi_major != GreyCat.abi_proto) {
@@ -1159,7 +1176,7 @@ public final class GreyCat {
         types = new Type[typesSize];
         final int attributesSize = abiStream.read_i32();
         StringBuilder builder = new StringBuilder();
-        for (i = 0; i < typesSize; i++) {
+        for (int i = 0; i < typesSize; i++) {
             /* build type qualified name */
             final String moduleName = symbols[abiStream.read_vu32()];
             final String typeName = symbols[abiStream.read_vu32()];
@@ -1205,7 +1222,7 @@ public final class GreyCat {
         // step 3: create all functions
         final long functionsBytes = abiStream.read_i64();
         final int functionSizes = abiStream.read_i32();
-        for (i = 0; i < functionSizes; i++) {
+        for (int i = 0; i < functionSizes; i++) {
             /* build type qualified name */
             final String moduleName = symbols[abiStream.read_vu32()];
             final String typeName = symbols[abiStream.read_vu32()];
@@ -1347,7 +1364,18 @@ public final class GreyCat {
         url.append(greycat.runtime_url);
         url.append('/');
         url.append(fqn);
-        HttpURLConnection connection = (HttpURLConnection) new URL(url.toString()).openConnection();
+
+        HttpURLConnection connection;
+        if (url.toString().startsWith("http://")) {
+            connection = (HttpURLConnection) new URL(url.toString()).openConnection();
+        } else if (url.toString().startsWith("https://")) {
+            connection = (HttpsURLConnection) new URL(url.toString()).openConnection();
+        } else {
+            throw new IllegalArgumentException("Invalid URL format");
+        }
+        if (greycat.token != null) {
+            connection.setRequestProperty ("Authorization", greycat.token);
+        }
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept", "application/octet-stream");
         connection.setRequestProperty("Content-Type", "application/octet-stream");
@@ -1376,6 +1404,83 @@ public final class GreyCat {
         java.lang.Object result = buf.read();
         buf.close();
         return result;
+    }
+
+    public java.lang.Object fetch(String path) throws IOException {
+        if (!this.is_remote) {
+            throw new RuntimeException("Remote Call is not available on this GreyCat handle");
+        }
+        
+        URL url = new URL(this.runtime_url + "/" + path);
+        HttpURLConnection connection;
+
+        if (this.runtime_url.toString().startsWith("http://")) {
+            connection = (HttpURLConnection) url.openConnection();
+        } else if (this.runtime_url.startsWith("https://")) {
+            connection = (HttpsURLConnection) url.openConnection();
+        } else {
+            throw new IllegalArgumentException("Invalid URL format");
+        }
+
+        if (this.token != null) {
+            connection.setRequestProperty ("Authorization", this.token);
+        }
+        connection.setRequestProperty("Accept", "application/octet-stream");
+        connection.setRequestMethod("GET");
+        int status = connection.getResponseCode();
+        if (status < 200 || status >= 300) {
+            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+        }
+
+        Stream buf = new Stream(this, new BufferedInputStream(connection.getInputStream()));
+        buf.readAbiHeader();
+        java.lang.Object result = buf.read();
+        buf.close();
+        return result;
+    }
+
+    public void login(String username, String password, boolean useCookie) throws Exception {
+        URL url = new URL(this.runtime_url + "/runtime::User::login");
+        
+        HttpURLConnection connection;
+        if (this.runtime_url.startsWith("http://")) {
+            connection = (HttpURLConnection) url.openConnection();
+        } else if (this.runtime_url.startsWith("https://")) {
+            connection = (HttpsURLConnection) url.openConnection();
+        } else {
+            throw new IllegalArgumentException("Invalid URL format");
+        }
+
+        try {
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+
+            String credentials = username + ":" + hashPassword(password);
+            String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
+            String body = "[" + "\"" + encodedCredentials + "\"" + "," + useCookie + "]";
+            
+            connection.setDoOutput(true);
+            OutputStream os = connection.getOutputStream();
+            PrintStream b = new PrintStream(os);
+            b.print(body);
+            b.close();
+
+            int status = connection.getResponseCode();
+            if (200 > status || 300 <= status) {
+                throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());   
+            }
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    response.append(line);
+                }
+                this.token = response.toString().replaceAll("\"", "");
+            }
+        } finally {
+            connection.disconnect();
+        }
     }
 
     @SuppressWarnings({"unused"})
@@ -1411,21 +1516,29 @@ public final class GreyCat {
     }
 
     private Stream getRemoteAbi(String runtime_url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(runtime_url + "/runtime::Runtime::abi").openConnection();
-        connection.setRequestMethod("POST");
-        int status = connection.getResponseCode();
-        if (200 > status || 300 <= status) {
-            StringBuilder builder = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-            String line = reader.readLine();
-            while (line != null) {
-                builder.append(line);
-                line = reader.readLine();
-            }
-            throw new RuntimeException(builder.toString());
+        URL url = new URL(runtime_url + "/runtime::Runtime::abi");
+        HttpURLConnection connection;
+        if (this.runtime_url.startsWith("http://")) {
+            connection = (HttpURLConnection) url.openConnection();
+        } else if (this.runtime_url.startsWith("https://")) {
+            connection = (HttpsURLConnection) url.openConnection();
+        } else {
+            throw new IllegalArgumentException("Invalid URL format");
         }
-        this.is_remote = true;
-        return new Stream(this, new BufferedInputStream(connection.getInputStream()));
+
+        if (this.token != null) {
+            connection.setRequestProperty ("Authorization", this.token);
+        }
+        connection.setRequestProperty("Accept", "application/octet-stream");
+        connection.setRequestMethod("POST");
+
+        int status = connection.getResponseCode();
+        if (status >= 200 && status < 300) {
+            this.is_remote = true;
+            return new Stream(this, new BufferedInputStream(connection.getInputStream()));
+        } else {
+            throw new RuntimeException("HTTP Error: " + status + " " + connection.getResponseMessage());
+        }
     }
 
     private Stream getLocalAbi(String runtime_url) throws IOException {
@@ -1449,6 +1562,23 @@ public final class GreyCat {
         } else {
             return getLocalAbi(runtime_url);
         }
+    }
+
+    private static String hashPassword(String password) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+        byte[] hashedBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+
+        StringBuilder hexString = new StringBuilder();
+        for (byte hashedByte : hashedBytes) {
+            String hex = Integer.toHexString(0xff & hashedByte);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+
+        return hexString.toString();
     }
 
 }
