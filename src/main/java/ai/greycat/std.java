@@ -2965,16 +2965,16 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[6],v);
 			}
 			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.TaskInfo> running(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.TaskInfo>) ai.greycat.GreyCat.call(greycat,"runtime::Task::running");
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.TaskInfo>) greycat.call("runtime::Task::running");
 			}
 			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.Task> history(ai.greycat.GreyCat greycat,java.lang.Long offset,java.lang.Long max) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.Task>) ai.greycat.GreyCat.call(greycat,"runtime::Task::history", offset, max);
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.Task>) greycat.call("runtime::Task::history", offset, max);
 			}
 			public static java.lang.Boolean cancel(ai.greycat.GreyCat greycat,java.lang.Long task_id) throws java.io.IOException {
-				return (java.lang.Boolean) ai.greycat.GreyCat.call(greycat,"runtime::Task::cancel", task_id);
+				return (java.lang.Boolean) greycat.call("runtime::Task::cancel", task_id);
 			}
 			public static ai.greycat.std.runtime.TaskInfo info(ai.greycat.GreyCat greycat,java.lang.Long user_id,java.lang.Long task_id) throws java.io.IOException {
-				return (ai.greycat.std.runtime.TaskInfo) ai.greycat.GreyCat.call(greycat,"runtime::Task::info", user_id, task_id);
+				return (ai.greycat.std.runtime.TaskInfo) greycat.call("runtime::Task::info", user_id, task_id);
 			}
 			public static Task create(ai.greycat.GreyCat greycat, java.lang.Long user_id, java.lang.Long task_id, java.lang.String mod, java.lang.String type, java.lang.String fun, ai.greycat.std.core.time creation, ai.greycat.std.runtime.TaskStatus status){
 				return new Task(greycat.libs_by_name.get(ai.greycat.std.name).mapped[39], user_id, task_id, mod, type, fun, creation, status);
@@ -3112,7 +3112,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[3],v);
 			}
 			public static ai.greycat.std.core.Array<java.lang.String> permissions(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<java.lang.String>) ai.greycat.GreyCat.call(greycat,"runtime::SecurityPolicy::permissions");
+				return (ai.greycat.std.core.Array<java.lang.String>) greycat.call("runtime::SecurityPolicy::permissions");
 			}
 			public static SecurityPolicy create(ai.greycat.GreyCat greycat, ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> entities, ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserCredential> credentials, ai.greycat.std.core.Map<java.lang.String, ai.greycat.std.runtime.UserRole> roles, ai.greycat.std.runtime.SecurityFields fields){
 				return new SecurityPolicy(greycat.libs_by_name.get(ai.greycat.std.name).mapped[42], entities, credentials, roles, fields);
@@ -3136,13 +3136,13 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[1],v);
 			}
 			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.UserRole> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.UserRole>) ai.greycat.GreyCat.call(greycat,"runtime::UserRole::all");
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.UserRole>) greycat.call("runtime::UserRole::all");
 			}
 			public static void remove(ai.greycat.GreyCat greycat,java.lang.String name) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::UserRole::remove", name);
+				greycat.call("runtime::UserRole::remove", name);
 			}
 			public static void set(ai.greycat.GreyCat greycat,ai.greycat.std.runtime.UserRole value) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::UserRole::set", value);
+				greycat.call("runtime::UserRole::set", value);
 			}
 			public static UserRole create(ai.greycat.GreyCat greycat, java.lang.String name, ai.greycat.std.core.Array<java.lang.String> permissions){
 				return new UserRole(greycat.libs_by_name.get(ai.greycat.std.name).mapped[43], name, permissions);
@@ -3172,10 +3172,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[2],v);
 			}
 			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity>) ai.greycat.GreyCat.call(greycat,"runtime::SecurityEntity::all");
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity>) greycat.call("runtime::SecurityEntity::all");
 			}
 			public static java.lang.Long set(ai.greycat.GreyCat greycat,ai.greycat.std.runtime.SecurityEntity entity) throws java.io.IOException {
-				return (java.lang.Long) ai.greycat.GreyCat.call(greycat,"runtime::SecurityEntity::set", entity);
+				return (java.lang.Long) greycat.call("runtime::SecurityEntity::set", entity);
 			}
 			public static SecurityEntity create(ai.greycat.GreyCat greycat, java.lang.Long id, java.lang.String name, java.lang.Boolean activated){
 				return new SecurityEntity(greycat.libs_by_name.get(ai.greycat.std.name).mapped[44], id, name, activated);
@@ -3247,37 +3247,37 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[9],v);
 			}
 			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity>) ai.greycat.GreyCat.call(greycat,"runtime::SecurityEntity::all");
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity>) greycat.call("runtime::SecurityEntity::all");
 			}
 			public static java.lang.Long set(ai.greycat.GreyCat greycat,ai.greycat.std.runtime.SecurityEntity entity) throws java.io.IOException {
-				return (java.lang.Long) ai.greycat.GreyCat.call(greycat,"runtime::SecurityEntity::set", entity);
+				return (java.lang.Long) greycat.call("runtime::SecurityEntity::set", entity);
 			}
 			public static java.lang.String login(ai.greycat.GreyCat greycat,java.lang.String credentials,java.lang.Boolean use_cookie) throws java.io.IOException {
-				return (java.lang.String) ai.greycat.GreyCat.call(greycat,"runtime::User::login", credentials, use_cookie);
+				return (java.lang.String) greycat.call("runtime::User::login", credentials, use_cookie);
 			}
 			public static java.lang.String tokenLogin(ai.greycat.GreyCat greycat,java.lang.String token,java.lang.Boolean use_cookie) throws java.io.IOException {
-				return (java.lang.String) ai.greycat.GreyCat.call(greycat,"runtime::User::tokenLogin", token, use_cookie);
+				return (java.lang.String) greycat.call("runtime::User::tokenLogin", token, use_cookie);
 			}
 			public static void logout(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::User::logout");
+				greycat.call("runtime::User::logout");
 			}
 			public static java.lang.String renew(ai.greycat.GreyCat greycat,java.lang.Boolean use_cookie) throws java.io.IOException {
-				return (java.lang.String) ai.greycat.GreyCat.call(greycat,"runtime::User::renew", use_cookie);
+				return (java.lang.String) greycat.call("runtime::User::renew", use_cookie);
 			}
 			public static java.lang.Long current(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (java.lang.Long) ai.greycat.GreyCat.call(greycat,"runtime::User::current");
+				return (java.lang.Long) greycat.call("runtime::User::current");
 			}
 			public static ai.greycat.std.runtime.User me(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.runtime.User) ai.greycat.GreyCat.call(greycat,"runtime::User::me");
+				return (ai.greycat.std.runtime.User) greycat.call("runtime::User::me");
 			}
 			public static ai.greycat.std.core.Array<java.lang.String> permissions(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<java.lang.String>) ai.greycat.GreyCat.call(greycat,"runtime::User::permissions");
+				return (ai.greycat.std.core.Array<java.lang.String>) greycat.call("runtime::User::permissions");
 			}
 			public static java.lang.Boolean setPassword(ai.greycat.GreyCat greycat,java.lang.String name,java.lang.String pass) throws java.io.IOException {
-				return (java.lang.Boolean) ai.greycat.GreyCat.call(greycat,"runtime::User::setPassword", name, pass);
+				return (java.lang.Boolean) greycat.call("runtime::User::setPassword", name, pass);
 			}
 			public static java.lang.String getToken(ai.greycat.GreyCat greycat,java.lang.Long id) throws java.io.IOException {
-				return (java.lang.String) ai.greycat.GreyCat.call(greycat,"runtime::User::getToken", id);
+				return (java.lang.String) greycat.call("runtime::User::getToken", id);
 			}
 			public static User create(ai.greycat.GreyCat greycat, java.lang.Long id, java.lang.String name, java.lang.Boolean activated, java.lang.String full_name, java.lang.String email, java.lang.String role, java.lang.Long permissions_flags, ai.greycat.std.core.Array<ai.greycat.std.runtime.UserGroupPolicy> groups, java.lang.Long groups_flags, java.lang.Boolean external){
 				return new User(greycat.libs_by_name.get(ai.greycat.std.name).mapped[45], id, name, activated, full_name, email, role, permissions_flags, groups, groups_flags, external);
@@ -3412,13 +3412,13 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super(type, attributes);
 			}
 			public static ai.greycat.std.runtime.RuntimeInfo info(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.runtime.RuntimeInfo) ai.greycat.GreyCat.call(greycat,"runtime::Runtime::info");
+				return (ai.greycat.std.runtime.RuntimeInfo) greycat.call("runtime::Runtime::info");
 			}
 			public static void abi(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::Runtime::abi");
+				greycat.call("runtime::Runtime::abi");
 			}
 			public static java.lang.Object readModVar(ai.greycat.GreyCat greycat,java.lang.String mod_var) throws java.io.IOException {
-				return ai.greycat.GreyCat.call(greycat,"runtime::Runtime::readModVar", mod_var);
+				return greycat.call("runtime::Runtime::readModVar", mod_var);
 			}
 			public static Runtime create(ai.greycat.GreyCat greycat){
 				return new Runtime(greycat.libs_by_name.get(ai.greycat.std.name).mapped[49]);
@@ -3442,7 +3442,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[1],v);
 			}
 			public static ai.greycat.std.runtime.OpenIDConnect config(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.runtime.OpenIDConnect) ai.greycat.GreyCat.call(greycat,"runtime::OpenIDConnect::config");
+				return (ai.greycat.std.runtime.OpenIDConnect) greycat.call("runtime::OpenIDConnect::config");
 			}
 			public static OpenIDConnect create(ai.greycat.GreyCat greycat, java.lang.String url, java.lang.String clientId){
 				return new OpenIDConnect(greycat.libs_by_name.get(ai.greycat.std.name).mapped[50], url, clientId);
@@ -3631,10 +3631,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[2],v);
 			}
 			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity>) ai.greycat.GreyCat.call(greycat,"runtime::SecurityEntity::all");
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.SecurityEntity>) greycat.call("runtime::SecurityEntity::all");
 			}
 			public static java.lang.Long set(ai.greycat.GreyCat greycat,ai.greycat.std.runtime.SecurityEntity entity) throws java.io.IOException {
-				return (java.lang.Long) ai.greycat.GreyCat.call(greycat,"runtime::SecurityEntity::set", entity);
+				return (java.lang.Long) greycat.call("runtime::SecurityEntity::set", entity);
 			}
 			public static UserGroup create(ai.greycat.GreyCat greycat, java.lang.Long id, java.lang.String name, java.lang.Boolean activated){
 				return new UserGroup(greycat.libs_by_name.get(ai.greycat.std.name).mapped[54], id, name, activated);
@@ -3697,10 +3697,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[4],v);
 			}
 			public static ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask> all(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask>) ai.greycat.GreyCat.call(greycat,"runtime::PeriodicTask::all");
+				return (ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask>) greycat.call("runtime::PeriodicTask::all");
 			}
 			public static void set(ai.greycat.GreyCat greycat,ai.greycat.std.core.Array<ai.greycat.std.runtime.PeriodicTask> tasks) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::PeriodicTask::set", tasks);
+				greycat.call("runtime::PeriodicTask::set", tasks);
 			}
 			public static PeriodicTask create(ai.greycat.GreyCat greycat, ai.greycat.std.core.function function, java.lang.Long user_id, ai.greycat.std.core.Array<java.lang.Object> arguments, ai.greycat.std.core.time start, ai.greycat.std.core.duration every){
 				return new PeriodicTask(greycat.libs_by_name.get(ai.greycat.std.name).mapped[56], function, user_id, arguments, start, every);
@@ -3748,10 +3748,10 @@ public final class std extends ai.greycat.GreyCat.Library {
 				super.set(super.type.generated_offsets[5],v);
 			}
 			public static void set(ai.greycat.GreyCat greycat,ai.greycat.std.runtime.SecurityFields f) throws java.io.IOException {
-				ai.greycat.GreyCat.call(greycat,"runtime::SecurityFields::set", f);
+				greycat.call("runtime::SecurityFields::set", f);
 			}
 			public static ai.greycat.std.runtime.SecurityFields get(ai.greycat.GreyCat greycat) throws java.io.IOException {
-				return (ai.greycat.std.runtime.SecurityFields) ai.greycat.GreyCat.call(greycat,"runtime::SecurityFields::get");
+				return (ai.greycat.std.runtime.SecurityFields) greycat.call("runtime::SecurityFields::get");
 			}
 			public static SecurityFields create(ai.greycat.GreyCat greycat, java.lang.String email, java.lang.String name, java.lang.String first_name, java.lang.String last_name, ai.greycat.std.core.Map<java.lang.String, java.lang.String> roles, ai.greycat.std.core.Map<java.lang.String, java.lang.String> groups){
 				return new SecurityFields(greycat.libs_by_name.get(ai.greycat.std.name).mapped[57], email, name, first_name, last_name, roles, groups);
@@ -4107,7 +4107,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 				return (java.lang.Long) t.static_values[2];
 			}
 			public static ai.greycat.std.io.CsvAnalysis explore_new(ai.greycat.GreyCat greycat,java.lang.String file_path,ai.greycat.std.io.CsvAnalysis analysis) throws java.io.IOException {
-				return (ai.greycat.std.io.CsvAnalysis) ai.greycat.GreyCat.call(greycat,"io::CsvAnalysis::explore_new", file_path, analysis);
+				return (ai.greycat.std.io.CsvAnalysis) greycat.call("io::CsvAnalysis::explore_new", file_path, analysis);
 			}
 			public static CsvAnalysis create(ai.greycat.GreyCat greycat, ai.greycat.std.io.CsvFormat format, java.lang.Long row_limit, java.lang.Long enum_limit, java.lang.Long date_check_limit, ai.greycat.std.core.Array<java.lang.String> date_formats, ai.greycat.std.io.CsvStatistics statistics){
 				return new CsvAnalysis(greycat.libs_by_name.get(ai.greycat.std.name).mapped[66], format, row_limit, enum_limit, date_check_limit, date_formats, statistics);

@@ -12,9 +12,9 @@ public class Sandbox {
         String username = "admin";
         String password = "admin";
 
-        GreyCat greycat = new GreyCat(url, null, username, password, false);
+        GreyCat greycat = new GreyCat(url, username, password, null);
 
-        System.out.println(GreyCat.call(greycat, "runtime::User::me"));
+        System.out.println(greycat.call("runtime::User::me"));
         //System.out.println(System.getProperty("user.dir"));
         //GreyCat greycat = new GreyCat(System.getProperty("user.dir"));
     }

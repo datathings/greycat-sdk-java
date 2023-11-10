@@ -1,17 +1,6 @@
 package ai.greycat;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
-
+@SuppressWarnings("IOStreamConstructor")
 public final class GreyCat {
     public static final short abi_proto = 1;
 
@@ -23,14 +12,14 @@ public final class GreyCat {
             this.stream = stream;
         }
 
-        public java.lang.Object read() throws IOException {
+        public java.lang.Object read() throws java.io.IOException {
             return stream.read();
         }
 
         public int available() {
             try {
                 return stream.is.available();
-            } catch (IOException ex) {
+            } catch (java.io.IOException ex) {
                 return 0;
             }
         }
@@ -44,19 +33,19 @@ public final class GreyCat {
             this.stream = stream;
         }
 
-        public void write(java.lang.Object object) throws IOException {
+        public void write(java.lang.Object object) throws java.io.IOException {
             stream.write(object);
         }
     }
 
-    public AbiReader openAbiRead(String path) throws IOException {
-        Stream s = new Stream(this, new BufferedInputStream(new FileInputStream(path)));
+    public AbiReader openAbiRead(String path) throws java.io.IOException {
+        Stream s = new Stream(this, new java.io.BufferedInputStream(new java.io.FileInputStream(path)));
         s.readAbiHeader();
         return new AbiReader(s);
     }
 
-    public AbiWriter openAbiWrite(String path) throws IOException {
-        Stream s = new Stream(this, new PrintStream(new FileOutputStream(path)));
+    public AbiWriter openAbiWrite(String path) throws java.io.IOException {
+        Stream s = new Stream(this, new java.io.PrintStream(new java.io.FileOutputStream(path)));
         s.writeAbiHeader();
         return new AbiWriter(s);
     }
@@ -154,22 +143,22 @@ public final class GreyCat {
         }
 
         private final byte[] tmp = new byte[8];
-        private BufferedInputStream is;
-        private OutputStream os;
+        private java.io.BufferedInputStream is;
+        private java.io.OutputStream os;
 
         final GreyCat greycat;
 
-        Stream(GreyCat greycat, OutputStream os) {
+        Stream(GreyCat greycat, java.io.OutputStream os) {
             this.greycat = greycat;
             this.os = os;
         }
 
-        Stream(GreyCat greycat, BufferedInputStream is) {
+        Stream(GreyCat greycat, java.io.BufferedInputStream is) {
             this.greycat = greycat;
             this.is = is;
         }
 
-        void readAbiHeader() throws IOException {
+        void readAbiHeader() throws java.io.IOException {
             int abi_major = this.read_i16();
             if (abi_major != GreyCat.abi_proto) {
                 throw new RuntimeException("wrong ABI protocol major version");
@@ -184,18 +173,18 @@ public final class GreyCat {
             }
         }
 
-        java.lang.Object read() throws IOException {
+        java.lang.Object read() throws java.io.IOException {
             byte primitiveOffset = read_i8();
             return PRIMITIVE_LOADERS[primitiveOffset].load(this);
         }
 
-        void writeAbiHeader() throws IOException {
+        void writeAbiHeader() throws java.io.IOException {
             this.write_i16(GreyCat.abi_proto);
             this.write_i16(greycat.abi_magic);
             this.write_i32(greycat.abi_version);
         }
 
-        void write(java.lang.Object value) throws IOException {
+        void write(java.lang.Object value) throws java.io.IOException {
             if (value == null) {
                 write_i8(GreyCat.PrimitiveType.NULL);
             } else if (value instanceof Boolean) {
@@ -229,7 +218,7 @@ public final class GreyCat {
                 } else {
                     write_i8(GreyCat.PrimitiveType.OBJECT);
                     write_vu32(greycat.type_offset_core_string);
-                    final byte[] data = string.getBytes(StandardCharsets.UTF_8);
+                    final byte[] data = string.getBytes(java.nio.charset.StandardCharsets.UTF_8);
                     write_vu32(data.length << 1);
                     write_i8_array(data, 0, data.length);
                 }
@@ -242,7 +231,7 @@ public final class GreyCat {
             }
         }
 
-        void close() throws IOException {
+        void close() throws java.io.IOException {
             if (is != null) {
                 is.close();
             }
@@ -255,29 +244,29 @@ public final class GreyCat {
             return null;
         }
 
-        boolean read_bool() throws IOException {
+        boolean read_bool() throws java.io.IOException {
             return read_i8() != 0;
         }
 
-        char read_char() throws IOException {
+        char read_char() throws java.io.IOException {
             return (char) is.read();
         }
 
-        byte read_i8() throws IOException {
+        byte read_i8() throws java.io.IOException {
             return (byte) is.read();
         }
 
-        int read_i16() throws IOException {
+        int read_i16() throws java.io.IOException {
             if (is.read(tmp, 0, 2) == -1) {
-                throw new IOException();
+                throw new java.io.IOException();
             }
             return ((tmp[1] << 24) >>> 16) +
                     ((tmp[0] << 24) >>> 24);
         }
 
-        int read_i32() throws IOException {
+        int read_i32() throws java.io.IOException {
             if (is.read(tmp, 0, 4) == -1) {
-                throw new IOException();
+                throw new java.io.IOException();
             }
             return (tmp[3] << 24) +
                     ((tmp[2] << 24) >>> 8) +
@@ -285,13 +274,13 @@ public final class GreyCat {
                     ((tmp[0] << 24) >>> 24);
         }
 
-        int read_vu32() throws IOException {
+        int read_vu32() throws java.io.IOException {
             byte current;
             int value = 0;
             is.mark(5);
             byte[] bytes = new byte[5];
             if (-1 == is.read(bytes, 0, 5)) {
-                throw new IOException();
+                throw new java.io.IOException();
             }
 
             current = bytes[0];
@@ -335,9 +324,9 @@ public final class GreyCat {
             return value;
         }
 
-        long read_i64() throws IOException {
+        long read_i64() throws java.io.IOException {
             if (is.read(tmp, 0, 8) == -1) {
-                throw new IOException();
+                throw new java.io.IOException();
             }
             return ((long) tmp[7] << 56) +
                     (((long) tmp[6] << 56) >>> 8) +
@@ -349,18 +338,18 @@ public final class GreyCat {
                     (((long) tmp[0] << 56) >>> 56);
         }
 
-        long read_vi64() throws IOException {
+        long read_vi64() throws java.io.IOException {
             long sign_swapped_value = read_vu64();
             return (sign_swapped_value >>> 1) ^ (-(sign_swapped_value & 1));
         }
 
-        long read_vu64() throws IOException {
+        long read_vu64() throws java.io.IOException {
             byte current;
             long value = 0;
             is.mark(9);
             byte[] bytes = new byte[9];
             if (-1 == is.read(bytes, 0, 9)) {
-                throw new IOException();
+                throw new java.io.IOException();
             }
 
             current = bytes[0];
@@ -440,26 +429,26 @@ public final class GreyCat {
             return value;
         }
 
-        double read_f64() throws IOException {
+        double read_f64() throws java.io.IOException {
             return Double.longBitsToDouble(read_i64());
         }
 
-        byte[] read_i8_array(final int len) throws IOException {
+        byte[] read_i8_array(final int len) throws java.io.IOException {
             byte[] newArr = new byte[len];
             if (is.read(newArr, 0, len) == -1) {
-                throw new IOException();
+                throw new java.io.IOException();
             }
             return newArr;
         }
 
-        String read_string(int len) throws IOException {
-            return new String(read_i8_array(len), StandardCharsets.UTF_8);
+        String read_string(int len) throws java.io.IOException {
+            return new String(read_i8_array(len), java.nio.charset.StandardCharsets.UTF_8);
         }
 
-        String read_string_lit() throws IOException {
+        String read_string_lit() throws java.io.IOException {
             int offset = read_vu32();
             if (0 == (offset & 1)) {
-                throw new IOException("wrong state");
+                throw new java.io.IOException("wrong state");
             }
             offset >>>= 1;
             if (offset < greycat.symbols.length) {
@@ -468,27 +457,27 @@ public final class GreyCat {
             throw new IllegalArgumentException("invalid primitive type");
         }
 
-        java.lang.Object read_object() throws IOException {
+        java.lang.Object read_object() throws java.io.IOException {
             int typeOffset = read_vu32();
             final Type type = greycat.types[typeOffset];
             return type.loader.load(type, this);
         }
 
-        void write_bool(final boolean b) throws IOException {
+        void write_bool(final boolean b) throws java.io.IOException {
             os.write((byte) (b ? 1 : 0));
         }
 
-        void write_i8(final byte b) throws IOException {
+        void write_i8(final byte b) throws java.io.IOException {
             os.write(b);
         }
 
-        void write_i16(final int i) throws IOException {
+        void write_i16(final int i) throws java.io.IOException {
             tmp[0] = (byte) (i & 0xFF);
             tmp[1] = (byte) ((i >>> 8) & 0xFF);
             os.write(tmp, 0, 2);
         }
 
-        void write_i32(final int i) throws IOException {
+        void write_i32(final int i) throws java.io.IOException {
             tmp[0] = (byte) (i & 0xFF);
             tmp[1] = (byte) ((i >>> 8) & 0xFF);
             tmp[2] = (byte) ((i >>> 16) & 0xFF);
@@ -496,7 +485,7 @@ public final class GreyCat {
             os.write(tmp, 0, 4);
         }
 
-        void write_vu32(final int i) throws IOException {
+        void write_vu32(final int i) throws java.io.IOException {
             byte[] packed_value = new byte[5];
             int value = i;
 
@@ -536,7 +525,7 @@ public final class GreyCat {
             write_i8_array(packed_value, 0, 5);
         }
 
-        void write_i64(final long l) throws IOException {
+        void write_i64(final long l) throws java.io.IOException {
             tmp[0] = (byte) (l & 0xFF);
             tmp[1] = (byte) ((l >>> 8) & 0xFF);
             tmp[2] = (byte) ((l >>> 16) & 0xFF);
@@ -548,11 +537,11 @@ public final class GreyCat {
             os.write(tmp, 0, 8);
         }
 
-        void write_vi64(final long l) throws IOException {
+        void write_vi64(final long l) throws java.io.IOException {
             write_vu64((l << 1) ^ (l >> 63));
         }
 
-        void write_vu64(final long l) throws IOException {
+        void write_vu64(final long l) throws java.io.IOException {
             byte[] packed_value = new byte[9];
             long value = l;
 
@@ -624,17 +613,18 @@ public final class GreyCat {
             write_i8_array(packed_value, 0, 9);
         }
 
-        void write_f64(final double d) throws IOException {
+        void write_f64(final double d) throws java.io.IOException {
             write_i64(Double.doubleToLongBits(d));
         }
 
-        void write_i8_array(final byte[] bytes, final int offset, final int length) throws IOException {
+        @SuppressWarnings("SameParameterValue")
+        void write_i8_array(final byte[] bytes, final int offset, final int length) throws java.io.IOException {
             os.write(bytes, offset, length);
         }
 
         @FunctionalInterface
         private interface PrimitiveLoader {
-            java.lang.Object load(Stream stream) throws IOException;
+            java.lang.Object load(Stream stream) throws java.io.IOException;
         }
     }
 
@@ -686,7 +676,7 @@ public final class GreyCat {
          * this follows the abi order
          */
         public final Attribute[] attributes;
-        public final Map<String, Integer> attribute_off_by_name = new HashMap<>();
+        public final java.util.Map<String, Integer> attribute_off_by_name = new java.util.HashMap<>();
         public final GreyCat greycat;
         public final GreyCat.Factory factory;
         public final GreyCat.Loader loader;
@@ -846,13 +836,13 @@ public final class GreyCat {
         }
 
         @Override
-        protected final void saveType(Stream stream) throws IOException {
+        protected final void saveType(Stream stream) throws java.io.IOException {
             stream.write_i8(GreyCat.PrimitiveType.ENUM);
             stream.write_vu32(type.offset);
         }
 
         @Override
-        protected final void save(Stream stream) throws IOException {
+        protected final void save(Stream stream) throws java.io.IOException {
             stream.write_vu32(offset);
         }
 
@@ -867,7 +857,7 @@ public final class GreyCat {
 
     @FunctionalInterface
     public interface Loader {
-        java.lang.Object load(Type type, Stream stream) throws IOException;
+        java.lang.Object load(Type type, Stream stream) throws java.io.IOException;
 
     }
 
@@ -947,12 +937,12 @@ public final class GreyCat {
             attributes[offset] = value;
         }
 
-        protected void saveType(Stream stream) throws IOException {
+        protected void saveType(Stream stream) throws java.io.IOException {
             stream.write_i8(GreyCat.PrimitiveType.OBJECT);
             stream.write_vu32(type.offset);
         }
 
-        protected void save(Stream stream) throws IOException {
+        protected void save(Stream stream) throws java.io.IOException {
             byte[] nullable_bitset = new byte[type.nullable_nb_bytes];
             byte nullable_offset = 0;
             Type.Attribute field;
@@ -1019,7 +1009,7 @@ public final class GreyCat {
                             if (symbolOffset != null) {
                                 stream.write_vu32((symbolOffset << 1) | 1);
                             } else {
-                                final byte[] data = string.getBytes(StandardCharsets.UTF_8);
+                                final byte[] data = string.getBytes(java.nio.charset.StandardCharsets.UTF_8);
                                 stream.write_vu32(data.length << 1);
                                 stream.write_i8_array(data, 0, data.length);
                             }
@@ -1071,22 +1061,22 @@ public final class GreyCat {
 
     public final static class Files {
 
-        public static java.lang.Object get(GreyCat greycat, String path) throws IOException {
+        public static java.lang.Object get(GreyCat greycat, String path) throws java.io.IOException {
             String url = greycat.runtime_url +
                     "/files/" +
                     path;
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/octet-stream");
             connection.setRequestProperty("Content-Type", "application/octet-stream");
             int status = connection.getResponseCode();
             if (200 > status || 300 <= status) {
-                Stream stream = new Stream(greycat, new BufferedInputStream(connection.getErrorStream()));
+                Stream stream = new Stream(greycat, new java.io.BufferedInputStream(connection.getErrorStream()));
                 java.lang.Object result = stream.read();
                 stream.close();
-                throw new IOException(result.toString());
+                throw new java.io.IOException(result.toString());
             }
-            Stream buf = new Stream(greycat, new BufferedInputStream(connection.getInputStream()));
+            Stream buf = new Stream(greycat, new java.io.BufferedInputStream(connection.getInputStream()));
             java.lang.Object result = buf.read();
             buf.close();
             return result;
@@ -1094,11 +1084,11 @@ public final class GreyCat {
     }
 
     public final String[] symbols;
-    private final java.util.Map<String, Integer> symbols_off_by_value = new HashMap<>();
+    private final java.util.Map<String, Integer> symbols_off_by_value = new java.util.HashMap<>();
     public final Type[] types;
-    public final Map<String, Library> libs_by_name;
-    public final java.util.Map<String, Type> types_by_name = new HashMap<>();
-    public final java.util.Map<String, Function> functions_by_name = new HashMap<>();
+    public final java.util.Map<String, Library> libs_by_name = new java.util.HashMap<>();
+    public final java.util.Map<String, Type> types_by_name = new java.util.HashMap<>();
+    public final java.util.Map<String, Function> functions_by_name = new java.util.HashMap<>();
     private final String runtime_url;
     private String token;
     public final int type_offset_core_string;
@@ -1123,7 +1113,7 @@ public final class GreyCat {
     private final int abi_magic;
     private final int abi_version;
 
-    public GreyCat(String url, List<Library> libraries, String username, String password, boolean use_cookie) throws Exception {
+    public GreyCat(String url, String username, String password, Boolean use_cookie, Library... libraries) throws Exception {
         this.runtime_url = url;
         this.token = null;
 
@@ -1131,24 +1121,20 @@ public final class GreyCat {
             login(username, password, use_cookie);
         }
 
-        this.libs_by_name = new HashMap<>();
         std std = new std();
         this.libs_by_name.put(std.name(), std);
 
-        if (libraries != null) {
-            for (Library lib : libraries) {
-                this.libs_by_name.put(lib.name(), lib);
-            }
+        for (Library lib : libraries) {
+            this.libs_by_name.put(lib.name(), lib);
         }
 
-        Map<String, Loader> loaders = new HashMap<>();
-        Map<String, Factory> factories = new HashMap<>();
+        final java.util.Map<String, Loader> loaders = new java.util.HashMap<>();
+        final java.util.Map<String, Factory> factories = new java.util.HashMap<>();
 
         for (Library lib : this.libs_by_name.values()) {
             lib.configure(loaders, factories);
         }
 
-        this.is_remote = false;
         final Stream abiStream = getAbi(url);
 
         // step 0: verify abi version
@@ -1349,40 +1335,30 @@ public final class GreyCat {
         }
     }
 
-    public static java.lang.Object call(GreyCat greycat, String fqn, java.lang.Object... parameters) throws IOException {
-        if (!greycat.is_remote) {
+    public java.lang.Object call(String fqn, java.lang.Object... parameters) throws java.io.IOException {
+        if (!is_remote) {
             throw new RuntimeException("Remote Call are not available on this GreyCat handle");
         }
-        GreyCat.Function fn = greycat.functions_by_name.get(fqn);
+        GreyCat.Function fn = functions_by_name.get(fqn);
         if (fn == null) {
-            for (String name : greycat.functions_by_name.keySet()) { // TODO: remove
+            for (String name : functions_by_name.keySet()) { // TODO: remove
                 System.out.println(name);
             }
             throw new RuntimeException("Function not found with name " + fqn);
         }
-        StringBuilder url = new StringBuilder();
-        url.append(greycat.runtime_url);
-        url.append('/');
-        url.append(fqn);
+        String url = runtime_url + '/' + fqn;
 
-        HttpURLConnection connection;
-        if (url.toString().startsWith("http://")) {
-            connection = (HttpURLConnection) new URL(url.toString()).openConnection();
-        } else if (url.toString().startsWith("https://")) {
-            connection = (HttpsURLConnection) new URL(url.toString()).openConnection();
-        } else {
-            throw new IllegalArgumentException("Invalid URL format");
-        }
-        if (greycat.token != null) {
-            connection.setRequestProperty ("Authorization", greycat.token);
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+        if (token != null) {
+            connection.setRequestProperty("Authorization", token);
         }
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept", "application/octet-stream");
         connection.setRequestProperty("Content-Type", "application/octet-stream");
         if (parameters.length > 0) {
             connection.setDoOutput(true);
-            OutputStream os = connection.getOutputStream();
-            Stream b = new Stream(greycat, new BufferedOutputStream(os));
+            java.io.OutputStream os = connection.getOutputStream();
+            Stream b = new Stream(this, new java.io.BufferedOutputStream(os));
             b.writeAbiHeader();
             int paramOffset = 0;
             while (paramOffset < parameters.length) {
@@ -1393,37 +1369,29 @@ public final class GreyCat {
         }
         int status = connection.getResponseCode();
         if (200 > status || 300 <= status) {
-            Stream stream = new Stream(greycat, new BufferedInputStream(connection.getErrorStream()));
+            Stream stream = new Stream(this, new java.io.BufferedInputStream(connection.getErrorStream()));
             stream.readAbiHeader();
             java.lang.Object result = stream.read();
             stream.close();
-            throw new IOException(result.toString());
+            throw new java.io.IOException(result.toString());
         }
-        Stream buf = new Stream(greycat, new BufferedInputStream(connection.getInputStream()));
+        Stream buf = new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
         buf.readAbiHeader();
         java.lang.Object result = buf.read();
         buf.close();
         return result;
     }
 
-    public java.lang.Object fetch(String path) throws IOException {
+    public java.lang.Object fetch(String path) throws java.io.IOException {
         if (!this.is_remote) {
             throw new RuntimeException("Remote Call is not available on this GreyCat handle");
         }
-        
-        URL url = new URL(this.runtime_url + "/" + path);
-        HttpURLConnection connection;
-
-        if (this.runtime_url.toString().startsWith("http://")) {
-            connection = (HttpURLConnection) url.openConnection();
-        } else if (this.runtime_url.startsWith("https://")) {
-            connection = (HttpsURLConnection) url.openConnection();
-        } else {
-            throw new IllegalArgumentException("Invalid URL format");
-        }
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
+                this.runtime_url + "/" + path
+        ).openConnection();
 
         if (this.token != null) {
-            connection.setRequestProperty ("Authorization", this.token);
+            connection.setRequestProperty("Authorization", this.token);
         }
         connection.setRequestProperty("Accept", "application/octet-stream");
         connection.setRequestMethod("GET");
@@ -1432,55 +1400,49 @@ public final class GreyCat {
             throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
         }
 
-        Stream buf = new Stream(this, new BufferedInputStream(connection.getInputStream()));
+        Stream buf = new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
         buf.readAbiHeader();
         java.lang.Object result = buf.read();
         buf.close();
         return result;
     }
 
-    public void login(String username, String password, boolean useCookie) throws Exception {
-        URL url = new URL(this.runtime_url + "/runtime::User::login");
-        
-        HttpURLConnection connection;
-        if (this.runtime_url.startsWith("http://")) {
-            connection = (HttpURLConnection) url.openConnection();
-        } else if (this.runtime_url.startsWith("https://")) {
-            connection = (HttpsURLConnection) url.openConnection();
-        } else {
-            throw new IllegalArgumentException("Invalid URL format");
+    public void login(String username, String password, Boolean useCookie) throws Exception {
+        if (null == useCookie) {
+            useCookie = false;
         }
 
-        try {
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept", "application/json");
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
+                this.runtime_url + "/runtime::User::login"
+        ).openConnection();
 
-            String credentials = username + ":" + hashPassword(password);
-            String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
-            String body = "[" + "\"" + encodedCredentials + "\"" + "," + useCookie + "]";
-            
-            connection.setDoOutput(true);
-            OutputStream os = connection.getOutputStream();
-            PrintStream b = new PrintStream(os);
-            b.print(body);
-            b.close();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept", "application/json");
 
-            int status = connection.getResponseCode();
-            if (200 > status || 300 <= status) {
-                throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());   
-            }
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    response.append(line);
-                }
-                this.token = response.toString().replaceAll("\"", "");
-            }
-        } finally {
-            connection.disconnect();
+
+        String credentials = username + ":" + hashPassword(password);
+        String encodedCredentials = java.util.Base64.getEncoder().encodeToString(credentials.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        String body = "[" + "\"" + encodedCredentials + "\"" + "," + useCookie + "]";
+
+        connection.setDoOutput(true);
+        java.io.OutputStream os = connection.getOutputStream();
+        java.io.PrintStream b = new java.io.PrintStream(os);
+        b.print(body);
+        b.close();
+
+        int status = connection.getResponseCode();
+        if (200 > status || 300 <= status) {
+            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
         }
+        java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(connection.getInputStream()));
+        StringBuilder builder = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            builder.append(line);
+        }
+        String response = builder.toString();
+        this.token = response.substring(1, response.length() - 1);
     }
 
     @SuppressWarnings({"unused"})
@@ -1515,19 +1477,12 @@ public final class GreyCat {
         return dur;
     }
 
-    private Stream getRemoteAbi(String runtime_url) throws IOException {
-        URL url = new URL(runtime_url + "/runtime::Runtime::abi");
-        HttpURLConnection connection;
-        if (this.runtime_url.startsWith("http://")) {
-            connection = (HttpURLConnection) url.openConnection();
-        } else if (this.runtime_url.startsWith("https://")) {
-            connection = (HttpsURLConnection) url.openConnection();
-        } else {
-            throw new IllegalArgumentException("Invalid URL format");
-        }
+    private Stream getRemoteAbi(String runtime_url) throws java.io.IOException {
+        java.net.URL url = new java.net.URL(runtime_url + "/runtime::Runtime::abi");
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) url.openConnection();
 
         if (this.token != null) {
-            connection.setRequestProperty ("Authorization", this.token);
+            connection.setRequestProperty("Authorization", this.token);
         }
         connection.setRequestProperty("Accept", "application/octet-stream");
         connection.setRequestMethod("POST");
@@ -1535,28 +1490,31 @@ public final class GreyCat {
         int status = connection.getResponseCode();
         if (status >= 200 && status < 300) {
             this.is_remote = true;
-            return new Stream(this, new BufferedInputStream(connection.getInputStream()));
+            return new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
         } else {
             throw new RuntimeException("HTTP Error: " + status + " " + connection.getResponseMessage());
         }
     }
 
-    private Stream getLocalAbi(String runtime_url) throws IOException {
+    private Stream getLocalAbi(String runtime_url) throws java.io.IOException {
         StringBuilder b = new StringBuilder();
         if (!runtime_url.startsWith("file://")) {
             b.append("file://");
         }
         b.append(runtime_url);
-        b.append(File.separator);
+        b.append(java.io.File.separator);
         b.append("gcdata");
-        b.append(File.separator);
+        b.append(java.io.File.separator);
         b.append("store");
-        b.append(File.separator);
+        b.append(java.io.File.separator);
         b.append("abi");
-        return new Stream(this, new BufferedInputStream(new FileInputStream(new URL(b.toString()).getFile())));
+        return new Stream(
+                this,
+                new java.io.BufferedInputStream(new java.io.FileInputStream(new java.net.URL(b.toString()).getFile()))
+        );
     }
 
-    private Stream getAbi(String runtime_url) throws IOException {
+    private Stream getAbi(String runtime_url) throws java.io.IOException {
         if (runtime_url.startsWith("http") || runtime_url.startsWith("https")) {
             return getRemoteAbi(runtime_url);
         } else {
@@ -1565,9 +1523,9 @@ public final class GreyCat {
     }
 
     private static String hashPassword(String password) throws Exception {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
 
-        byte[] hashedBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        byte[] hashedBytes = digest.digest(password.getBytes(java.nio.charset.StandardCharsets.UTF_8));
 
         StringBuilder hexString = new StringBuilder();
         for (byte hashedByte : hashedBytes) {
@@ -1580,5 +1538,4 @@ public final class GreyCat {
 
         return hexString.toString();
     }
-
 }
