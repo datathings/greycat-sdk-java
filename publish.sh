@@ -36,3 +36,4 @@ EOF
 cd dist
 
 mvn deploy:deploy-file -Dfile=sdk.jar -DpomFile=sdk.pom -DrepositoryId=deploy -Durl=https://get.greycat.io/files/sdk/java/"${CI_COMMIT_REF_NAME}"/"${VERSION_MAJOR_MINOR}"/
+curl -s -X PUT -H "Authorization: $token" -d "${VERSION_MAJOR_MINOR}/${VERSION}" -H "Content-Type: text/plain" "https://get.greycat.io/files/sdk/java/${CI_COMMIT_REF_NAME}/latest"
