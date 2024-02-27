@@ -224,7 +224,6 @@ fn write_runtime(out: GcbWriter) {
     license: License {
         start: 13_time,
         end: 37_time,
-        max_workers: 12,
         max_memory: 42,
       },
     io_threads: 13,
@@ -268,7 +267,6 @@ fn write_runtime(out: GcbWriter) {
   out.write(License {
       start: 13_time,
       end: 37_time,
-      max_workers: 12,
       max_memory: 42,
     });
   out.write(StoreStat {
