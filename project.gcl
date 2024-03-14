@@ -1,4 +1,4 @@
-@library("std", "6.1.82-dev");
+// @library("std", "6.1.82-dev");
 
 // @library("algebra");
 // @library("decisiontrees"); // Non-existent
@@ -24,10 +24,10 @@ fn main() {
     external: false,
     role: "user",
   };
-  SecurityEntity::set(user);
+  // SecurityEntity::set(user);
   info(Crypto::sha256hex("admin"));
   //println("${user} Crypto::sha256hex(${"admin"})");
-  User::setPassword(user.name, Crypto::sha256hex("admin"));
+  // User::setPassword(user.name, Crypto::sha256hex("admin"));
   var out = GcbWriter::new("out.gcb");
   write_std(out);
 }

@@ -2,3 +2,5 @@
 **.iml
 target/
 lib/*
+
+/src/main/java/ai/greycat/project_lib.java
