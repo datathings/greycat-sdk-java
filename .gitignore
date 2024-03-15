@@ -4,3 +4,7 @@ target/
 lib/*
 
 /src/main/java/ai/greycat/project_lib.java
+/src/test/java/ai/greycat/Sandbox.java
+
+/gcdata/
+/out.gcb

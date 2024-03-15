@@ -175,6 +175,9 @@ public final class GreyCat {
 
         java.lang.Object read() throws java.io.IOException {
             byte primitiveOffset = read_i8();
+            if (61 == primitiveOffset) {
+                System.out.println("DEBUG");
+            }
             return PRIMITIVE_LOADERS[primitiveOffset].load(this);
         }
 
@@ -1203,6 +1206,9 @@ public final class GreyCat {
             if (abiType.mapped_type_off == i && fqn.length() != 0) {
                 types_by_name.put(abiType.name, abiType);
             }
+            if (abiType.name.equals("core::Table")) {
+                System.out.println(i);
+            }
             types[i] = abiType;
         }
         // step 3: create all functions
@@ -1341,9 +1347,6 @@ public final class GreyCat {
         }
         GreyCat.Function fn = functions_by_name.get(fqn);
         if (fn == null) {
-            for (String name : functions_by_name.keySet()) { // TODO: remove
-                System.out.println(name);
-            }
             throw new RuntimeException("Function not found with name " + fqn);
         }
         String url = runtime_url + '/' + fqn;

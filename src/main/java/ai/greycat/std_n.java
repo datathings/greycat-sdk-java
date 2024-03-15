@@ -1,6 +1,7 @@
 package ai.greycat;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 class std_n {
@@ -777,6 +778,7 @@ class std_n {
                 array.attributes = new java.lang.Object[size];
                 for (int offset = 0; offset < size; offset++) {
                     array.set(offset, stream.read());
+                    System.out.println(array.get(offset));
                 }
                 return array;
             }
@@ -1098,6 +1100,13 @@ class std_n {
                         default:
                             break;
                     }
+                    if (colMeta.header.length() > 0) {
+                        stream.write_vu32(colMeta.header.length());
+                        byte[] colMetaHeaderBytes = colMeta.header.getBytes(StandardCharsets.UTF_8);
+                        stream.write_i8_array(colMetaHeaderBytes, 0, colMetaHeaderBytes.length);
+                    } else {
+                        stream.write_vu32(0);
+                    }
                 }
                 for (int c = 0; c < cols; ++c) {
                     switch (meta[c].colType) {
@@ -1160,7 +1169,14 @@ class std_n {
                             metaType = -1;
                             break;
                     }
-                    meta[col] = new core.Table.TableColumnMeta(metaColType, metaType, metaIndex);
+                    int metaHeaderLen = stream.read_vu32();
+                    java.lang.String metaHeader;
+                    if (metaHeaderLen > 0) {
+                        metaHeader = stream.read_string(metaHeaderLen);
+                    } else {
+                        metaHeader = "";
+                    }
+                    meta[col] = new core.Table.TableColumnMeta(metaColType, metaType, metaIndex, metaHeader);
                 }
                 final Object[] data = new Object[cols * rows];
                 for (int c = 0; c < cols; c++) {
@@ -1212,11 +1228,13 @@ class std_n {
                 public final byte colType;
                 public final int type;
                 public final boolean index;
+                public final java.lang.String header;
 
-                public TableColumnMeta(byte colType, int type, boolean index) {
+                public TableColumnMeta(byte colType, int type, boolean index, java.lang.String header) {
                     this.colType = colType;
                     this.type = type;
                     this.index = index;
+                    this.header = header;
                 }
             }
         }

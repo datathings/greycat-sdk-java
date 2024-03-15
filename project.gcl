@@ -1,6 +1,6 @@
 // @library("std", "6.1.82-dev");
 
-// @library("algebra");
+@library("algebra");
 // @library("decisiontrees"); // Non-existent
 // @library("network");
 // @library("patterns");
@@ -11,13 +11,14 @@ use io;
 use math;
 use runtime;
 use util;
+use compute;
 
 fn fail() {
   var out = GcbWriter::new("fail.gcb");
 }
 
 fn main() {
-   var user: User = User {
+  var user: User = User {
     id: 0,
     name: "admin",
     activated: true,
@@ -26,15 +27,10 @@ fn main() {
   };
   SecurityEntity::set(user);
   info(Crypto::sha256hex("admin"));
-  //println("${user} Crypto::sha256hex(${"admin"})");
-  User::setPassword(user.name, Crypto::sha256hex("admin"));
+  User::setPassword(user.name, Crypto::sha256hex("changeme"));
+
   var out = GcbWriter::new("out.gcb");
   write_std(out);
-}
-
-@expose
-fn outp() {
-  return "1";
 }
 
 fn write_std(out: GcbWriter) {
@@ -43,6 +39,22 @@ fn write_std(out: GcbWriter) {
   write_math(out);
   write_runtime(out);
   write_util(out);
+}
+
+@expose
+fn get_gcb(): Array<any?> {
+  var fin = GcbReader::new("out.gcb");
+  var array = Array<any?>::new(0);
+  while (fin.available() > 0) {
+    array.add(fin.read());
+  }
+  return array;
+}
+
+@expose
+fn display(v: any?): any? {
+  println(v);
+  return v;
 }
 
 fn write_core(out: GcbWriter) {
@@ -115,17 +127,17 @@ fn write_core(out: GcbWriter) {
     table.set(row, 1, row + 1);
   }
   out.write(table);
-  /*out.write(Tensor::new());
-  var tensor = Tensor::new();
-  tensor.init(TensorType::f64, [3, 3, 3]);
-  for (var x = 0; x < 2; ++x) {
-    for (var y = 0; y < 2; ++y) {
-      for (var z = 0; z < 2; ++z) {
-        tensor.set([x, y, z], x + y * z);
-      }
-    }
-  }
-  out.write(tensor);*/
+  // out.write(Tensor::new());
+  // var tensor = Tensor::new();
+  // tensor.init(TensorType::f64, [3, 3, 3]);
+  // for (var x = 0; x < 2; ++x) {
+  //   for (var y = 0; y < 2; ++y) {
+  //     for (var z = 0; z < 2; ++z) {
+  //       tensor.set([x, y, z], x + y * z);
+  //     }
+  //   }
+  // }
+  // out.write(tensor);
   out.write(GeoCircle::new(42_geo, 13.37));
   out.write(Date::new(2012, 12, 12, 12, 12, 12, 12, TimeZone::Europe_Luxembourg));
   out.write(Map<geo, time>::new());
@@ -142,7 +154,7 @@ fn write_core(out: GcbWriter) {
     ]);
   out.write(Tuple<Array, Map>::new(Array::new(0), Map::new()));
   out.write(nodeIndex<Tuple>::new());
-  out.write(GeoPoly{points: [13_geo, 37_geo, 13_geo]});
+  out.write(GeoPoly { points: [13_geo, 37_geo, 13_geo] });
   out.write(12_time);
   out.write(DatePart::days);
   out.write(nodeGeo<DatePart>::new());
@@ -158,7 +170,7 @@ fn write_core(out: GcbWriter) {
 }
 
 fn write_io(out: GcbWriter) {
-/*
+  /*
   // out.write(out); // unsupported
   // out.write(AbiReader::new("out.gcb")); // segfault
   out.write(FileDescriptor{
@@ -209,66 +221,66 @@ fn write_math(out: GcbWriter) {
 }
 
 fn write_runtime(out: GcbWriter) {
-  out.write(Task{
-    user_id: 13,
-    task_id: 37,
-    creation: 42_time,
-    status: TaskStatus::empty,
-  });
+  out.write(Task {
+      user_id: 13,
+      task_id: 37,
+      creation: 42_time,
+      status: TaskStatus::empty,
+    });
   out.write(TaskStatus::cancelled);
   out.write(Runtime {});
-  out.write(RuntimeInfo{
-    version: "",
-    arch: "",
-    timezone: TimeZone::Europe_Luxembourg,
-    license: License {
-        start: 13_time,
-        end: 37_time,
-        max_memory: 42,
-      },
-    io_threads: 13,
-    bg_threads: 37,
-    fg_threads: 42,
-    mem_total: 12,
-    mem_worker: 0,
-    nb_ctx: 1,
-  });
+  // out.write(RuntimeInfo {
+  //     version: "",
+  //     arch: "",
+  //     timezone: TimeZone::Europe_Luxembourg,
+  //     license: License {
+  //       start: 13_time,
+  //       end: 37_time,
+  //       max_memory: 42,
+  //     },
+  //     io_threads: 13,
+  //     bg_threads: 37,
+  //     fg_threads: 42,
+  //     mem_total: 12,
+  //     mem_worker: 0,
+  //     nb_ctx: 1,
+  //   });
   out.write(SecurityFields {});
-  out.write(UserGroup{
-    id: 12,
-    name: "",
-    activated: false,
-  });
-  out.write(OpenIDConnect{
-    url: "",
-    clientId: "",
-  });
-  out.write(UserRole{
-    name: "",
-    permissions: [],
-  });
-  /*out.write(PeriodicTask{
-    name: "",
-    user_id: 12,
-    start: 13_time,
-    every: duration::new(37, DurationUnit::microseconds),
-  });*/
-  out.write(User{
-    id: 12,
-    name: "",
-    activated: false,
-    external: true,
-  });
+  out.write(UserGroup {
+      id: 12,
+      name: "",
+      activated: false,
+    });
+  out.write(OpenIDConnect {
+      url: "",
+      clientId: "",
+    });
+  out.write(UserRole {
+      name: "",
+      permissions: [],
+    });
+  // out.write(PeriodicTask {
+  //     name: "",
+  //     user_id: 12,
+  //     start: 13_time,
+  //     every: duration::new(37, DurationUnit::microseconds),
+  //   });
+  out.write(User {
+      id: 12,
+      name: "",
+      activated: false,
+      external: true,
+    });
   out.write(UserGroupPolicy {
       group_id: 12,
       type: UserGroupPolicyType::execute,
     });
   out.write(UserGroupPolicyType::read);
-  out.write(License {
-      start: 13_time,
-      end: 37_time,
-      max_memory: 42,
-    });
+  // out.write(License {
+  //     start: 13_time,
+  //     end: 37_time,
+  //     max_memory: 42,
+  //   });
   out.write(StoreStat {
       capacity_bytes: 13,
       allocated_bytes: 37,
@@ -289,15 +301,15 @@ fn write_runtime(out: GcbWriter) {
 }
 
 fn write_util(out: GcbWriter) {
-  out.write(Random{
+  out.write(Random {
       seed: 42,
       v: 13.37,
     });
   out.write(Buffer::new());
-  out.write(Assert{});
-  out.write(ProgressTracker{start: 0_time});
-  //out.write(Iban::new(""));
-  out.write(Gaussian{});
+  out.write(Assert {});
+  out.write(ProgressTracker { start: 0_time });
+  // out.write(Iban::new(""));
+  out.write(Gaussian {});
   // out.write(Quantizer::new()); // unsupported
   out.write(GaussianProfile::new(0));
   out.write(TimeWindow::new());
@@ -326,6 +338,6 @@ fn write_util(out: GcbWriter) {
       size: 42,
     });
     */
-    // out.write(ByteArray{}); // segfault
-    out.write(Crypto{});
+  // out.write(ByteArray{}); // segfault
+  out.write(Crypto {});
 }
