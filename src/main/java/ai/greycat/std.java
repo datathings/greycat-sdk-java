@@ -5471,7 +5471,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 		this.mapped[36] = greycat.types_by_name.get(core.ti4d.name);
 		this.mapped[37] = greycat.types_by_name.get(core.geo.name);
 		if(this.mapped[37] != null){
-			this.mapped[37].static_values = new java.lang.Object[]{greycat.createGeo(-85.0511287602,-179.9999999581),greycat.createGeo(85.0511287602,179.9999999581)};
+			this.mapped[37].static_values = new java.lang.Object[]{greycat.createGeo(java.lang.Double.longBitsToDouble(-4587686678796158022L),java.lang.Double.longBitsToDouble(-4582834833316020224L)),greycat.createGeo(java.lang.Double.longBitsToDouble(4635685358058617786L),java.lang.Double.longBitsToDouble(4640537203538755584L))};
 		}
 		this.mapped[38] = greycat.types_by_name.get(core.nodeTimeSingleton.name);
 		if(this.mapped[38] != null){
@@ -5654,7 +5654,7 @@ public final class std extends ai.greycat.GreyCat.Library {
 		}
 		this.mapped[85] = greycat.types_by_name.get(math.MathConstants.name);
 		if(this.mapped[85] != null){
-			this.mapped[85].static_values = new java.lang.Object[]{2.7182818285,1.4426950409,0.4342944819,0.6931471806,2.302585093,3.1415926536,1.5707963268,0.7853981634,0.3183098862,0.6366197724,1.1283791671,1.4142135624,0.7071067812};
+			this.mapped[85].static_values = new java.lang.Object[]{java.lang.Double.longBitsToDouble(4613303445314885481L),java.lang.Double.longBitsToDouble(4609176140021203710L),java.lang.Double.longBitsToDouble(4601495173785380110L),java.lang.Double.longBitsToDouble(4604418534313441775L),java.lang.Double.longBitsToDouble(4612367379483415830L),java.lang.Double.longBitsToDouble(4614256656552045848L),java.lang.Double.longBitsToDouble(4609753056924675352L),java.lang.Double.longBitsToDouble(4605249457297304856L),java.lang.Double.longBitsToDouble(4599405781057128579L),java.lang.Double.longBitsToDouble(4603909380684499075L),java.lang.Double.longBitsToDouble(4607760587169110893L),java.lang.Double.longBitsToDouble(4609047870845172685L),java.lang.Double.longBitsToDouble(4604544271217802189L)};
 		}
 		this.mapped[86] = greycat.types_by_name.get(util.Random.name);
 		if(this.mapped[86] != null){
