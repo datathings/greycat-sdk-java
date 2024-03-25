@@ -175,9 +175,6 @@ public final class GreyCat {
 
         java.lang.Object read() throws java.io.IOException {
             byte primitiveOffset = read_i8();
-            if (61 == primitiveOffset) {
-                System.out.println("DEBUG");
-            }
             return PRIMITIVE_LOADERS[primitiveOffset].load(this);
         }
 
@@ -1205,9 +1202,6 @@ public final class GreyCat {
             /* only the program related abi type (last version) is mapped to himself */
             if (abiType.mapped_type_off == i && fqn.length() != 0) {
                 types_by_name.put(abiType.name, abiType);
-            }
-            if (abiType.name.equals("core::Table")) {
-                System.out.println(i);
             }
             types[i] = abiType;
         }
