@@ -1,5 +1,11 @@
 package ai.greycat;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+
 @SuppressWarnings("IOStreamConstructor")
 public final class GreyCat {
     public static final short abi_proto = 1;
@@ -1116,7 +1122,85 @@ public final class GreyCat {
     private final int abi_magic;
     private final int abi_version;
 
+    public static void main(String... args) throws IOException {
+        int port = 8080;
+        Iterator<String> argsIt = Arrays.stream(args).iterator();
+        while (argsIt.hasNext()) {
+            String arg = argsIt.next();
+            switch (arg) {
+                case "-p":
+                case "--port":
+                    port = Integer.parseInt(argsIt.next());
+                    break;
+                default:
+                    throw new IllegalArgumentException(arg);
+            }
+        }
+        try (java.net.ServerSocket serverSocket = new java.net.ServerSocket(port)) {
+            while (true) {
+                java.net.Socket socket = serverSocket.accept();
+                new Thread(() -> {
+                    try {
+                        GreyCat.handle(socket);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
+            }
+        }
+    }
+
+    public interface Handler {
+    }
+
+    @FunctionalInterface
+    public interface ReturnHandler<T> extends Handler {
+        T handle(java.lang.Object... parameters);
+    }
+
+    @FunctionalInterface
+    public interface VoidHandler extends Handler {
+        void handle(java.lang.Object... parameters);
+    }
+
+    private final static java.util.Map<String, Handler> HANDLERS = new HashMap<>();
+
+    public static void addHandler(String key, ReturnHandler<?> handler) {
+        HANDLERS.put(key, handler);
+    }
+
+    public static void addHandler(String key, VoidHandler handler) {
+        HANDLERS.put(key, handler);
+    }
+
+    private static void handle(java.net.Socket socket, Library... libraries) throws Exception {
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
+        GreyCat greycat = new GreyCat(null, null, null, false, bufferedInputStream, libraries);
+        Stream stream = new Stream(greycat, bufferedInputStream);
+        Handler handler = HANDLERS.get(stream.read_string(stream.read_vu32()));
+        if (handler instanceof ReturnHandler) {
+            new Stream(greycat, socket.getOutputStream()).write(
+                    ((ReturnHandler<?>) handler).handle(((std.core.Array<?>) std.core.Array.load(
+                            greycat.types_by_name.get(std.core.Array.name),
+                            stream
+                    )).attributes)
+            );
+        } else if (handler instanceof VoidHandler) {
+            ((VoidHandler) handler).handle(((std.core.Array<?>) std.core.Array.load(
+                    greycat.types_by_name.get(std.core.Array.name),
+                    stream
+            )).attributes);
+        } else {
+            throw new RuntimeException("Wrong state");
+        }
+        socket.close();
+    }
+
     public GreyCat(String url, String username, String password, Boolean use_cookie, Library... libraries) throws Exception {
+        this(url, username, password, use_cookie, null, libraries);
+    }
+
+    private GreyCat(String url, String username, String password, Boolean use_cookie, BufferedInputStream bufferedInputStream, Library... libraries) throws Exception {
         this.runtime_url = url;
         this.token = null;
 
@@ -1138,7 +1222,12 @@ public final class GreyCat {
             lib.configure(loaders, factories);
         }
 
-        final Stream abiStream = getAbi(url);
+        final Stream abiStream;
+        if (null == bufferedInputStream) {
+            abiStream = getAbi(url);
+        } else {
+            abiStream = new Stream(this, bufferedInputStream);
+        }
 
         // step 0: verify abi version
         int abi_major = abiStream.read_i16();
