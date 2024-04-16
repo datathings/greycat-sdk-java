@@ -1,6 +1,7 @@
 package ai.greycat;
 
 import java.io.BufferedInputStream;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1121,7 +1122,19 @@ public final class GreyCat {
     private final int abi_magic;
     private final int abi_version;
 
-    private static GreyCat DEFAULT;
+    private static GreyCat DEFAULT = null;
+    private final static java.util.Map<String, Library> DEFAULT_LIBS = new java.util.HashMap<>();
+
+    @FunctionalInterface
+    public interface LibraryLoader {
+        Library load();
+    }
+
+    public static void importLibrary(String name, LibraryLoader loader) {
+        if (!DEFAULT_LIBS.containsKey(name)) {
+            DEFAULT_LIBS.put(name, loader.load());
+        }
+    }
 
     public static void main(String... args) throws Exception {
         int port = 0;
@@ -1145,11 +1158,14 @@ public final class GreyCat {
         if (port < 1 || port > 65535) {
             throw new IllegalArgumentException("Missing or invalid -p|--port [1..65535] parameter");
         }
-        DEFAULT = new GreyCat(abiPath, null, null, null);
         try (java.net.ServerSocket serverSocket = new java.net.ServerSocket(port)) {
             //noinspection InfiniteLoopStatement
             while (true) {
-                DEFAULT.handle(serverSocket.accept());
+                Socket socket = serverSocket.accept();
+                if (null == DEFAULT) {
+                    DEFAULT = new GreyCat(abiPath, null, null, null, DEFAULT_LIBS.values().toArray(new Library[0]));
+                }
+                DEFAULT.handle(socket);
             }
         }
     }
