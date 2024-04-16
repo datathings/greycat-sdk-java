@@ -778,7 +778,6 @@ class std_n {
                 array.attributes = new java.lang.Object[size];
                 for (int offset = 0; offset < size; offset++) {
                     array.set(offset, stream.read());
-                    System.out.println(array.get(offset));
                 }
                 return array;
             }

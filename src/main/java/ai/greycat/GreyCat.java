@@ -1,6 +1,7 @@
 package ai.greycat;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -181,9 +182,6 @@ public final class GreyCat {
 
         java.lang.Object read() throws java.io.IOException {
             byte primitiveOffset = read_i8();
-            if (61 == primitiveOffset) {
-                System.out.println("DEBUG");
-            }
             return PRIMITIVE_LOADERS[primitiveOffset].load(this);
         }
 
@@ -1137,8 +1135,8 @@ public final class GreyCat {
     }
 
     public static void main(String... args) throws Exception {
-        int port = 0;
-        String abiPath = "./gcdata/store/abi";
+        int port = 8081;
+        String abiPath = System.getenv("PWD");
         Iterator<String> argsIt = Arrays.stream(args).iterator();
         while (argsIt.hasNext()) {
             String arg = argsIt.next();
@@ -1159,6 +1157,7 @@ public final class GreyCat {
             throw new IllegalArgumentException("Missing or invalid -p|--port [1..65535] parameter");
         }
         try (java.net.ServerSocket serverSocket = new java.net.ServerSocket(port)) {
+            System.out.println("Serving at 0.0.0.0:" + port + "…");
             //noinspection InfiniteLoopStatement
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -1181,16 +1180,30 @@ public final class GreyCat {
         HANDLERS.put(key, handler);
     }
 
+    static {
+        addHandler("core::external_test", (greycat, self, parameters) -> {
+            long i = (long) parameters[0];
+            double d = (double) parameters[1];
+            return d * i;
+        });
+    }
+
     private void handle(java.net.Socket socket) throws Exception {
-        Stream stream = new Stream(this, new BufferedInputStream(socket.getInputStream()));
-        Handler<?> handler = HANDLERS.get(stream.read_string(stream.read_vu32()));
-        Object self = (Object) stream.read_object();
+        Stream in = new Stream(this, new BufferedInputStream(socket.getInputStream()));
+        String functionName = (String) std.core.String.load(types[type_offset_core_string], in);
+        Handler<?> handler = HANDLERS.get(functionName);
+        Object self = (Object) in.read_object();
         java.lang.Object[] parameters = ((std.core.Array<?>) std.core.Array.load(
                 types_by_name.get(std.core.Array.name),
-                stream)
-        ).toArray();
+                in
+        )).toArray();
         java.lang.Object result = handler.handle(this, self, parameters);
-        new Stream(this, socket.getOutputStream()).write(result);
+        ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        new Stream(this, buf).write(result);
+        Stream out = new Stream(this, socket.getOutputStream());
+        int len = buf.size();
+        out.write_i32(len);
+        out.write_i8_array(buf.toByteArray(), 0, len);
     }
 
     public GreyCat(String url, String username, String password, Boolean use_cookie, Library... libraries) throws Exception {
@@ -1282,9 +1295,6 @@ public final class GreyCat {
             /* only the program related abi type (last version) is mapped to himself */
             if (abiType.mapped_type_off == i && fqn.length() != 0) {
                 types_by_name.put(abiType.name, abiType);
-            }
-            if (abiType.name.equals("core::Table")) {
-                System.out.println(i);
             }
             types[i] = abiType;
         }
@@ -1584,8 +1594,6 @@ public final class GreyCat {
         b.append(runtime_url);
         b.append(java.io.File.separator);
         b.append("gcdata");
-        b.append(java.io.File.separator);
-        b.append("store");
         b.append(java.io.File.separator);
         b.append("abi");
         return new Stream(

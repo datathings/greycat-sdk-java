@@ -1,6 +1,6 @@
 // @library("std", "6.1.82-dev");
 
-@library("algebra");
+// @library("algebra");
 // @library("decisiontrees"); // Non-existent
 // @library("network");
 // @library("patterns");
@@ -8,13 +8,16 @@
 // @library("useragent"); // Tricky useragent.useragent is tricky
 
 use io;
-use math;
 use runtime;
 use util;
-use compute;
+// use compute;
 
 fn fail() {
   var out = GcbWriter::new("fail.gcb");
+}
+
+fn test_external() {
+    info(external_test(12, 13.37));
 }
 
 fn main() {
