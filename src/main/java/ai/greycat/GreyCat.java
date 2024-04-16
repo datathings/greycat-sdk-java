@@ -1,7 +1,6 @@
 package ai.greycat;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1122,12 +1121,19 @@ public final class GreyCat {
     private final int abi_magic;
     private final int abi_version;
 
-    public static void main(String... args) throws IOException {
-        int port = 8080;
+    private static GreyCat DEFAULT;
+
+    public static void main(String... args) throws Exception {
+        int port = 0;
+        String abiPath = "./gcdata/store/abi";
         Iterator<String> argsIt = Arrays.stream(args).iterator();
         while (argsIt.hasNext()) {
             String arg = argsIt.next();
             switch (arg) {
+                case "-a":
+                case "--abi":
+                    abiPath = argsIt.next();
+                    break;
                 case "-p":
                 case "--port":
                     port = Integer.parseInt(argsIt.next());
@@ -1136,71 +1142,42 @@ public final class GreyCat {
                     throw new IllegalArgumentException(arg);
             }
         }
+        if (port < 1 || port > 65535) {
+            throw new IllegalArgumentException("Missing or invalid -p|--port [1..65535] parameter");
+        }
+        DEFAULT = new GreyCat(abiPath, null, null, null);
         try (java.net.ServerSocket serverSocket = new java.net.ServerSocket(port)) {
+            //noinspection InfiniteLoopStatement
             while (true) {
-                java.net.Socket socket = serverSocket.accept();
-                new Thread(() -> {
-                    try {
-                        GreyCat.handle(socket);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }).start();
+                DEFAULT.handle(serverSocket.accept());
             }
         }
     }
 
-    public interface Handler {
-    }
-
     @FunctionalInterface
-    public interface ReturnHandler<T> extends Handler {
-        T handle(java.lang.Object... parameters);
+    public interface Handler<T> {
+        T handle(GreyCat greycat, Object self, java.lang.Object... parameters);
     }
 
-    @FunctionalInterface
-    public interface VoidHandler extends Handler {
-        void handle(java.lang.Object... parameters);
-    }
+    private final static java.util.Map<String, Handler<?>> HANDLERS = new HashMap<>();
 
-    private final static java.util.Map<String, Handler> HANDLERS = new HashMap<>();
-
-    public static void addHandler(String key, ReturnHandler<?> handler) {
+    public static void addHandler(String key, Handler<?> handler) {
         HANDLERS.put(key, handler);
     }
 
-    public static void addHandler(String key, VoidHandler handler) {
-        HANDLERS.put(key, handler);
-    }
-
-    private static void handle(java.net.Socket socket, Library... libraries) throws Exception {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
-        GreyCat greycat = new GreyCat(null, null, null, false, bufferedInputStream, libraries);
-        Stream stream = new Stream(greycat, bufferedInputStream);
-        Handler handler = HANDLERS.get(stream.read_string(stream.read_vu32()));
-        if (handler instanceof ReturnHandler) {
-            new Stream(greycat, socket.getOutputStream()).write(
-                    ((ReturnHandler<?>) handler).handle(((std.core.Array<?>) std.core.Array.load(
-                            greycat.types_by_name.get(std.core.Array.name),
-                            stream
-                    )).attributes)
-            );
-        } else if (handler instanceof VoidHandler) {
-            ((VoidHandler) handler).handle(((std.core.Array<?>) std.core.Array.load(
-                    greycat.types_by_name.get(std.core.Array.name),
-                    stream
-            )).attributes);
-        } else {
-            throw new RuntimeException("Wrong state");
-        }
-        socket.close();
+    private void handle(java.net.Socket socket) throws Exception {
+        Stream stream = new Stream(this, new BufferedInputStream(socket.getInputStream()));
+        Handler<?> handler = HANDLERS.get(stream.read_string(stream.read_vu32()));
+        Object self = (Object) stream.read_object();
+        java.lang.Object[] parameters = ((std.core.Array<?>) std.core.Array.load(
+                types_by_name.get(std.core.Array.name),
+                stream)
+        ).toArray();
+        java.lang.Object result = handler.handle(this, self, parameters);
+        new Stream(this, socket.getOutputStream()).write(result);
     }
 
     public GreyCat(String url, String username, String password, Boolean use_cookie, Library... libraries) throws Exception {
-        this(url, username, password, use_cookie, null, libraries);
-    }
-
-    private GreyCat(String url, String username, String password, Boolean use_cookie, BufferedInputStream bufferedInputStream, Library... libraries) throws Exception {
         this.runtime_url = url;
         this.token = null;
 
@@ -1222,12 +1199,7 @@ public final class GreyCat {
             lib.configure(loaders, factories);
         }
 
-        final Stream abiStream;
-        if (null == bufferedInputStream) {
-            abiStream = getAbi(url);
-        } else {
-            abiStream = new Stream(this, bufferedInputStream);
-        }
+        final Stream abiStream = getAbi(url);
 
         // step 0: verify abi version
         int abi_major = abiStream.read_i16();
