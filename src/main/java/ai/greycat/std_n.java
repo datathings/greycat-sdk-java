@@ -765,10 +765,14 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(attributes.length);
-                //noinspection ForLoopReplaceableByForEach
-                for (int offset = 0; offset < attributes.length; ++offset) {
-                    stream.write(attributes[offset]);
+                if (null == attributes) {
+                    stream.write_vu32(0);
+                } else {
+                    stream.write_vu32(attributes.length);
+                    //noinspection ForLoopReplaceableByForEach
+                    for (int offset = 0; offset < attributes.length; ++offset) {
+                        stream.write(attributes[offset]);
+                    }
                 }
             }
 
@@ -827,14 +831,24 @@ class std_n {
 
             @SuppressWarnings("unused")
             public final void add(T value) {
-                attributes = java.util.Arrays.copyOf(attributes, attributes.length + 1);
+                if (null == attributes) {
+                    attributes = new Object[1];
+                } else {
+                    attributes = java.util.Arrays.copyOf(attributes, attributes.length + 1);
+                }
                 attributes[attributes.length - 1] = value;
             }
 
             @SuppressWarnings("unused")
             public final void addAll(T[] values) {
-                int currentLength = attributes.length;
-                attributes = java.util.Arrays.copyOf(attributes, currentLength + values.length);
+                int currentLength;
+                if (null == attributes) {
+                    currentLength = 0;
+                    attributes = new Object[values.length];
+                } else {
+                    currentLength = attributes.length;
+                    attributes = java.util.Arrays.copyOf(attributes, currentLength + values.length);
+                }
                 java.lang.System.arraycopy(values, 0, attributes, currentLength, values.length);
             }
 
@@ -858,11 +872,14 @@ class std_n {
 
             @SuppressWarnings("unused")
             public final int size() {
-                return attributes.length;
+                return null == attributes ? 0 : attributes.length;
             }
 
             @SuppressWarnings("unused")
             public final int indexOf(T value) {
+                if (null == attributes) {
+                    return -1;
+                }
                 for (int index = 0; index < attributes.length; ++index) {
                     if (value == attributes[index]) {
                         return index;
