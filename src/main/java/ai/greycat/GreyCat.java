@@ -2,7 +2,7 @@ package ai.greycat;
 
 @SuppressWarnings("IOStreamConstructor")
 public final class GreyCat {
-    public static final short abi_proto = 1;
+    public static final short abi_proto = 2;
 
     public static final class AbiReader {
 
