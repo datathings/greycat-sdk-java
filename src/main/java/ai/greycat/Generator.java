@@ -10,6 +10,33 @@ import java.util.*;
 @SuppressWarnings("IOStreamConstructor")
 public class Generator {
 
+    private static final class Function {
+
+        private static final class Param {
+            final boolean isNullable;
+            final Type type;
+            final String name;
+
+            private Param(boolean isNullable, Type type, String name) {
+                this.isNullable = isNullable;
+                this.type = type;
+                this.name = name;
+            }
+        }
+
+        final String name;
+        final Param[] params;
+        final boolean isReturnNullable;
+        final int returnTypeOffset;
+
+        private Function(String name, Param[] params, boolean isReturnNullable, int returnTypeOffset) {
+            this.name = name;
+            this.params = params;
+            this.isReturnNullable = isReturnNullable;
+            this.returnTypeOffset = returnTypeOffset;
+        }
+    }
+
     private static final class Type {
         final int offset;
         final String lib;
@@ -23,6 +50,7 @@ public class Generator {
         final boolean isNative;
         final boolean isEnum;
         final GreyCat.Type.Attribute[] attributes;
+        final List<Function> methods = new ArrayList<>();
 
         private Type(int offset, String lib, String module, String name, int genericAbiType, int g1AbiTypeDesc, int g2AbiTypeDesc, int mappedAbiTypeOffset, int maskedAbiTypeOffset, boolean isNative, boolean isEnum, GreyCat.Type.Attribute[] attributes) {
             this.offset = offset;
@@ -54,7 +82,7 @@ public class Generator {
 
         private String fqn() {
             if (CORE_NULL == offset) {
-                return "?";
+                throw new RuntimeException("wrong state");
             }
             if (CORE_ANY == offset) {
                 return "java.lang.Object";
@@ -74,7 +102,7 @@ public class Generator {
             if (genericAbiType == 0) {
                 return "ai.greycat." + lib + '.' + module + '.' + name;
             }
-            return "ai.greycat." + lib + '.' + module + '.' + name.replaceAll("<(.*)>", "<" + generics() + ">");
+            return "ai.greycat." + lib + '.' + module + '.' + name.replaceAll("<.*>", "<" + generics() + ">");
         }
     }
 
@@ -234,7 +262,26 @@ public class Generator {
             TYPES[typeOffset] = type;
         }
         // abi functions
-        // TODO
+        final long functionBytes = stream.read_i64();
+        final int functionsSize = stream.read_i32();
+        for (int functionOffset = 0; functionOffset < functionsSize; ++functionOffset) {
+            final String moduleName = SYMBOLS[stream.read_vu32()];
+            final String typeName = SYMBOLS[stream.read_vu32()];
+            final String functionName = SYMBOLS[stream.read_vu32()];
+            final String libName = SYMBOLS[stream.read_vu32()];
+            int nb_params = stream.read_vu32();
+            Function.Param[] params = new Function.Param[nb_params];
+            for (int j = 0; j < nb_params; j++) {
+                boolean isNullable = 1 == stream.read_i8();
+                Type type = TYPES[stream.read_vu32()];
+                String name = SYMBOLS[stream.read_vu32()];
+                params[j] = new Function.Param(isNullable, type, name);
+            }
+            int returnTypeOffset = stream.read_vu32();
+            byte returnFlags = stream.read_i8();
+            boolean isReturnNullable = 1 == (returnFlags & 1);
+            LIBRARIES.get(libName).modules.get(moduleName).types.get(typeName).methods.add(new Function(functionName, params, isReturnNullable, returnTypeOffset));
+        }
         generateTypes();
     }
 
@@ -293,6 +340,25 @@ public class Generator {
                                 builder.append(T4).append("super.set(super.type.generator_offsets[").append(attribute.mappedAttOffset).append("], v);\n");
                                 builder.append(T3).append("}\n");
                             }
+                        }
+                        for (Function method : type.methods) {
+                            builder.append(T3).append("public static ").
+                                    append(0 == method.returnTypeOffset ? "void" : TYPES[method.returnTypeOffset].fqn()).
+                                    append(' ').append(method.name).append("(ai.greycat.GreyCat greycat");
+                            for (Function.Param param : method.params) {
+                                builder.append(", ").append(param.type.fqn()).append(' ').append(param.name);
+                            }
+                            builder.append("{\n");
+                            builder.append(T4);
+                            if (0 != method.returnTypeOffset) {
+                                builder.append("return (").append(TYPES[method.returnTypeOffset].fqn()).append(") ");
+                            }
+                            builder.append("greycat.call(\"").append(type.module).append("::").append(type.name).append("::").append(method.name).append('"');
+                            for (Function.Param param : method.params) {
+                                builder.append(", ").append(param.name);
+                            }
+                            builder.append(");\n");
+                            builder.append(T3).append("}\n");
                         }
                         builder.append(T3).append("public static ").append(type.name).append(" create(ai.greycat.GreyCat greycat) {\n");
                         builder.append(T4).append("return new ").append(type.name).append("(greycat.libs_by_name.get(ai.greycat.").append(lib.name).append(".name).mapped[").append(type.offset).append("]);\n");
