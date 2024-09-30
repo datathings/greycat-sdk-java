@@ -1,9 +1,6 @@
 package ai.greycat;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -294,23 +291,85 @@ public class Generator {
         return CORE_NULL == typeOffset || CORE_ANY == typeOffset || CORE_BOOL == typeOffset || CORE_CHAR == typeOffset || CORE_INT == typeOffset || CORE_FLOAT == typeOffset;
     }
 
-    private static void generateTypes() {
+    private static boolean isJavaKeyword(String symbol) {
+        switch (symbol.length()) {
+            default:
+                return false;
+            case 2:
+                return "do".equals(symbol) || "if".equals(symbol);
+            case 3:
+                return "for".equals(symbol) || "int".equals(symbol) || "new".equals(symbol) ||
+                        "try".equals(symbol);
+            case 4:
+                return "byte".equals(symbol) || "case".equals(symbol) || "char".equals(symbol) ||
+                        "else".equals(symbol) || "enum".equals(symbol) || "goto".equals(symbol) ||
+                        "long".equals(symbol) || "null".equals(symbol) || "this".equals(symbol) ||
+                        "true".equals(symbol) || "void".equals(symbol);
+            case 5:
+                return "break".equals(symbol) || "catch".equals(symbol) || "class".equals(symbol) ||
+                        "const".equals(symbol) || "false".equals(symbol) || "final".equals(symbol) ||
+                        "float".equals(symbol) || "short".equals(symbol) || "super".equals(symbol) ||
+                        "throw".equals(symbol) || "while".equals(symbol);
+            case 6:
+                return "assert".equals(symbol) || "double".equals(symbol) || "import".equals(symbol) ||
+                        "native".equals(symbol) || "public".equals(symbol) || "return".equals(symbol) ||
+                        "static".equals(symbol) || "switch".equals(symbol) || "throws".equals(symbol);
+            case 7:
+                return "boolean".equals(symbol) || "default".equals(symbol) || "extends".equals(symbol) ||
+                        "finally".equals(symbol) || "greycat".equals(symbol) || "package".equals(symbol) ||
+                        "private".equals(symbol);
+            case 8:
+                return "abstract".equals(symbol) || "continue".equals(symbol) ||
+                        "strictfp".equals(symbol) || "volatile".equals(symbol);
+            case 9:
+                return "interface".equals(symbol) || "protected".equals(symbol) ||
+                        "transient".equals(symbol);
+            case 10:
+                return "implements".equals(symbol) || "instanceof".equals(symbol);
+            case 12:
+                return "synchronized".equals(symbol);
+        }
+    }
+
+    private static String protect(String symbol) {
+        if (isJavaKeyword(symbol)) {
+            symbol += "_";
+        }
+        return symbol;
+    }
+
+    private static final String OUT = "src/main/java/ai/greycat";
+
+    private static void generateTypes() throws FileNotFoundException {
         StringBuilder builder = new StringBuilder();
+        //noinspection ResultOfMethodCallIgnored
+        new File(OUT).mkdirs();
         for (Library lib : LIBRARIES.values()) {
             builder.setLength(0);
-            builder.append("public final class ").append(lib.name).append(" extends ai.greycat.GreyCat.Library{\n");
+            builder.append("// AUTO-GENERATED FILE PLEASE DO NOT MODIFY MANUALLY\n");
+            builder.append("package ai.greycat;\n");
+            builder.append("@SuppressWarnings({\"unused\", \"unchecked\"})\n");
+            builder.append("public final class ").append(protect(lib.name)).append(" extends ai.greycat.GreyCat.Library {\n");
             builder.append(T1).append("public static final java.lang.String name = \"").append(lib.name).append("\";\n");
             builder.append(T1).append("@Override\n");
             builder.append(T1).append("public java.lang.String name() {\n");
             builder.append(T2).append("return name;\n");
             builder.append(T1).append("}\n");
             for (Module module : lib.modules.values()) {
-                builder.append(T1).append("public static final class ").append(module.name).append(" {\n");
+                builder.append(T1).append("public static final class ").append(protect(module.name)).append(" {\n");
                 for (Type type : module.types.values()) {
                     if (0 == type.genericAbiType && !isPrimitive(type.offset)) {
-                        builder.append(T2).append("public static final class ").append(type.name).append(" extends ai.greycat.");
+                        builder.append(T2).append("public static final class ").append(protect(type.name));
+                        if (0 != type.g1AbiTypeDesc) {
+                            builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
+                            if (0 != type.g2AbiTypeDesc) {
+                                builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
+                            }
+                            builder.append('>');
+                        }
+                        builder.append(" extends ai.greycat.");
                         if (type.isNative) {
-                            builder.append(lib.name).append("_n.").append(module.name).append('.').append(type.name);
+                            builder.append(protect(lib.name)).append("_n.").append(protect(module.name)).append('.').append(protect(type.name));
                         } else if (type.isEnum) {
                             builder.append("GreyCat.Enum");
                         } else {
@@ -318,58 +377,73 @@ public class Generator {
                         }
                         builder.append(" {\n");
                         builder.append(T3).append("public static final java.lang.String name = \"").append(module.name).append("::").append(type.name).append("\";\n");
-                        builder.append(T3).append("private ").append(type.name).append("(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {\n");
-                        builder.append(T4).append("super(type);\n");
+                        builder.append(T3).append("private ").append(protect(type.name)).append("(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {\n");
+                        builder.append(T4).append("super(type");
+                        if (!type.isNative) {
+                            builder.append(", attributes");
+                        }
+                        builder.append(");\n");
                         builder.append(T3).append("}\n");
                         if (type.isEnum) {
                             for (GreyCat.Type.Attribute attribute : type.attributes) {
-                                builder.append(T3).append("public static ai.greycat.").append(lib.name).append('.').append(module.name).append('.').append(type.name).append(' ').append(attribute.name).append("(ai.greycat.GreyCat greycat) {\n");
-                                builder.append(T4).append("final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.").append(lib.name).append(".name).mapped[").append(type.offset).append("];\n");
-                                builder.append(T4).append("return (ai.greycat.").append(lib.name).append('.').append(module.name).append('.').append(type.name).append(") t.enum_values[t.generated_offsets[").append(attribute.mappedAttOffset).append("]];\n");
+                                builder.append(T3).append("public static ai.greycat.").append(protect(lib.name)).append('.').append(protect(module.name)).append('.').append(protect(type.name)).append(' ').append(protect(attribute.name)).append("(ai.greycat.GreyCat greycat) {\n");
+                                builder.append(T4).append("final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.").append(protect(lib.name)).append(".name).mapped[").append(type.offset).append("];\n");
+                                builder.append(T4).append("return (ai.greycat.").append(protect(lib.name)).append('.').append(protect(module.name)).append('.').append(protect(type.name)).append(") t.enum_values[t.generated_offsets[").append(attribute.mappedAttOffset).append("]];\n");
                                 builder.append(T3).append("}\n");
                             }
                         } else if (!type.isNative) {
                             for (GreyCat.Type.Attribute attribute : type.attributes) {
                                 String fqn = TYPES[attribute.abiType].fqn();
                                 // getter
-                                builder.append(T3).append("public ").append(fqn).append(' ').append(attribute.name).append("() {\n");
+                                builder.append(T3).append("public ").append(fqn).append(' ').append(protect(attribute.name)).append("() {\n");
                                 builder.append(T4).append("return (").append(fqn).append(") super.get(super.type.generated_offsets[").append(attribute.mappedAttOffset).append("]);\n");
                                 builder.append(T3).append("}\n");
                                 // setter
-                                builder.append(T3).append("public void set_").append(attribute.name).append('(').append(fqn).append(" v) {\n");
-                                builder.append(T4).append("super.set(super.type.generator_offsets[").append(attribute.mappedAttOffset).append("], v);\n");
+                                builder.append(T3).append("public void set_").append(protect(attribute.name)).append('(').append(fqn).append(" v) {\n");
+                                builder.append(T4).append("super.set(super.type.generated_offsets[").append(attribute.mappedAttOffset).append("], v);\n");
                                 builder.append(T3).append("}\n");
                             }
                         }
                         for (Function method : type.methods) {
                             builder.append(T3).append("public static ").
                                     append(0 == method.returnTypeOffset ? "void" : TYPES[method.returnTypeOffset].fqn()).
-                                    append(' ').append(method.name).append("(ai.greycat.GreyCat greycat");
+                                    append(' ').append(protect(method.name)).append("(ai.greycat.GreyCat greycat");
                             for (Function.Param param : method.params) {
-                                builder.append(", ").append(param.type.fqn()).append(' ').append(param.name);
+                                builder.append(", ").append(param.type.fqn()).append(' ').append(protect(param.name));
                             }
-                            builder.append("{\n");
+                            builder.append(") throws java.io.IOException {\n");
                             builder.append(T4);
                             if (0 != method.returnTypeOffset) {
                                 builder.append("return (").append(TYPES[method.returnTypeOffset].fqn()).append(") ");
                             }
                             builder.append("greycat.call(\"").append(type.module).append("::").append(type.name).append("::").append(method.name).append('"');
                             for (Function.Param param : method.params) {
-                                builder.append(", ").append(param.name);
+                                builder.append(", ").append(protect(param.name));
                             }
                             builder.append(");\n");
                             builder.append(T3).append("}\n");
                         }
-                        builder.append(T3).append("public static ").append(type.name).append(" create(ai.greycat.GreyCat greycat) {\n");
-                        builder.append(T4).append("return new ").append(type.name).append("(greycat.libs_by_name.get(ai.greycat.").append(lib.name).append(".name).mapped[").append(type.offset).append("]);\n");
+                        builder.append(T3).append("public static ").append(protect(type.name)).append(" create(ai.greycat.GreyCat greycat) {\n");
+                        builder.append(T4).append("return new ").append(protect(type.name)).append("(greycat.libs_by_name.get(ai.greycat.").append(protect(lib.name)).append(".name).mapped[").append(type.offset).append("]);\n");
                         builder.append(T3).append("}\n");
                         builder.append(T2).append("}\n");
                     }
                 }
                 builder.append(T1).append("}\n");
             }
+            // Library::configure
+            builder.append(T1).append("@Override\n");
+            builder.append(T1).append("public void configure(java.util.Map<java.lang.String, ai.greycat.GreyCat.Loader> loaders, java.util.Map<java.lang.String, ai.greycat.GreyCat.Factory> factories) {\n");
+            // TODO
+            builder.append(T1).append("}\n");
+            // Library::init
+            builder.append(T1).append("@Override\n");
+            builder.append(T1).append("public void init(ai.greycat.GreyCat greycat) {\n");
+            // TODO
+            builder.append(T1).append("}\n");
+            // EOF
             builder.append("}\n");
-            System.out.println(builder);
+            new PrintStream(new FileOutputStream(OUT + '/' + protect(lib.name) + ".java")).println(builder);
         }
     }
 }

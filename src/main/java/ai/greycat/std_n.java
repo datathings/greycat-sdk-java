@@ -1,7 +1,6 @@
 package ai.greycat;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 class std_n {
@@ -9,135 +8,36 @@ class std_n {
     public static final class core {
 
         // Primitive types
+        protected static class duration extends GreyCat.Object {
+            public long value;
 
-        @SuppressWarnings("unused")
-        protected static class node<T> extends GreyCat.Object {
-            public long ref;
-
-            protected node(GreyCat.Type type) {
+            protected duration(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE);
+                stream.write_i8(GreyCat.PrimitiveType.DURATION);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
+                stream.write_vi64(value);
             }
 
-            static core.node<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.node<?> res = (core.node<?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.duration res = (duration) type.factory.build(type);
+                res.value = stream.read_vi64();
                 return res;
             }
 
         }
 
-        @SuppressWarnings("unused")
-        protected static class nodeTime<T> extends GreyCat.Object {
-            public long ref;
-
-            protected nodeTime(GreyCat.Type type) {
-                super(type, null);
-
-            }
-
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_TIME);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
-            }
-
-            static core.nodeTime<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeTime<?> res = (core.nodeTime<?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
-                return res;
-            }
-        }
-
-        @SuppressWarnings("unused")
-        protected static class nodeIndex<T, U> extends GreyCat.Object {
-            public static final java.lang.String type_name = "core::nodeIndex";
-
-            public long ref;
-
-            protected nodeIndex(GreyCat.Type type) {
+        protected static class field extends GreyCat.Object {
+            protected field(GreyCat.Type type) {
                 super(type, null);
             }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_INDEX);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
-            }
-
-            static core.nodeIndex<?, ?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeIndex<?, ?> res = (core.nodeIndex<?, ?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
-                return res;
-            }
-        }
-
-        @SuppressWarnings("unused")
-        protected static class nodeList<T> extends GreyCat.Object {
-            public long ref;
-
-            protected nodeList(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_LIST);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
-            }
-
-            static core.nodeList<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeList<?> res = (core.nodeList<?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
-                return res;
-            }
-
-        }
-
-        @SuppressWarnings("unused")
-        protected static class nodeGeo<T> extends GreyCat.Object {
-            public long ref;
-
-            protected nodeGeo(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_GEO);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
-            }
-
-            static core.nodeGeo<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeGeo<?> res = (core.nodeGeo<?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
-                return res;
-            }
-
+            // TODO
         }
 
         protected static class function extends GreyCat.Object {
@@ -261,62 +161,144 @@ class std_n {
             }
         }
 
-        protected static class time extends GreyCat.Object {
-            public long value;
+        protected static class node<T> extends GreyCat.Object {
+            public long ref;
 
-            protected time(GreyCat.Type type) {
+            protected node(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TIME);
+                stream.write_i8(GreyCat.PrimitiveType.NODE);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(value);
+                stream.write_vu64(ref);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.time res = (core.time) type.factory.build(type);
-                res.value = stream.read_vi64();
+            static core.node<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.node<?> res = (core.node<?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
                 return res;
             }
 
         }
 
-        protected static class duration extends GreyCat.Object {
-            public long value;
+        protected static class nodeGeo<T> extends GreyCat.Object {
+            public long ref;
 
-            protected duration(GreyCat.Type type) {
+            protected nodeGeo(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.DURATION);
+                stream.write_i8(GreyCat.PrimitiveType.NODE_GEO);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(value);
+                stream.write_vu64(ref);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.duration res = (duration) type.factory.build(type);
-                res.value = stream.read_vi64();
+            static core.nodeGeo<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeGeo<?> res = (core.nodeGeo<?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
                 return res;
             }
 
         }
 
-        protected static class ti2d extends GreyCat.Object {
+        protected static class nodeIndex<T, U> extends GreyCat.Object {
+            public static final java.lang.String type_name = "core::nodeIndex";
+
+            public long ref;
+
+            protected nodeIndex(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_INDEX);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vu64(ref);
+            }
+
+            static core.nodeIndex<?, ?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeIndex<?, ?> res = (core.nodeIndex<?, ?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
+                return res;
+            }
+        }
+
+        protected static class nodeList<T> extends GreyCat.Object {
+            public long ref;
+
+            protected nodeList(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_LIST);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vu64(ref);
+            }
+
+            static core.nodeList<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeList<?> res = (core.nodeList<?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
+                return res;
+            }
+
+        }
+
+        protected static class nodeTime<T> extends GreyCat.Object {
+            public long ref;
+
+            protected nodeTime(GreyCat.Type type) {
+                super(type, null);
+
+            }
+
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_TIME);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vu64(ref);
+            }
+
+            static core.nodeTime<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeTime<?> res = (core.nodeTime<?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
+                return res;
+            }
+        }
+
+        protected static class str extends GreyCat.Object {
+            protected str(GreyCat.Type type) {
+                super(type, null);
+            }
+            // TODO
+        }
+
+        protected static class t2 extends GreyCat.Object {
             public int x0, x1;
 
             private final static long UINT32_MIN = 2147483648L;
 
-            protected ti2d(GreyCat.Type type) {
+            protected t2(GreyCat.Type type) {
                 super(type, null);
             }
 
@@ -331,7 +313,7 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.ti2d res = (core.ti2d) type.factory.build(type);
+                t2 res = (t2) type.factory.build(type);
                 res.deinterleave(stream.read_i64());
                 return res;
             }
@@ -352,7 +334,7 @@ class std_n {
             }
         }
 
-        protected static class ti3d extends GreyCat.Object {
+        protected static class t3 extends GreyCat.Object {
             public int x0, x1, x2;
 
             private final static int INT21_MIN = -1048575 - 1;
@@ -360,7 +342,7 @@ class std_n {
             private final static int INT_21_MAX = 1048575;
             private final static long UINT21_MIN = 4293918720L;
 
-            protected ti3d(GreyCat.Type type) {
+            protected t3(GreyCat.Type type) {
                 super(type, null);
             }
 
@@ -375,7 +357,7 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.ti3d res = (core.ti3d) type.factory.build(type);
+                t3 res = (t3) type.factory.build(type);
                 res.deinterleave(stream.read_i64());
                 return res;
             }
@@ -399,12 +381,12 @@ class std_n {
             }
         }
 
-        protected static class ti4d extends GreyCat.Object {
+        protected static class t4 extends GreyCat.Object {
 
             public short x0, x1, x2, x3;
             private final static int UINT16_MIN = 32768;
 
-            protected ti4d(GreyCat.Type type) {
+            protected t4(GreyCat.Type type) {
                 super(type, null);
             }
 
@@ -419,7 +401,7 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.ti4d res = (core.ti4d) type.factory.build(type);
+                t4 res = (t4) type.factory.build(type);
                 res.deinterleave(stream.read_i64());
                 return res;
             }
@@ -447,180 +429,11 @@ class std_n {
             }
         }
 
-        protected static class ti5d extends GreyCat.Object {
-            public short x0, x1, x2, x3, x4;
-
-            private final static short INT12_MIN = -2047 - 1;
-            @SuppressWarnings("unused")
-            private final static short INT12_MAX = 2047;
-            private final static int UINT12_MIN = 63488;
-
-            protected ti5d(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TU5D);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(interleave());
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.ti5d res = (core.ti5d) type.factory.build(type);
-                res.deinterleave(stream.read_i64());
-                return res;
-            }
-
-            @Override
-            public java.lang.String toString() {
-                return "ti5d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + ",x3=" + x3 + ",x4=" + x4 + "}";
-            }
-
-            long interleave() {
-                return interleave64_5d(
-                        ((int) x0) + UINT12_MIN,
-                        ((int) x1) + UINT12_MIN,
-                        ((int) x2) + UINT12_MIN,
-                        ((int) x3) + UINT12_MIN,
-                        ((int) x4) + UINT12_MIN
-                );
-            }
-
-            private void deinterleave(long interleaved) {
-                @SuppressWarnings("unused") final long[] B = {0x0c0300c0300c03L, 0x0f0000f0000fL, 0x00f00000000ffL, 0x0fffL};
-                @SuppressWarnings("unused") final int[] S = {4, 8, 16, 32};
-
-                x0 = (short) ((long) deinterleave64_5d(interleaved) + INT12_MIN);
-                x1 = (short) ((long) deinterleave64_5d(interleaved >>> 1) + INT12_MIN);
-                x2 = (short) ((long) deinterleave64_5d(interleaved >>> 2) + INT12_MIN);
-                x3 = (short) ((long) deinterleave64_5d(interleaved >>> 3) + INT12_MIN);
-                x4 = (short) ((long) deinterleave64_5d(interleaved >>> 4) + INT12_MIN);
-            }
-        }
-
-        protected static class ti6d extends GreyCat.Object {
-
-            public short x0, x1, x2, x3, x4, x5;
-            private final static short INT10_MIN = -511 - 1;
-            @SuppressWarnings("unused")
-            private final static short INT10_MAX = 511;
-            private final static int UINT10_MIN = 65024;
-
-            protected ti6d(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TU6D);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(interleave());
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.ti6d res = (core.ti6d) type.factory.build(type);
-                res.deinterleave(stream.read_i64());
-                return res;
-            }
-
-            @Override
-            public java.lang.String toString() {
-                return "ti6d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + ",x3=" + x3 + ",x4=" + x4 + ",x5=" + x5 + "}";
-            }
-
-            long interleave() {
-                return interleave64_3d(
-                        interleave64_2d((((int) x0) + UINT10_MIN) & 0x3ff, (((int) x3) + UINT10_MIN) & 0x3ff),
-                        interleave64_2d((((int) x1) + UINT10_MIN) & 0x3ff, (((int) x4) + UINT10_MIN) & 0x3ff),
-                        interleave64_2d((((int) x2) + UINT10_MIN) & 0x3ff, (((int) x5) + UINT10_MIN) & 0x3ff)
-                );
-            }
-
-            private void deinterleave(long interleaved) {
-                long y30 = deinterleave64_2d(deinterleave64_3d(interleaved));
-                long y41 = deinterleave64_2d(deinterleave64_3d(interleaved >>> 1));
-                long y52 = deinterleave64_2d(deinterleave64_3d(interleaved >>> 2));
-
-                x0 = (short) ((y30 & 0x3ffL) + INT10_MIN);
-                x1 = (short) ((y41 & 0x3ffL) + INT10_MIN);
-                x2 = (short) ((y52 & 0x3ffL) + INT10_MIN);
-                x3 = (short) ((y30 >>> 32) + INT10_MIN);
-                x4 = (short) ((y41 >>> 32) + INT10_MIN);
-                x5 = (short) ((y52 >>> 32) + INT10_MIN);
-            }
-        }
-
-        protected static class ti10d extends GreyCat.Object {
-
-            public byte x0, x1, x2, x3, x4, x5, x6, x7, x8, x9;
-
-            private final static byte INT6_MIN = -31 - 1;
-            @SuppressWarnings("unused")
-            private final static byte INT6_MAX = 31;
-            private final static char UINT6_MIN = 224;
-
-            protected ti10d(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TU10D);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(interleave());
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.ti10d res = (core.ti10d) type.factory.build(type);
-                res.deinterleave(stream.read_i64());
-                return res;
-            }
-
-            @Override
-            public java.lang.String toString() {
-                return "ti10d{x0=" + x0 + ",x1=" + x1 + ",x2=" + x2 + ",x3=" + x3 + ",x4=" + x4 +
-                        ",x5=" + x5 + ",x6=" + x6 + ",x7=" + x7 + ",x8=" + x8 + ",x9=" + x9 + "}";
-            }
-
-            long interleave() {
-                return interleave64_5d(
-                        interleave64_2d((((char) x0) + UINT6_MIN) & 0x3f, (((char) x5) + UINT6_MIN) & 0x3f),
-                        interleave64_2d((((char) x1) + UINT6_MIN) & 0x3f, (((char) x6) + UINT6_MIN) & 0x3f),
-                        interleave64_2d((((char) x2) + UINT6_MIN) & 0x3f, (((char) x7) + UINT6_MIN) & 0x3f),
-                        interleave64_2d((((char) x3) + UINT6_MIN) & 0x3f, (((char) x8) + UINT6_MIN) & 0x3f),
-                        interleave64_2d((((char) x4) + UINT6_MIN) & 0x3f, (((char) x9) + UINT6_MIN) & 0x3f)
-                );
-            }
-
-            private void deinterleave(long interleaved) {
-                x0 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved)) & 0x3f) + INT6_MIN);
-                x1 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 1)) & 0x3f) + INT6_MIN);
-                x2 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 2)) & 0x3f) + INT6_MIN);
-                x3 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 3)) & 0x3f) + INT6_MIN);
-                x4 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 4)) & 0x3f) + INT6_MIN);
-                x5 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 5)) & 0x3f) + INT6_MIN);
-                x6 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 6)) & 0x3f) + INT6_MIN);
-                x7 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 7)) & 0x3f) + INT6_MIN);
-                x8 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 8)) & 0x3f) + INT6_MIN);
-                x9 = (byte) ((deinterleave64_2d(deinterleave64_5d(interleaved >>> 9)) & 0x3f) + INT6_MIN);
-            }
-        }
-
-        protected static class tf2d extends GreyCat.Object {
+        protected static class t2f extends GreyCat.Object {
 
             float x0, x1;
 
-            protected tf2d(GreyCat.Type type) {
+            protected t2f(GreyCat.Type type) {
                 super(type, null);
             }
 
@@ -635,7 +448,7 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.tf2d res = (core.tf2d) type.factory.build(type);
+                t2f res = (t2f) type.factory.build(type);
                 res.deinterleave(stream.read_i64());
                 return res;
             }
@@ -647,8 +460,8 @@ class std_n {
 
             long interleave() {
                 return interleave64_2d(
-                        ((long) Float.floatToIntBits(x0)) + ti2d.UINT32_MIN,
-                        ((long) Float.floatToIntBits(x1)) + ti2d.UINT32_MIN
+                        ((long) Float.floatToIntBits(x0)) + t2.UINT32_MIN,
+                        ((long) Float.floatToIntBits(x1)) + t2.UINT32_MIN
                 );
             }
 
@@ -659,11 +472,11 @@ class std_n {
             }
         }
 
-        protected static class tf3d extends GreyCat.Object {
+        protected static class t3f extends GreyCat.Object {
 
             float x0, x1, x2;
 
-            protected tf3d(GreyCat.Type type) {
+            protected t3f(GreyCat.Type type) {
                 super(type, null);
             }
 
@@ -678,7 +491,7 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.tf3d res = (core.tf3d) type.factory.build(type);
+                t3f res = (t3f) type.factory.build(type);
                 res.deinterleave(stream.read_i64());
                 return res;
             }
@@ -690,24 +503,24 @@ class std_n {
 
             long interleave() {
                 return interleave64_3d(
-                        (((long) Float.floatToIntBits(x0)) >>> 11) + ti3d.UINT21_MIN,
-                        (((long) Float.floatToIntBits(x1)) >>> 11) + ti3d.UINT21_MIN,
-                        (((long) Float.floatToIntBits(x2)) >>> 11) + ti3d.UINT21_MIN
+                        (((long) Float.floatToIntBits(x0)) >>> 11) + t3.UINT21_MIN,
+                        (((long) Float.floatToIntBits(x1)) >>> 11) + t3.UINT21_MIN,
+                        (((long) Float.floatToIntBits(x2)) >>> 11) + t3.UINT21_MIN
                 );
             }
 
             public void deinterleave(long interleaved) {
-                x0 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved) + ti3d.INT21_MIN) << 11));
-                x1 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 1) + ti3d.INT21_MIN) << 11));
-                x2 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 2) + ti3d.INT21_MIN) << 11));
+                x0 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved) + t3.INT21_MIN) << 11));
+                x1 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 1) + t3.INT21_MIN) << 11));
+                x2 = Float.intBitsToFloat((int) (((long) deinterleave64_3d(interleaved >>> 2) + t3.INT21_MIN) << 11));
             }
         }
 
-        protected static class tf4d extends GreyCat.Object {
+        protected static class t4f extends GreyCat.Object {
 
             float x0, x1, x2, x3;
 
-            protected tf4d(GreyCat.Type type) {
+            protected t4f(GreyCat.Type type) {
                 super(type, null);
             }
 
@@ -722,7 +535,7 @@ class std_n {
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.tf4d res = (core.tf4d) type.factory.build(type);
+                t4f res = (t4f) type.factory.build(type);
                 res.deinterleave(stream.read_i64());
                 return res;
             }
@@ -735,12 +548,12 @@ class std_n {
             long interleave() {
                 return interleave64_2d(
                         interleave64_2d(
-                                ((Float.floatToIntBits(x0)) >>> 16) + ti4d.UINT16_MIN,
-                                (Float.floatToIntBits(x2) >>> 16) + ti4d.UINT16_MIN
+                                ((Float.floatToIntBits(x0)) >>> 16) + t4.UINT16_MIN,
+                                (Float.floatToIntBits(x2) >>> 16) + t4.UINT16_MIN
                         ),
                         interleave64_2d(
-                                (Float.floatToIntBits(x1) >>> 16) + ti4d.UINT16_MIN,
-                                (Float.floatToIntBits(x3) >>> 16) + ti4d.UINT16_MIN
+                                (Float.floatToIntBits(x1) >>> 16) + t4.UINT16_MIN,
+                                (Float.floatToIntBits(x3) >>> 16) + t4.UINT16_MIN
                         )
                 );
             }
@@ -754,6 +567,38 @@ class std_n {
                 x2 = Float.intBitsToFloat((int) (((d20 >>> 32) + Short.MIN_VALUE) << 16));
                 x3 = Float.intBitsToFloat((int) (((d31 >>> 32) + Short.MIN_VALUE) << 16));
             }
+        }
+
+        protected static class time extends GreyCat.Object {
+            public long value;
+
+            protected time(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TIME);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vi64(value);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.time res = (core.time) type.factory.build(type);
+                res.value = stream.read_vi64();
+                return res;
+            }
+
+        }
+
+        protected static class type extends GreyCat.Object {
+            protected type(GreyCat.Type type) {
+                super(type, null);
+            }
+            // TODO
         }
 
         // Object types
@@ -892,105 +737,23 @@ class std_n {
             }
         }
 
-        protected static class Date extends GreyCat.Object {
-            public long localizedEpochS;
-            public long epochUs;
-            public int timeZone;
+        protected static class Buffer extends GreyCat.Object {
+            public byte[] data;
 
-            protected Date(GreyCat.Type type) {
+            protected Buffer(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(localizedEpochS);
-                stream.write_vi64(epochUs);
-                stream.write_vu32(timeZone);
+                stream.write_vu32(data.length);
+                stream.write_i8_array(data, 0, data.length);
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                Date res = (Date) type.factory.build(type);
-                res.localizedEpochS = stream.read_vi64();
-                res.epochUs = stream.read_vi64();
-                res.timeZone = stream.read_vu32();
-                return res;
-            }
-        }
-
-        protected static class Error extends GreyCat.Object {
-            public int code;
-            public core.Error.Frame[] frames;
-            public java.lang.String msg;
-
-            public Object value;
-
-            protected Error(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(code);
-                stream.write_vu32(frames.length);
-                final byte[] msg_bytes = msg.getBytes(StandardCharsets.UTF_8);
-                stream.write_vu32(msg_bytes.length);
-                int offset = 0;
-                while (offset < frames.length) {
-                    core.Error.Frame frame = frames[offset];
-                    stream.write_vu32(frame.modSymbol);
-                    stream.write_vu32(frame.typeSymbol);
-                    stream.write_vu32(frame.fnSymbol);
-                    stream.write_vu32(frame.line);
-                    stream.write_vu32(frame.column);
-                    offset++;
-                }
-                stream.write_i8_array(msg_bytes, 0, msg_bytes.length);
-                stream.write(value);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int code = stream.read_vu32();
-                final int framesLen = stream.read_vu32();
-                final int msgLen = stream.read_vu32();
-                final core.Error.Frame[] frames = new core.Error.Frame[framesLen];
-                for (int offset = 0; offset < framesLen; offset++) {
-                    final int modSymbol = stream.read_vu32();
-                    final int typeSymbol = stream.read_vu32();
-                    final int fnSymbol = stream.read_vu32();
-                    final int line = stream.read_vu32();
-                    final int column = stream.read_vu32();
-                    frames[offset] = new core.Error.Frame(modSymbol, typeSymbol, fnSymbol, line, column);
-                }
-                core.Error res = (Error) type.factory.build(type);
-                res.code = code;
-                res.frames = frames;
-                res.msg = stream.read_string(msgLen);
-                res.value = stream.read();
-                return res;
-            }
-
-            public final static class Frame {
-                private final int modSymbol,
-                        typeSymbol,
-                        fnSymbol,
-                        line,
-                        column;
-
-                public Frame(int modSymbol, int typeSymbol, int fnSymbol, int line, int column) {
-                    this.modSymbol = modSymbol;
-                    this.typeSymbol = typeSymbol;
-                    this.fnSymbol = fnSymbol;
-                    this.line = line;
-                    this.column = column;
-                }
-            }
-
-            @Override
-            public java.lang.String toString() {
-                return type.name + "{" +
-                        "msg='" + msg + '\'' +
-                        ", value=" + value +
-                        '}';
+                core.Buffer buf = (Buffer) type.factory.build(type);
+                buf.data = stream.read_i8_array(stream.read_vu32());
+                return buf;
             }
         }
 
@@ -1297,41 +1060,6 @@ class std_n {
             }
         }
 
-        // Deliberately unsupported types
-
-        protected static class nodeIndexBucket extends GreyCat.Object {
-            protected nodeIndexBucket(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                if (attributes == null) {
-                    stream.write_i32(0);
-                } else {
-                    stream.write_i32(attributes.length);
-                    int i = 0;
-                    while (i < attributes.length) {
-                        Object object = attributes[i];
-                        stream.write(object);
-                        i++;
-                    }
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int size = stream.read_i32();
-                final Object[] data = new Object[size];
-                for (int offset = 0; offset < size; offset++) {
-                    data[offset] = stream.read();
-                }
-                core.nodeIndexBucket res = (nodeIndexBucket) type.factory.build(type);
-                res.attributes = data;
-                return res;
-            }
-
-        }
-
         // ti*d & tf*d (de)interleaving algorithms
 
         private final static long[] B_2D = {0x5555555555555555L, 0x3333333333333333L, 0x0F0F0F0F0F0F0F0FL,
@@ -1472,38 +1200,6 @@ class std_n {
 
     public static final class util {
 
-        protected static class Quantizer extends GreyCat.Object {
-
-            protected Quantizer(GreyCat.Type type) {
-                super(type, null);
-                throw new RuntimeException("unsupported");
-            }
-
-            static java.lang.Object load(@SuppressWarnings("unused") GreyCat.Type type, @SuppressWarnings("unused") GreyCat.Stream stream) throws IOException {
-                throw new IOException("unsupported");
-            }
-        }
-
-        protected static class Buffer extends GreyCat.Object {
-            public byte[] data;
-
-            protected Buffer(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(data.length);
-                stream.write_i8_array(data, 0, data.length);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                util.Buffer buf = (Buffer) type.factory.build(type);
-                buf.data = stream.read_i8_array(stream.read_vu32());
-                return buf;
-            }
-        }
-
         @SuppressWarnings("unused")
         protected static class Gaussian extends GreyCat.Object {
             public double sum;
@@ -1550,255 +1246,6 @@ class std_n {
                 return g;
             }
 
-        }
-
-        protected static class GaussianProfile extends GreyCat.Object {
-            //            public int size;
-            public byte[] data;
-            private int size;
-
-            protected GaussianProfile(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-//                stream.write_i32(size);
-                stream.write_i32(size);
-                stream.write_i32(data.length);
-                stream.write_i8_array(data, 0, data.length);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                util.GaussianProfile g = (GaussianProfile) type.factory.build(type);
-                g.size = stream.read_i32();
-                int bin_len = stream.read_i32();
-                g.data = stream.read_i8_array(bin_len);
-                return g;
-            }
-
-        }
-
-        protected static class HistogramFloat extends GreyCat.Object {
-            public double realMin;
-            public double realMax;
-            public double min;
-            public double max;
-            public long size;
-            public long nullCount;
-            public long maxRange;
-            public double sum;
-            public double sumSq;
-            public int unitMagnitude;
-            public int significantFigures;
-            public int subBucketHalfCountMagnitude;
-            public int subBucketHalfCount;
-            public long subBucketMask;
-            public int subBucketCount;
-            public int bucketCount;
-            public long minValue;
-            public long maxValue;
-            public int normalizingIndexOffset;
-            public int countsLen;
-            public long totalCount;
-            public long[] counts;
-
-            protected HistogramFloat(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_f64(realMin);
-                stream.write_f64(realMax);
-                stream.write_f64(min);
-                stream.write_f64(max);
-                stream.write_i64(size);
-                stream.write_i64(nullCount);
-                stream.write_i64(maxRange);
-                stream.write_f64(sum);
-                stream.write_f64(sumSq);
-                stream.write_i32(unitMagnitude);
-                stream.write_i32(significantFigures);
-                stream.write_i32(subBucketHalfCountMagnitude);
-                stream.write_i32(subBucketHalfCount);
-                stream.write_i64(subBucketMask);
-                stream.write_i32(subBucketCount);
-                stream.write_i32(bucketCount);
-                stream.write_i64(minValue);
-                stream.write_i64(maxValue);
-                stream.write_i32(normalizingIndexOffset);
-                stream.write_i32(countsLen);
-                stream.write_i64(totalCount);
-                int i = 0;
-                while (i < counts.length) {
-                    stream.write_i64(counts[i]);
-                    i++;
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final double realMin = stream.read_f64();
-                final double realMax = stream.read_f64();
-                final double min = stream.read_f64();
-                final double max = stream.read_f64();
-                final long size = stream.read_i64();
-                final long nullCount = stream.read_i64();
-                final long maxRange = stream.read_i64();
-                final double sum = stream.read_f64();
-                final double sumSq = stream.read_f64();
-                final int unitMagnitude = stream.read_i32();
-                final int significantFigures = stream.read_i32();
-                final int subBucketHalfCountMagnitude = stream.read_i32();
-                final int subBucketHalfCount = stream.read_i32();
-                final long subBucketMask = stream.read_i64();
-                final int subBucketCount = stream.read_i32();
-                final int bucketCount = stream.read_i32();
-                final long minValue = stream.read_i64();
-                final long maxValue = stream.read_i64();
-                final int normalizingIndexOffset = stream.read_i32();
-                final int countsLen = stream.read_i32();
-                long totalCount = stream.read_i64();
-                final long[] counts = new long[countsLen];
-                for (int offset = 0; offset < countsLen; offset++) {
-                    counts[offset] = stream.read_i64();
-                }
-                HistogramFloat h = (HistogramFloat) type.factory.build(type);
-                h.realMin = realMin;
-                h.realMax = realMax;
-                h.min = min;
-                h.max = max;
-                h.size = size;
-                h.nullCount = nullCount;
-                h.maxRange = maxRange;
-                h.sum = sum;
-                h.sumSq = sumSq;
-                h.unitMagnitude = unitMagnitude;
-                h.significantFigures = significantFigures;
-                h.subBucketHalfCountMagnitude = subBucketHalfCountMagnitude;
-                h.subBucketHalfCount = subBucketHalfCount;
-                h.subBucketMask = subBucketMask;
-                h.subBucketCount = subBucketCount;
-                h.bucketCount = bucketCount;
-                h.minValue = minValue;
-                h.maxValue = maxValue;
-                h.normalizingIndexOffset = normalizingIndexOffset;
-                h.countsLen = countsLen;
-                h.totalCount = totalCount;
-                h.counts = counts;
-                return h;
-            }
-        }
-
-        protected static class HistogramInt extends GreyCat.Object {
-            public long realMin;
-            public long realMax;
-            public long min;
-            public long max;
-            public long size;
-            public long nullCount;
-            public long maxRange;
-            public double sum;
-            public double sumSq;
-            public int unitMagnitude;
-            public int significantFigures;
-            public int subBucketHalfCountMagnitude;
-            public int subBucketHalfCount;
-            public long subBucketMask;
-            public int subBucketCount;
-            public int bucketCount;
-            public long minValue;
-            public long maxValue;
-            public int normalizingIndexOffset;
-            public int countsLen;
-            public long totalCount;
-            public long[] counts;
-
-            protected HistogramInt(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(realMin);
-                stream.write_i64(realMax);
-                stream.write_i64(min);
-                stream.write_i64(max);
-                stream.write_i64(size);
-                stream.write_i64(nullCount);
-                stream.write_i64(maxRange);
-                stream.write_f64(sum);
-                stream.write_f64(sumSq);
-                stream.write_i32(unitMagnitude);
-                stream.write_i32(significantFigures);
-                stream.write_i32(subBucketHalfCountMagnitude);
-                stream.write_i32(subBucketHalfCount);
-                stream.write_i64(subBucketMask);
-                stream.write_i32(subBucketCount);
-                stream.write_i32(bucketCount);
-                stream.write_i64(minValue);
-                stream.write_i64(maxValue);
-                stream.write_i32(normalizingIndexOffset);
-                stream.write_i32(countsLen);
-                stream.write_i64(totalCount);
-                int i = 0;
-                while (i < counts.length) {
-                    stream.write_i64(counts[i]);
-                    i++;
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final long realMin = stream.read_i64();
-                final long realMax = stream.read_i64();
-                final long min = stream.read_i64();
-                final long max = stream.read_i64();
-                final long size = stream.read_i64();
-                final long nullCount = stream.read_i64();
-                final long maxRange = stream.read_i64();
-                final double sum = stream.read_f64();
-                final double sumSq = stream.read_f64();
-                final int unitMagnitude = stream.read_i32();
-                final int significantFigures = stream.read_i32();
-                final int subBucketHalfCountMagnitude = stream.read_i32();
-                final int subBucketHalfCount = stream.read_i32();
-                final long subBucketMask = stream.read_i64();
-                final int subBucketCount = stream.read_i32();
-                final int bucketCount = stream.read_i32();
-                final long minValue = stream.read_i64();
-                final long maxValue = stream.read_i64();
-                final int normalizingIndexOffset = stream.read_i32();
-                final int countsLen = stream.read_i32();
-                final long totalCount = stream.read_i64();
-                final long[] counts = new long[countsLen];
-                for (int offset = 0; offset < countsLen; offset++) {
-                    counts[offset] = stream.read_i64();
-                }
-                HistogramInt h = (HistogramInt) type.factory.build(type);
-                h.realMin = realMin;
-                h.realMax = realMax;
-                h.min = min;
-                h.max = max;
-                h.size = size;
-                h.nullCount = nullCount;
-                h.maxRange = maxRange;
-                h.sum = sum;
-                h.sumSq = sumSq;
-                h.unitMagnitude = unitMagnitude;
-                h.significantFigures = significantFigures;
-                h.subBucketHalfCountMagnitude = subBucketHalfCountMagnitude;
-                h.subBucketHalfCount = subBucketHalfCount;
-                h.subBucketMask = subBucketMask;
-                h.subBucketCount = subBucketCount;
-                h.bucketCount = bucketCount;
-                h.minValue = minValue;
-                h.maxValue = maxValue;
-                h.normalizingIndexOffset = normalizingIndexOffset;
-                h.countsLen = countsLen;
-                h.totalCount = totalCount;
-                h.counts = counts;
-                return h;
-            }
         }
 
         @SuppressWarnings("unused")
@@ -1863,228 +1310,6 @@ class std_n {
                 pt.progress = progress;
                 pt.remainingTime = remainingTime;
                 return pt;
-            }
-        }
-
-        protected static class Iban extends GreyCat.Object {
-
-            public int infoOff;
-            public byte[] data;
-
-            public Iban(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(infoOff);
-                stream.write_vu32(data.length);
-                stream.write_i8_array(data, 0, data.length);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                util.Iban iban = (Iban) type.factory.build(type);
-                iban.infoOff = stream.read_vu32();
-                iban.data = stream.read_i8_array(stream.read_vu32());
-                return iban;
-            }
-
-        }
-
-        protected static class Queue<T> extends GreyCat.Object {
-
-            private final java.util.Queue<T> queue = new java.util.LinkedList<>();
-
-            protected Queue(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(size()); // width
-                stream.write_vu32(size()); // size
-                stream.write_vu32(size()); // capacity
-                stream.write_vi64(size()); // TODO: head - values
-                stream.write_vi64(0); // TODO: tail - values
-                for (T t : queue) {
-                    stream.write(t);
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                stream.read_vi64(); // width
-                final int size = stream.read_vu32();
-                final int capacity = stream.read_vu32();
-                stream.read_vi64(); // head - values;
-                stream.read_vi64(); // tail - values;
-                @SuppressWarnings("unchecked") final util.Queue<Object> queue = (Queue<Object>) type.factory.build(type);
-                int offset;
-                for (offset = 0; offset < size; offset++) {
-                    queue.enqueue(stream.read());
-                }
-                for (; offset < capacity; offset++) {
-                    stream.read();
-                }
-                return queue;
-            }
-
-            public int size() {
-                return queue.size();
-            }
-
-            @SuppressWarnings({"unused", "FieldCanBeLocal"})
-            public void clear() {
-                queue.clear();
-            }
-
-            public void enqueue(T t) {
-                queue.offer(t);
-            }
-
-            @SuppressWarnings({"unused", "FieldCanBeLocal"})
-            public T dequeue() {
-                return queue.poll();
-            }
-
-            @SuppressWarnings({"unused", "FieldCanBeLocal"})
-            public T poll() {
-                return queue.poll();
-            }
-
-            @SuppressWarnings({"unused", "FieldCanBeLocal"})
-            public T head() {
-                return queue.peek();
-            }
-        }
-
-        protected static class SlidingWindow extends GreyCat.Object {
-            public long width;
-            public byte sumType;
-            public double sum;
-            public double sumSq;
-            public int size;
-            public int capacity;
-            public long toHead;
-            public long toTail;
-            public Object[] values;
-
-            protected SlidingWindow(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(width);
-                stream.write_i8(sumType);
-                stream.write_f64(sum);
-                stream.write_f64(sumSq);
-                stream.write_vu32(size);
-                stream.write_vu32(capacity);
-                stream.write_vi64(toHead);
-                stream.write_vi64(toTail);
-                int i = 0;
-                while (i < values.length) {
-                    stream.write(values[i]);
-                    i++;
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final long width = stream.read_vi64();
-                final byte sumType = stream.read_i8();
-                final double sum = stream.read_f64();
-                final double sumSq = stream.read_f64();
-                final int size = stream.read_vu32();
-                final int capacity = stream.read_vu32();
-                final long toHead = stream.read_vi64();
-                final long toTail = stream.read_vi64();
-                final Object[] values = new Object[capacity];
-                for (int offset = 0; offset < capacity; offset++) {
-                    values[offset] = stream.read();
-                }
-                util.SlidingWindow sw = (SlidingWindow) type.factory.build(type);
-                sw.width = width;
-                sw.sumType = sumType;
-                sw.sum = sum;
-                sw.sumSq = sumSq;
-                sw.size = size;
-                sw.capacity = capacity;
-                sw.toHead = toHead;
-                sw.toTail = toTail;
-                sw.values = values;
-                return sw;
-            }
-
-        }
-
-        protected static class TimeWindow extends GreyCat.Object {
-            public long timeWidth;
-            public byte sumType;
-            public double sum;
-            public double sumSq;
-            public int size;
-            public int capacity;
-            public long toHead;
-            public long toTail;
-            public ValueTime[] valueTimes;
-
-            protected TimeWindow(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(timeWidth);
-                stream.write_i8(sumType);
-                stream.write_f64(sum);
-                stream.write_f64(sumSq);
-                stream.write_vu32(size);
-                stream.write_vu32(capacity);
-                stream.write_vi64(toHead);
-                stream.write_vi64(toTail);
-                int i = 0;
-                while (i < valueTimes.length) {
-                    final ValueTime valueTime = valueTimes[i];
-                    stream.write(valueTime.value);
-                    stream.write_i64(valueTime.time);
-                    i++;
-                }
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final long timeWidth = stream.read_vi64();
-                final byte sumType = stream.read_i8();
-                final double sum = stream.read_f64();
-                final double sumSq = stream.read_f64();
-                final int size = stream.read_vu32();
-                final int capacity = stream.read_vu32();
-                final long toHead = stream.read_vi64();
-                final long toTail = stream.read_vi64();
-                final util.TimeWindow.ValueTime[] values = new util.TimeWindow.ValueTime[capacity];
-                for (int offset = 0; offset < capacity; offset++) {
-                    values[offset] = new util.TimeWindow.ValueTime(stream.read(), stream.read_i64());
-                }
-                util.TimeWindow tw = (TimeWindow) type.factory.build(type);
-                tw.timeWidth = timeWidth;
-                tw.sumType = sumType;
-                tw.sum = sum;
-                tw.sumSq = sumSq;
-                tw.size = size;
-                tw.capacity = capacity;
-                tw.toHead = toHead;
-                tw.toTail = toTail;
-                tw.valueTimes = values;
-                return tw;
-            }
-
-            public final static class ValueTime {
-                public final Object value;
-                public final long time;
-
-                public ValueTime(Object value, long time) {
-                    this.value = value;
-                    this.time = time;
-                }
             }
         }
     }
