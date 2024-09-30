@@ -97,42 +97,42 @@ public final class GreyCat {
                 final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_duration];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.ENUM] = Stream::read_object;
+            PRIMITIVE_LOADERS[PrimitiveType.STATIC_FIELD] = Stream::read_object;
             PRIMITIVE_LOADERS[PrimitiveType.OBJECT] = Stream::read_object;
-            PRIMITIVE_LOADERS[PrimitiveType.TU2D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_ti2d];
+            PRIMITIVE_LOADERS[PrimitiveType.T2] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t2];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.TU3D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_ti3d];
+            PRIMITIVE_LOADERS[PrimitiveType.T3] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t3];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.TU4D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_ti4d];
+            PRIMITIVE_LOADERS[PrimitiveType.T4] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t4];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.TU5D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_ti5d];
+            PRIMITIVE_LOADERS[PrimitiveType.STR] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_str];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.TU6D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_ti6d];
+            PRIMITIVE_LOADERS[PrimitiveType.T2F] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t2f];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.TU10D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_ti10d];
+            PRIMITIVE_LOADERS[PrimitiveType.T3F] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t3f];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.TUF2D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_tf2d];
+            PRIMITIVE_LOADERS[PrimitiveType.T4F] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t4f];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.TUF3D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_tf3d];
+            PRIMITIVE_LOADERS[PrimitiveType.TYPE] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_type];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.TUF4D] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_tf4d];
+            PRIMITIVE_LOADERS[PrimitiveType.FIELD] = (GreyCat.Stream stream) -> {
+                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_field];
                 return t.loader.load(t, stream);
             };
 //            PRIMITIVE_LOADERS[PrimitiveType.BLOCK] = error_loader;
@@ -722,7 +722,7 @@ public final class GreyCat {
                     loadType = stream.read_i8();
                 }
                 switch (loadType) {
-                    case PrimitiveType.ENUM: {
+                    case PrimitiveType.STATIC_FIELD: {
                         Type fieldType = type.greycat.types[att.abiType];
                         if (att.sbiType == PrimitiveType.UNDEFINED) {
                             loadedField = enum_loader.load(type.greycat.types[stream.read_vu32()], stream);
@@ -840,7 +840,7 @@ public final class GreyCat {
 
         @Override
         protected final void saveType(Stream stream) throws java.io.IOException {
-            stream.write_i8(GreyCat.PrimitiveType.ENUM);
+            stream.write_i8(GreyCat.PrimitiveType.STATIC_FIELD);
             stream.write_vu32(type.offset);
         }
 
@@ -895,20 +895,20 @@ public final class GreyCat {
         static final byte TIME = 11;
         static final byte DURATION = 12;
         static final byte CUBIC = 13;
-        static final byte ENUM = 14;
+        static final byte STATIC_FIELD = 14;
         static final byte OBJECT = 15;
-        static final byte TU2D = 16;
-        static final byte TU3D = 17;
-        static final byte TU4D = 18;
-        static final byte TU5D = 19;
-        static final byte TU6D = 20;
-        static final byte TU10D = 21;
-        static final byte TUF2D = 22;
-        static final byte TUF3D = 23;
-        static final byte TUF4D = 24;
-        static final byte BLOCK_REF = 25;
-        static final byte FUNCTION = 26;
-        static final byte UNDEFINED = 27;
+        static final byte T2 = 16;
+        static final byte T3 = 17;
+        static final byte T4 = 18;
+        static final byte STR = 19;
+        static final byte T2F = 20;
+        static final byte T3F = 21;
+        static final byte T4F = 22;
+        static final byte BLOCK_REF = 23;
+        static final byte FUNCTION = 24;
+        static final byte UNDEFINED = 25;
+        static final byte TYPE = 26;
+        static final byte FIELD = 27;
         static final byte STRING_LIT = 28;
         static final byte SIZE = 29;
     }
@@ -990,19 +990,19 @@ public final class GreyCat {
                     case PrimitiveType.NODE_LIST:
                     case PrimitiveType.NODE_GEO:
                     case PrimitiveType.GEO:
-                    case PrimitiveType.TU2D:
-                    case PrimitiveType.TU3D:
-                    case PrimitiveType.TU4D:
-                    case PrimitiveType.TU5D:
-                    case PrimitiveType.TU6D:
-                    case PrimitiveType.TU10D:
-                    case PrimitiveType.TUF2D:
-                    case PrimitiveType.TUF3D:
-                    case PrimitiveType.TUF4D:
+                    case PrimitiveType.T2:
+                    case PrimitiveType.T3:
+                    case PrimitiveType.T4:
+                    case PrimitiveType.STR:
+                    case PrimitiveType.T2F:
+                    case PrimitiveType.T3F:
+                    case PrimitiveType.T4F:
                     case PrimitiveType.TIME:
                     case PrimitiveType.DURATION:
+                    case PrimitiveType.TYPE:
+                    case PrimitiveType.FIELD:
 //                    case PrimitiveType.CUBIC: // TODO
-                    case PrimitiveType.ENUM:
+                    case PrimitiveType.STATIC_FIELD:
                         ((Object) value).save(stream);
                         break;
                     case PrimitiveType.OBJECT:
@@ -1103,15 +1103,15 @@ public final class GreyCat {
     public final int type_offset_core_node_time;
     public final int type_offset_core_node;
     public final int type_offset_core_node_geo;
-    public final int type_offset_core_ti2d;
-    public final int type_offset_core_ti3d;
-    public final int type_offset_core_ti4d;
-    public final int type_offset_core_ti5d;
-    public final int type_offset_core_ti6d;
-    public final int type_offset_core_ti10d;
-    public final int type_offset_core_tf2d;
-    public final int type_offset_core_tf3d;
-    public final int type_offset_core_tf4d;
+    public final int type_offset_core_t2;
+    public final int type_offset_core_t3;
+    public final int type_offset_core_t4;
+    public final int type_offset_core_str;
+    public final int type_offset_core_t2f;
+    public final int type_offset_core_t3f;
+    public final int type_offset_core_t4f;
+    public final int type_offset_core_type;
+    public final int type_offset_core_field;
     private boolean is_remote = false;
     private final int abi_magic;
     private final int abi_version;
@@ -1263,7 +1263,6 @@ public final class GreyCat {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_geo = tmp.offset;
-
         tmp = types_by_name.get("core::nodeList");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
@@ -1290,51 +1289,51 @@ public final class GreyCat {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node = tmp.offset;
-        tmp = types_by_name.get("core::ti2d");
+        tmp = types_by_name.get("core::t2");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_ti2d = tmp.offset;
-        tmp = types_by_name.get("core::ti3d");
+        type_offset_core_t2 = tmp.offset;
+        tmp = types_by_name.get("core::t3");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_ti3d = tmp.offset;
-        tmp = types_by_name.get("core::ti4d");
+        type_offset_core_t3 = tmp.offset;
+        tmp = types_by_name.get("core::t4");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_ti4d = tmp.offset;
-        tmp = types_by_name.get("core::ti5d");
+        type_offset_core_t4 = tmp.offset;
+        tmp = types_by_name.get("core::str");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_ti5d = tmp.offset;
-        tmp = types_by_name.get("core::ti6d");
+        type_offset_core_str = tmp.offset;
+        tmp = types_by_name.get("core::t2f");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_ti6d = tmp.offset;
-        tmp = types_by_name.get("core::ti10d");
+        type_offset_core_t2f = tmp.offset;
+        tmp = types_by_name.get("core::t3f");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_ti10d = tmp.offset;
-        tmp = types_by_name.get("core::tf2d");
+        type_offset_core_t3f = tmp.offset;
+        tmp = types_by_name.get("core::t4f");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_tf2d = tmp.offset;
-        tmp = types_by_name.get("core::tf3d");
+        type_offset_core_t4f = tmp.offset;
+        tmp = types_by_name.get("core::type");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_tf3d = tmp.offset;
-        tmp = types_by_name.get("core::tf4d");
+        type_offset_core_type = tmp.offset;
+        tmp = types_by_name.get("core::field");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
-        type_offset_core_tf4d = tmp.offset;
+        type_offset_core_field = tmp.offset;
         abiStream.close();
         for (Library lib : libs_by_name.values()) {
             lib.init(this);

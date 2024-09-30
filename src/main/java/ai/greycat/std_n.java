@@ -34,10 +34,30 @@ class std_n {
         }
 
         protected static class field extends GreyCat.Object {
+            public int abi_type;
+            public int right;
+
             protected field(GreyCat.Type type) {
                 super(type, null);
             }
-            // TODO
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.FIELD);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vu32(abi_type);
+                stream.write_vu32(right);
+            }
+
+            static core.field load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.field res = (core.field) type.factory.build(type);
+                res.abi_type = stream.read_vu32();
+                res.right = stream.read_vu32();
+                return res;
+            }
         }
 
         protected static class function extends GreyCat.Object {
@@ -287,10 +307,33 @@ class std_n {
         }
 
         protected static class str extends GreyCat.Object {
+            public long value;
+
             protected str(GreyCat.Type type) {
                 super(type, null);
             }
-            // TODO
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.STR);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_i64(value);
+            }
+
+            static str load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                str res = (str) type.factory.build(type);
+                res.value = stream.read_i64();
+                return res;
+            }
+
+            @Override
+            public final java.lang.String toString() {
+                // TODO
+                throw new UnsupportedOperationException();
+            }
         }
 
         protected static class t2 extends GreyCat.Object {
@@ -304,7 +347,7 @@ class std_n {
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TU2D);
+                stream.write_i8(GreyCat.PrimitiveType.T2);
             }
 
             @Override
@@ -348,7 +391,7 @@ class std_n {
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TU3D);
+                stream.write_i8(GreyCat.PrimitiveType.T3);
             }
 
             @Override
@@ -392,7 +435,7 @@ class std_n {
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TU4D);
+                stream.write_i8(GreyCat.PrimitiveType.T4);
             }
 
             @Override
@@ -439,7 +482,7 @@ class std_n {
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TUF2D);
+                stream.write_i8(GreyCat.PrimitiveType.T2F);
             }
 
             @Override
@@ -482,7 +525,7 @@ class std_n {
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TUF3D);
+                stream.write_i8(GreyCat.PrimitiveType.T3F);
             }
 
             @Override
@@ -526,7 +569,7 @@ class std_n {
 
             @Override
             protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TUF4D);
+                stream.write_i8(GreyCat.PrimitiveType.T4F);
             }
 
             @Override
@@ -595,10 +638,27 @@ class std_n {
         }
 
         protected static class type extends GreyCat.Object {
+            public int abi_type;
+
             protected type(GreyCat.Type type) {
                 super(type, null);
             }
-            // TODO
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TYPE);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream) throws IOException {
+                stream.write_vu32(abi_type);
+            }
+
+            static core.type load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.type res = (core.type) type.factory.build(type);
+                res.abi_type = stream.read_vu32();
+                return res;
+            }
         }
 
         // Object types
@@ -857,7 +917,7 @@ class std_n {
                     stream.write_bool(colMeta.index);
                     switch (colMeta.colType) {
                         case GreyCat.PrimitiveType.OBJECT:
-                        case GreyCat.PrimitiveType.ENUM:
+                        case GreyCat.PrimitiveType.STATIC_FIELD:
                             stream.write_vu32(colMeta.type);
                             break;
                         default:
@@ -901,7 +961,7 @@ class std_n {
                             break;
                         case GreyCat.PrimitiveType.TIME:
                         case GreyCat.PrimitiveType.DURATION:
-                        case GreyCat.PrimitiveType.ENUM:
+                        case GreyCat.PrimitiveType.STATIC_FIELD:
                             for (int r = 0; r < rows; ++r) {
                                 ((GreyCat.Object) data[c * rows + r]).save(stream);
                             }
@@ -925,7 +985,7 @@ class std_n {
                     final int metaType;
                     switch (metaColType) {
                         case GreyCat.PrimitiveType.OBJECT:
-                        case GreyCat.PrimitiveType.ENUM:
+                        case GreyCat.PrimitiveType.STATIC_FIELD:
                             metaType = stream.read_vu32();
                             break;
                         default:
@@ -966,7 +1026,7 @@ class std_n {
                                 data[c * rows + r] = duration.load(type.greycat.types[type.greycat.type_offset_core_duration], stream);
                             }
                             break;
-                        case GreyCat.PrimitiveType.ENUM:
+                        case GreyCat.PrimitiveType.STATIC_FIELD:
                             for (int r = 0; r < rows; ++r) {
                                 GreyCat.Type enumType = type.greycat.types[meta[c].type];
                                 data[c * rows + r] = enumType.loader.load(enumType, stream);

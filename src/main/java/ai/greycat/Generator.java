@@ -370,6 +370,13 @@ public class Generator {
                         builder.append(" extends ai.greycat.");
                         if (type.isNative) {
                             builder.append(protect(lib.name)).append("_n.").append(protect(module.name)).append('.').append(protect(type.name));
+                            if (0 != type.g1AbiTypeDesc) {
+                                builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
+                                if (0 != type.g2AbiTypeDesc) {
+                                    builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
+                                }
+                                builder.append('>');
+                            }
                         } else if (type.isEnum) {
                             builder.append("GreyCat.Enum");
                         } else {
@@ -423,8 +430,28 @@ public class Generator {
                             builder.append(");\n");
                             builder.append(T3).append("}\n");
                         }
-                        builder.append(T3).append("public static ").append(protect(type.name)).append(" create(ai.greycat.GreyCat greycat) {\n");
-                        builder.append(T4).append("return new ").append(protect(type.name)).append("(greycat.libs_by_name.get(ai.greycat.").append(protect(lib.name)).append(".name).mapped[").append(type.offset).append("]);\n");
+                        builder.append(T3).append("public static ");
+                        if (0 != type.g1AbiTypeDesc) {
+                            builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
+                            if (0 != type.g2AbiTypeDesc) {
+                                builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
+                            }
+                            builder.append("> ");
+                        }
+                        builder.append(protect(type.name));
+                        if (0 != type.g1AbiTypeDesc) {
+                            builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
+                            if (0 != type.g2AbiTypeDesc) {
+                                builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
+                            }
+                            builder.append('>');
+                        }
+                        builder.append(" create(ai.greycat.GreyCat greycat) {\n");
+                        builder.append(T4).append("return new ").append(protect(type.name));
+                        if (0 != type.g1AbiTypeDesc) {
+                            builder.append("<>");
+                        }
+                        builder.append("(greycat.libs_by_name.get(ai.greycat.").append(protect(lib.name)).append(".name).mapped[").append(type.offset).append("]);\n");
                         builder.append(T3).append("}\n");
                         builder.append(T2).append("}\n");
                     }
