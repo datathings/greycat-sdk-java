@@ -5868,9 +5868,333 @@ public final class std extends ai.greycat.GreyCat.Library {
   }
   @Override
   public void configure(java.util.Map<java.lang.String, ai.greycat.GreyCat.Loader> loaders, java.util.Map<java.lang.String, ai.greycat.GreyCat.Factory> factories) {
+    factories.put(core.type.name, core.type::new);
+    loaders.put(core.type.name, ai.greycat.std_n.core.type::load);
+    factories.put(core.field.name, core.field::new);
+    loaders.put(core.field.name, ai.greycat.std_n.core.field::load);
+    factories.put(core.function.name, core.function::new);
+    loaders.put(core.function.name, ai.greycat.std_n.core.function::load);
+    factories.put(core.FloatPrecision.name, core.FloatPrecision::new);
+    factories.put(core.nodeTime.name, core.nodeTime::new);
+    loaders.put(core.nodeTime.name, ai.greycat.std_n.core.nodeTime::load);
+    factories.put(core.nodeTimeSingleton.name, core.nodeTimeSingleton::new);
+    factories.put(core.NodeInfo.name, core.NodeInfo::new);
+    factories.put(core.nodeTimeCursor.name, core.nodeTimeCursor::new);
+    factories.put(core.node.name, core.node::new);
+    loaders.put(core.node.name, ai.greycat.std_n.core.node::load);
+    factories.put(core.nodeIndex.name, core.nodeIndex::new);
+    loaders.put(core.nodeIndex.name, ai.greycat.std_n.core.nodeIndex::load);
+    factories.put(core.nodeList.name, core.nodeList::new);
+    loaders.put(core.nodeList.name, ai.greycat.std_n.core.nodeList::load);
+    factories.put(core.duration.name, core.duration::new);
+    loaders.put(core.duration.name, ai.greycat.std_n.core.duration::load);
+    factories.put(core.CalendarUnit.name, core.CalendarUnit::new);
+    factories.put(core.time.name, core.time::new);
+    loaders.put(core.time.name, ai.greycat.std_n.core.time::load);
+    factories.put(core.ErrorCode.name, core.ErrorCode::new);
+    factories.put(core.ErrorFrame.name, core.ErrorFrame::new);
+    factories.put(core.Error.name, core.Error::new);
+    factories.put(core.SamplingMode.name, core.SamplingMode::new);
+    factories.put(core.SortOrder.name, core.SortOrder::new);
+    factories.put(core.Table.name, core.Table::new);
+    loaders.put(core.Table.name, ai.greycat.std_n.core.Table::load);
+    factories.put(core.TableColumnMapping.name, core.TableColumnMapping::new);
+    factories.put(core.DurationUnit.name, core.DurationUnit::new);
+    factories.put(core.String.name, core.String::new);
+    loaders.put(core.String.name, ai.greycat.std_n.core.String::load);
+    factories.put(core.Buffer.name, core.Buffer::new);
+    loaders.put(core.Buffer.name, ai.greycat.std_n.core.Buffer::load);
+    factories.put(core.Array.name, core.Array::new);
+    loaders.put(core.Array.name, ai.greycat.std_n.core.Array::load);
+    factories.put(core.TensorType.name, core.TensorType::new);
+    factories.put(core.Tensor.name, core.Tensor::new);
+    loaders.put(core.Tensor.name, ai.greycat.std_n.core.Tensor::load);
+    factories.put(core.Map.name, core.Map::new);
+    loaders.put(core.Map.name, ai.greycat.std_n.core.Map::load);
+    factories.put(core.Tuple.name, core.Tuple::new);
+    factories.put(core.geo.name, core.geo::new);
+    loaders.put(core.geo.name, ai.greycat.std_n.core.geo::load);
+    factories.put(core.GeoCircle.name, core.GeoCircle::new);
+    factories.put(core.GeoPoly.name, core.GeoPoly::new);
+    factories.put(core.GeoBox.name, core.GeoBox::new);
+    factories.put(core.nodeGeo.name, core.nodeGeo::new);
+    loaders.put(core.nodeGeo.name, ai.greycat.std_n.core.nodeGeo::load);
+    factories.put(core.Date.name, core.Date::new);
+    factories.put(core.t2.name, core.t2::new);
+    loaders.put(core.t2.name, ai.greycat.std_n.core.t2::load);
+    factories.put(core.t3.name, core.t3::new);
+    loaders.put(core.t3.name, ai.greycat.std_n.core.t3::load);
+    factories.put(core.t4.name, core.t4::new);
+    loaders.put(core.t4.name, ai.greycat.std_n.core.t4::load);
+    factories.put(core.str.name, core.str::new);
+    loaders.put(core.str.name, ai.greycat.std_n.core.str::load);
+    factories.put(core.t2f.name, core.t2f::new);
+    loaders.put(core.t2f.name, ai.greycat.std_n.core.t2f::load);
+    factories.put(core.t3f.name, core.t3f::new);
+    loaders.put(core.t3f.name, ai.greycat.std_n.core.t3f::load);
+    factories.put(core.t4f.name, core.t4f::new);
+    loaders.put(core.t4f.name, ai.greycat.std_n.core.t4f::load);
+    factories.put(core.MathConstants.name, core.MathConstants::new);
+    factories.put(core.TimeZone.name, core.TimeZone::new);
+    factories.put(runtime.StoreStat.name, runtime.StoreStat::new);
+    factories.put(runtime.RuntimeInfo.name, runtime.RuntimeInfo::new);
+    factories.put(runtime.Runtime.name, runtime.Runtime::new);
+    factories.put(runtime.System.name, runtime.System::new);
+    factories.put(runtime.TaskStatus.name, runtime.TaskStatus::new);
+    factories.put(runtime.TaskBase.name, runtime.TaskBase::new);
+    factories.put(runtime.TaskMode.name, runtime.TaskMode::new);
+    factories.put(runtime.TaskRequest.name, runtime.TaskRequest::new);
+    factories.put(runtime.TaskResult.name, runtime.TaskResult::new);
+    factories.put(runtime.Task.name, runtime.Task::new);
+    factories.put(runtime.TaskInfo.name, runtime.TaskInfo::new);
+    factories.put(runtime.PeriodicTask.name, runtime.PeriodicTask::new);
+    factories.put(runtime.SecurityFields.name, runtime.SecurityFields::new);
+    factories.put(runtime.SecurityPolicy.name, runtime.SecurityPolicy::new);
+    factories.put(runtime.SecurityEntity.name, runtime.SecurityEntity::new);
+    factories.put(runtime.UserGroup.name, runtime.UserGroup::new);
+    factories.put(runtime.UserGroupPolicyType.name, runtime.UserGroupPolicyType::new);
+    factories.put(runtime.UserGroupPolicy.name, runtime.UserGroupPolicy::new);
+    factories.put(runtime.OpenIDConnect.name, runtime.OpenIDConnect::new);
+    factories.put(runtime.User.name, runtime.User::new);
+    factories.put(runtime.UserRole.name, runtime.UserRole::new);
+    factories.put(runtime.UserCredential.name, runtime.UserCredential::new);
+    factories.put(runtime.LicenseType.name, runtime.LicenseType::new);
+    factories.put(runtime.License.name, runtime.License::new);
+    factories.put(runtime.DebugVariable.name, runtime.DebugVariable::new);
+    factories.put(runtime.DebugFrame.name, runtime.DebugFrame::new);
+    factories.put(runtime.DebugInfo.name, runtime.DebugInfo::new);
+    factories.put(runtime.DebugBreakpoint.name, runtime.DebugBreakpoint::new);
+    factories.put(runtime.Debug.name, runtime.Debug::new);
+    factories.put(io.Writer.name, io.Writer::new);
+    factories.put(io.Reader.name, io.Reader::new);
+    factories.put(io.GcbWriter.name, io.GcbWriter::new);
+    factories.put(io.GcbReader.name, io.GcbReader::new);
+    factories.put(io.TextWriter.name, io.TextWriter::new);
+    factories.put(io.TextReader.name, io.TextReader::new);
+    factories.put(io.JsonWriter.name, io.JsonWriter::new);
+    factories.put(io.JsonReader.name, io.JsonReader::new);
+    factories.put(io.CsvWriter.name, io.CsvWriter::new);
+    factories.put(io.CsvReader.name, io.CsvReader::new);
+    factories.put(io.CsvValidateResult.name, io.CsvValidateResult::new);
+    factories.put(io.TextEncoder.name, io.TextEncoder::new);
+    factories.put(io.CsvColumn.name, io.CsvColumn::new);
+    factories.put(io.CsvColumnString.name, io.CsvColumnString::new);
+    factories.put(io.CsvColumnInteger.name, io.CsvColumnInteger::new);
+    factories.put(io.CsvColumnFloat.name, io.CsvColumnFloat::new);
+    factories.put(io.CsvColumnBoolean.name, io.CsvColumnBoolean::new);
+    factories.put(io.CsvColumnTime.name, io.CsvColumnTime::new);
+    factories.put(io.CsvColumnDuration.name, io.CsvColumnDuration::new);
+    factories.put(io.CsvColumnDate.name, io.CsvColumnDate::new);
+    factories.put(io.CsvColumnIgnored.name, io.CsvColumnIgnored::new);
+    factories.put(io.CsvFormat.name, io.CsvFormat::new);
+    factories.put(io.CsvColumnStatistics.name, io.CsvColumnStatistics::new);
+    factories.put(io.CsvStatistics.name, io.CsvStatistics::new);
+    factories.put(io.CsvAnalysisConfig.name, io.CsvAnalysisConfig::new);
+    factories.put(io.CsvAnalysis.name, io.CsvAnalysis::new);
+    factories.put(io.File.name, io.File::new);
+    factories.put(io.FileWalker.name, io.FileWalker::new);
+    factories.put(io.Url.name, io.Url::new);
+    factories.put(io.HttpHeader.name, io.HttpHeader::new);
+    factories.put(io.Http.name, io.Http::new);
+    factories.put(io.Email.name, io.Email::new);
+    factories.put(io.SmtpMode.name, io.SmtpMode::new);
+    factories.put(io.SmtpAuth.name, io.SmtpAuth::new);
+    factories.put(io.Smtp.name, io.Smtp::new);
+    factories.put(util.Queue.name, util.Queue::new);
+    factories.put(util.Stack.name, util.Stack::new);
+    factories.put(util.SlidingWindow.name, util.SlidingWindow::new);
+    factories.put(util.TimeWindow.name, util.TimeWindow::new);
+    factories.put(util.Gaussian.name, util.Gaussian::new);
+    factories.put(util.Random.name, util.Random::new);
+    factories.put(util.Assert.name, util.Assert::new);
+    factories.put(util.ProgressTracker.name, util.ProgressTracker::new);
+    factories.put(util.Quantizer.name, util.Quantizer::new);
+    factories.put(util.LinearQuantizer.name, util.LinearQuantizer::new);
+    factories.put(util.LogQuantizer.name, util.LogQuantizer::new);
+    factories.put(util.CustomQuantizer.name, util.CustomQuantizer::new);
+    factories.put(util.MultiQuantizer.name, util.MultiQuantizer::new);
+    factories.put(util.GaussianProfile.name, util.GaussianProfile::new);
+    factories.put(util.Histogram.name, util.Histogram::new);
+    factories.put(util.HistogramStats.name, util.HistogramStats::new);
+    factories.put(util.Crypto.name, util.Crypto::new);
+    factories.put(util.Plot.name, util.Plot::new);
+    factories.put(util.Root.name, util.Root::new);
   }
   @Override
   public void init(ai.greycat.GreyCat greycat) {
+    this.mapped = new ai.greycat.GreyCat.Type[127];
+    this.mapped[0] = greycat.types_by_name.get(core.type.name);
+    this.mapped[1] = greycat.types_by_name.get(core.field.name);
+    this.mapped[2] = greycat.types_by_name.get(core.function.name);
+    this.mapped[3] = greycat.types_by_name.get(core.FloatPrecision.name);
+    if (null != this.mapped[3]) {
+      this.mapped[3].resolveGeneratedOffsets("p1", "p10", "p100", "p1000", "p10000", "p100000", "p1000000", "p10000000", "p100000000", "p1000000000", "p10000000000");
+    }
+    this.mapped[4] = greycat.types_by_name.get(core.nodeTime.name);
+    this.mapped[5] = greycat.types_by_name.get(core.nodeTimeSingleton.name);
+    this.mapped[6] = greycat.types_by_name.get(core.NodeInfo.name);
+    this.mapped[7] = greycat.types_by_name.get(core.nodeTimeCursor.name);
+    this.mapped[8] = greycat.types_by_name.get(core.node.name);
+    this.mapped[9] = greycat.types_by_name.get(core.nodeIndex.name);
+    this.mapped[10] = greycat.types_by_name.get(core.nodeList.name);
+    this.mapped[11] = greycat.types_by_name.get(core.duration.name);
+    this.mapped[12] = greycat.types_by_name.get(core.CalendarUnit.name);
+    if (null != this.mapped[12]) {
+      this.mapped[12].resolveGeneratedOffsets("year", "month", "day", "hour", "minute", "second", "microsecond");
+    }
+    this.mapped[13] = greycat.types_by_name.get(core.time.name);
+    this.mapped[14] = greycat.types_by_name.get(core.ErrorCode.name);
+    if (null != this.mapped[14]) {
+      this.mapped[14].resolveGeneratedOffsets("none", "interrupted", "await", "timeout", "forbidden", "runtime_error");
+    }
+    this.mapped[15] = greycat.types_by_name.get(core.ErrorFrame.name);
+    this.mapped[16] = greycat.types_by_name.get(core.Error.name);
+    this.mapped[17] = greycat.types_by_name.get(core.SamplingMode.name);
+    if (null != this.mapped[17]) {
+      this.mapped[17].resolveGeneratedOffsets("fixed", "fixed_reg", "adaptative", "dense");
+    }
+    this.mapped[18] = greycat.types_by_name.get(core.SortOrder.name);
+    if (null != this.mapped[18]) {
+      this.mapped[18].resolveGeneratedOffsets("asc", "desc");
+    }
+    this.mapped[19] = greycat.types_by_name.get(core.Table.name);
+    this.mapped[20] = greycat.types_by_name.get(core.TableColumnMapping.name);
+    this.mapped[21] = greycat.types_by_name.get(core.DurationUnit.name);
+    if (null != this.mapped[21]) {
+      this.mapped[21].resolveGeneratedOffsets("microseconds", "milliseconds", "seconds", "minutes", "hours", "days");
+    }
+    this.mapped[22] = greycat.types_by_name.get(core.String.name);
+    this.mapped[23] = greycat.types_by_name.get(core.Buffer.name);
+    this.mapped[24] = greycat.types_by_name.get(core.Array.name);
+    this.mapped[25] = greycat.types_by_name.get(core.TensorType.name);
+    if (null != this.mapped[25]) {
+      this.mapped[25].resolveGeneratedOffsets("i32", "i64", "f32", "f64", "c64", "c128");
+    }
+    this.mapped[26] = greycat.types_by_name.get(core.Tensor.name);
+    this.mapped[27] = greycat.types_by_name.get(core.Map.name);
+    this.mapped[28] = greycat.types_by_name.get(core.Tuple.name);
+    this.mapped[29] = greycat.types_by_name.get(core.geo.name);
+    this.mapped[30] = greycat.types_by_name.get(core.GeoCircle.name);
+    this.mapped[31] = greycat.types_by_name.get(core.GeoPoly.name);
+    this.mapped[32] = greycat.types_by_name.get(core.GeoBox.name);
+    this.mapped[33] = greycat.types_by_name.get(core.nodeGeo.name);
+    this.mapped[34] = greycat.types_by_name.get(core.Date.name);
+    this.mapped[35] = greycat.types_by_name.get(core.t2.name);
+    this.mapped[36] = greycat.types_by_name.get(core.t3.name);
+    this.mapped[37] = greycat.types_by_name.get(core.t4.name);
+    this.mapped[38] = greycat.types_by_name.get(core.str.name);
+    this.mapped[39] = greycat.types_by_name.get(core.t2f.name);
+    this.mapped[40] = greycat.types_by_name.get(core.t3f.name);
+    this.mapped[41] = greycat.types_by_name.get(core.t4f.name);
+    this.mapped[42] = greycat.types_by_name.get(core.MathConstants.name);
+    this.mapped[43] = greycat.types_by_name.get(core.TimeZone.name);
+    if (null != this.mapped[43]) {
+      this.mapped[43].resolveGeneratedOffsets("Africa_Accra", "Africa_Bamako", "Africa_Banjul", "Africa_Conakry", "Africa_Dakar", "Africa_Freetown", "Africa_Lome", "Africa_Nouakchott", "Africa_Ouagadougou", "Africa_Timbuktu", "Atlantic_Reykjavik", "Atlantic_St_Helena", "Iceland", "Egypt", "Africa_Maseru", "Africa_Mbabane", "Africa_Bangui", "Africa_Brazzaville", "Africa_Douala", "Africa_Kinshasa", "Africa_Libreville", "Africa_Luanda", "Africa_Malabo", "Africa_Niamey", "Africa_Porto_Novo", "Africa_Blantyre", "Africa_Bujumbura", "Africa_Gaborone", "Africa_Harare", "Africa_Kigali", "Africa_Lubumbashi", "Africa_Lusaka", "Africa_Addis_Ababa", "Africa_Asmara", "Africa_Asmera", "Africa_Dar_es_Salaam", "Africa_Djibouti", "Africa_Kampala", "Africa_Mogadishu", "Indian_Antananarivo", "Indian_Comoro", "Indian_Mayotte", "Libya", "America_Atka", "US_Aleutian", "US_Alaska", "America_Buenos_Aires", "America_Argentina_ComodRivadavia", "America_Catamarca", "America_Cordoba", "America_Rosario", "America_Jujuy", "America_Mendoza", "US_Central", "America_Shiprock", "Navajo", "US_Mountain", "US_Michigan", "America_Yellowknife", "Canada_Mountain", "Canada_Atlantic", "Cuba", "America_Fort_Wayne", "America_Indianapolis", "US_East_Indiana", "America_Knox_IN", "US_Indiana_Starke", "America_Pangnirtung", "Jamaica", "America_Louisville", "US_Pacific", "Brazil_West", "Mexico_BajaSur", "Mexico_General", "US_Eastern", "Brazil_DeNoronha", "America_Godthab", "America_Atikokan", "America_Cayman", "America_Coral_Harbour", "America_Creston", "US_Arizona", "America_Anguilla", "America_Antigua", "America_Aruba", "America_Blanc_Sablon", "America_Curacao", "America_Dominica", "America_Grenada", "America_Guadeloupe", "America_Kralendijk", "America_Lower_Princes", "America_Marigot", "America_Montserrat", "America_Port_of_Spain", "America_St_Barthelemy", "America_St_Kitts", "America_St_Lucia", "America_St_Thomas", "America_St_Vincent", "America_Tortola", "America_Virgin", "Canada_Saskatchewan", "America_Porto_Acre", "Brazil_Acre", "Chile_Continental", "Brazil_East", "Canada_Newfoundland", "America_Ensenada", "America_Santa_Isabel", "Mexico_BajaNorte", "America_Montreal", "America_Nassau", "America_Nipigon", "America_Thunder_Bay", "Canada_Eastern", "Canada_Pacific", "Canada_Yukon", "America_Rainy_River", "Canada_Central", "Asia_Ashkhabad", "Asia_Phnom_Penh", "Asia_Vientiane", "Indian_Christmas", "Asia_Dacca", "Asia_Muscat", "Indian_Mahe", "Indian_Reunion", "Asia_Saigon", "Hongkong", "Asia_Tel_Aviv", "Israel", "Asia_Katmandu", "Asia_Calcutta", "Asia_Brunei", "Asia_Macao", "Asia_Ujung_Pandang", "Europe_Nicosia", "Asia_Bahrain", "Antarctica_Syowa", "Asia_Aden", "Asia_Kuwait", "ROK", "Asia_Chongqing", "Asia_Chungking", "Asia_Harbin", "PRC", "Asia_Kuala_Lumpur", "Singapore", "ROC", "Iran", "Asia_Thimbu", "Japan", "Asia_Ulan_Bator", "Asia_Kashgar", "Asia_Rangoon", "Indian_Cocos", "Atlantic_Faeroe", "Australia_South", "Australia_Queensland", "Australia_Yancowinna", "Australia_North", "Australia_Currie", "Australia_Tasmania", "Australia_LHI", "Australia_Victoria", "Australia_West", "Australia_ACT", "Australia_Canberra", "Australia_NSW", "GMT", "GMTx0", "GMT_0", "GMT0", "Greenwich", "UCT", "UTC", "Universal", "Zulu", "Europe_Ljubljana", "Europe_Podgorica", "Europe_Sarajevo", "Europe_Skopje", "Europe_Zagreb", "Arctic_Longyearbyen", "Atlantic_Jan_Mayen", "Europe_Copenhagen", "Europe_Oslo", "Europe_Stockholm", "Europe_Amsterdam", "Europe_Luxembourg", "Europe_Tiraspol", "Eire", "Europe_Mariehamn", "Asia_Istanbul", "Turkey", "Europe_Kiev", "Europe_Uzhgorod", "Europe_Zaporozhye", "Portugal", "Europe_Belfast", "Europe_Guernsey", "Europe_Isle_of_Man", "Europe_Jersey", "GB", "GB_Eire", "W_SU", "Europe_Monaco", "Europe_Bratislava", "Europe_San_Marino", "Europe_Vatican", "Poland", "Europe_Busingen", "Europe_Vaduz", "Indian_Kerguelen", "Antarctica_McMurdo", "Antarctica_South_Pole", "NZ", "NZ_CHAT", "Chile_EasterIsland", "Pacific_Pohnpei", "Pacific_Ponape", "Pacific_Saipan", "Pacific_Johnston", "US_Hawaii", "Pacific_Enderbury", "Kwajalein", "Pacific_Midway", "Pacific_Samoa", "US_Samoa", "Antarctica_DumontDUrville", "Pacific_Chuuk", "Pacific_Truk", "Pacific_Yap", "Pacific_Funafuti", "Pacific_Majuro", "Pacific_Wake", "Pacific_Wallis", "Africa_Abidjan", "Africa_Algiers", "Africa_Bissau", "Africa_Cairo", "Africa_Casablanca", "Africa_Ceuta", "Africa_El_Aaiun", "Africa_Johannesburg", "Africa_Juba", "Africa_Khartoum", "Africa_Lagos", "Africa_Maputo", "Africa_Monrovia", "Africa_Nairobi", "Africa_Ndjamena", "Africa_Sao_Tome", "Africa_Tripoli", "Africa_Tunis", "Africa_Windhoek", "America_Adak", "America_Anchorage", "America_Araguaina", "America_Argentina_Buenos_Aires", "America_Argentina_Catamarca", "America_Argentina_Cordoba", "America_Argentina_Jujuy", "America_Argentina_La_Rioja", "America_Argentina_Mendoza", "America_Argentina_Rio_Gallegos", "America_Argentina_Salta", "America_Argentina_San_Juan", "America_Argentina_San_Luis", "America_Argentina_Tucuman", "America_Argentina_Ushuaia", "America_Asuncion", "America_Bahia", "America_Bahia_Banderas", "America_Barbados", "America_Belem", "America_Belize", "America_Boa_Vista", "America_Bogota", "America_Boise", "America_Cambridge_Bay", "America_Campo_Grande", "America_Cancun", "America_Caracas", "America_Cayenne", "America_Chicago", "America_Chihuahua", "America_Ciudad_Juarez", "America_Costa_Rica", "America_Cuiaba", "America_Danmarkshavn", "America_Dawson", "America_Dawson_Creek", "America_Denver", "America_Detroit", "America_Edmonton", "America_Eirunepe", "America_El_Salvador", "America_Fort_Nelson", "America_Fortaleza", "America_Glace_Bay", "America_Goose_Bay", "America_Grand_Turk", "America_Guatemala", "America_Guayaquil", "America_Guyana", "America_Halifax", "America_Havana", "America_Hermosillo", "America_Indiana_Indianapolis", "America_Indiana_Knox", "America_Indiana_Marengo", "America_Indiana_Petersburg", "America_Indiana_Tell_City", "America_Indiana_Vevay", "America_Indiana_Vincennes", "America_Indiana_Winamac", "America_Inuvik", "America_Iqaluit", "America_Jamaica", "America_Juneau", "America_Kentucky_Louisville", "America_Kentucky_Monticello", "America_La_Paz", "America_Lima", "America_Los_Angeles", "America_Maceio", "America_Managua", "America_Manaus", "America_Martinique", "America_Matamoros", "America_Mazatlan", "America_Menominee", "America_Merida", "America_Metlakatla", "America_Mexico_City", "America_Miquelon", "America_Moncton", "America_Monterrey", "America_Montevideo", "America_New_York", "America_Nome", "America_Noronha", "America_North_Dakota_Beulah", "America_North_Dakota_Center", "America_North_Dakota_New_Salem", "America_Nuuk", "America_Ojinaga", "America_Panama", "America_Paramaribo", "America_Phoenix", "America_Port_au_Prince", "America_Porto_Velho", "America_Puerto_Rico", "America_Punta_Arenas", "America_Rankin_Inlet", "America_Recife", "America_Regina", "America_Resolute", "America_Rio_Branco", "America_Santarem", "America_Santiago", "America_Santo_Domingo", "America_Sao_Paulo", "America_Scoresbysund", "America_Sitka", "America_St_Johns", "America_Swift_Current", "America_Tegucigalpa", "America_Thule", "America_Tijuana", "America_Toronto", "America_Vancouver", "America_Whitehorse", "America_Winnipeg", "America_Yakutat", "Antarctica_Casey", "Antarctica_Davis", "Antarctica_Macquarie", "Antarctica_Mawson", "Antarctica_Palmer", "Antarctica_Rothera", "Antarctica_Troll", "Antarctica_Vostok", "Asia_Almaty", "Asia_Amman", "Asia_Anadyr", "Asia_Aqtau", "Asia_Aqtobe", "Asia_Ashgabat", "Asia_Atyrau", "Asia_Baghdad", "Asia_Baku", "Asia_Bangkok", "Asia_Barnaul", "Asia_Beirut", "Asia_Bishkek", "Asia_Chita", "Asia_Choibalsan", "Asia_Colombo", "Asia_Damascus", "Asia_Dhaka", "Asia_Dili", "Asia_Dubai", "Asia_Dushanbe", "Asia_Famagusta", "Asia_Gaza", "Asia_Hebron", "Asia_Ho_Chi_Minh", "Asia_Hong_Kong", "Asia_Hovd", "Asia_Irkutsk", "Asia_Jakarta", "Asia_Jayapura", "Asia_Jerusalem", "Asia_Kabul", "Asia_Kamchatka", "Asia_Karachi", "Asia_Kathmandu", "Asia_Khandyga", "Asia_Kolkata", "Asia_Krasnoyarsk", "Asia_Kuching", "Asia_Macau", "Asia_Magadan", "Asia_Makassar", "Asia_Manila", "Asia_Nicosia", "Asia_Novokuznetsk", "Asia_Novosibirsk", "Asia_Omsk", "Asia_Oral", "Asia_Pontianak", "Asia_Pyongyang", "Asia_Qatar", "Asia_Qostanay", "Asia_Qyzylorda", "Asia_Riyadh", "Asia_Sakhalin", "Asia_Samarkand", "Asia_Seoul", "Asia_Shanghai", "Asia_Singapore", "Asia_Srednekolymsk", "Asia_Taipei", "Asia_Tashkent", "Asia_Tbilisi", "Asia_Tehran", "Asia_Thimphu", "Asia_Tokyo", "Asia_Tomsk", "Asia_Ulaanbaatar", "Asia_Urumqi", "Asia_Ust_Nera", "Asia_Vladivostok", "Asia_Yakutsk", "Asia_Yangon", "Asia_Yekaterinburg", "Asia_Yerevan", "Atlantic_Azores", "Atlantic_Bermuda", "Atlantic_Canary", "Atlantic_Cape_Verde", "Atlantic_Faroe", "Atlantic_Madeira", "Atlantic_South_Georgia", "Atlantic_Stanley", "Australia_Adelaide", "Australia_Brisbane", "Australia_Broken_Hill", "Australia_Darwin", "Australia_Eucla", "Australia_Hobart", "Australia_Lindeman", "Australia_Lord_Howe", "Australia_Melbourne", "Australia_Perth", "Australia_Sydney", "CET", "CST6CDT", "EET", "EST", "EST5EDT", "Europe_Andorra", "Europe_Astrakhan", "Europe_Athens", "Europe_Belgrade", "Europe_Berlin", "Europe_Brussels", "Europe_Bucharest", "Europe_Budapest", "Europe_Chisinau", "Europe_Dublin", "Europe_Gibraltar", "Europe_Helsinki", "Europe_Istanbul", "Europe_Kaliningrad", "Europe_Kirov", "Europe_Kyiv", "Europe_Lisbon", "Europe_London", "Europe_Madrid", "Europe_Malta", "Europe_Minsk", "Europe_Moscow", "Europe_Paris", "Europe_Prague", "Europe_Riga", "Europe_Rome", "Europe_Samara", "Europe_Saratov", "Europe_Simferopol", "Europe_Sofia", "Europe_Tallinn", "Europe_Tirane", "Europe_Ulyanovsk", "Europe_Vienna", "Europe_Vilnius", "Europe_Volgograd", "Europe_Warsaw", "Europe_Zurich", "Factory", "HST", "Indian_Chagos", "Indian_Maldives", "Indian_Mauritius", "MET", "MST", "MST7MDT", "PST8PDT", "Pacific_Apia", "Pacific_Auckland", "Pacific_Bougainville", "Pacific_Chatham", "Pacific_Easter", "Pacific_Efate", "Pacific_Fakaofo", "Pacific_Fiji", "Pacific_Galapagos", "Pacific_Gambier", "Pacific_Guadalcanal", "Pacific_Guam", "Pacific_Honolulu", "Pacific_Kanton", "Pacific_Kiritimati", "Pacific_Kosrae", "Pacific_Kwajalein", "Pacific_Marquesas", "Pacific_Nauru", "Pacific_Niue", "Pacific_Norfolk", "Pacific_Noumea", "Pacific_Pago_Pago", "Pacific_Palau", "Pacific_Pitcairn", "Pacific_Port_Moresby", "Pacific_Rarotonga", "Pacific_Tahiti", "Pacific_Tarawa", "Pacific_Tongatapu", "WET");
+    }
+    this.mapped[44] = greycat.types_by_name.get(runtime.StoreStat.name);
+    this.mapped[45] = greycat.types_by_name.get(runtime.RuntimeInfo.name);
+    this.mapped[46] = greycat.types_by_name.get(runtime.Runtime.name);
+    this.mapped[47] = greycat.types_by_name.get(runtime.System.name);
+    this.mapped[48] = greycat.types_by_name.get(runtime.TaskStatus.name);
+    if (null != this.mapped[48]) {
+      this.mapped[48].resolveGeneratedOffsets("empty", "waiting", "running", "await", "cancelled", "error", "ended", "ended_with_errors");
+    }
+    this.mapped[49] = greycat.types_by_name.get(runtime.TaskBase.name);
+    this.mapped[50] = greycat.types_by_name.get(runtime.TaskMode.name);
+    if (null != this.mapped[50]) {
+      this.mapped[50].resolveGeneratedOffsets("commit", "volatile", "exclusive");
+    }
+    this.mapped[51] = greycat.types_by_name.get(runtime.TaskRequest.name);
+    this.mapped[52] = greycat.types_by_name.get(runtime.TaskResult.name);
+    this.mapped[53] = greycat.types_by_name.get(runtime.Task.name);
+    this.mapped[54] = greycat.types_by_name.get(runtime.TaskInfo.name);
+    this.mapped[55] = greycat.types_by_name.get(runtime.PeriodicTask.name);
+    this.mapped[56] = greycat.types_by_name.get(runtime.SecurityFields.name);
+    this.mapped[57] = greycat.types_by_name.get(runtime.SecurityPolicy.name);
+    this.mapped[58] = greycat.types_by_name.get(runtime.SecurityEntity.name);
+    this.mapped[59] = greycat.types_by_name.get(runtime.UserGroup.name);
+    this.mapped[60] = greycat.types_by_name.get(runtime.UserGroupPolicyType.name);
+    if (null != this.mapped[60]) {
+      this.mapped[60].resolveGeneratedOffsets("read", "write", "execute");
+    }
+    this.mapped[61] = greycat.types_by_name.get(runtime.UserGroupPolicy.name);
+    this.mapped[62] = greycat.types_by_name.get(runtime.OpenIDConnect.name);
+    this.mapped[63] = greycat.types_by_name.get(runtime.User.name);
+    this.mapped[64] = greycat.types_by_name.get(runtime.UserRole.name);
+    this.mapped[65] = greycat.types_by_name.get(runtime.UserCredential.name);
+    this.mapped[66] = greycat.types_by_name.get(runtime.LicenseType.name);
+    if (null != this.mapped[66]) {
+      this.mapped[66].resolveGeneratedOffsets("community", "enterprise", "testing");
+    }
+    this.mapped[67] = greycat.types_by_name.get(runtime.License.name);
+    this.mapped[68] = greycat.types_by_name.get(runtime.DebugVariable.name);
+    this.mapped[69] = greycat.types_by_name.get(runtime.DebugFrame.name);
+    this.mapped[70] = greycat.types_by_name.get(runtime.DebugInfo.name);
+    this.mapped[71] = greycat.types_by_name.get(runtime.DebugBreakpoint.name);
+    this.mapped[72] = greycat.types_by_name.get(runtime.Debug.name);
+    this.mapped[73] = greycat.types_by_name.get(io.Writer.name);
+    this.mapped[74] = greycat.types_by_name.get(io.Reader.name);
+    this.mapped[75] = greycat.types_by_name.get(io.GcbWriter.name);
+    this.mapped[76] = greycat.types_by_name.get(io.GcbReader.name);
+    this.mapped[77] = greycat.types_by_name.get(io.TextWriter.name);
+    this.mapped[78] = greycat.types_by_name.get(io.TextReader.name);
+    this.mapped[79] = greycat.types_by_name.get(io.JsonWriter.name);
+    this.mapped[80] = greycat.types_by_name.get(io.JsonReader.name);
+    this.mapped[81] = greycat.types_by_name.get(io.CsvWriter.name);
+    this.mapped[82] = greycat.types_by_name.get(io.CsvReader.name);
+    this.mapped[83] = greycat.types_by_name.get(io.CsvValidateResult.name);
+    this.mapped[84] = greycat.types_by_name.get(io.TextEncoder.name);
+    if (null != this.mapped[84]) {
+      this.mapped[84].resolveGeneratedOffsets("plain", "base64", "base64url", "hexadecimal");
+    }
+    this.mapped[85] = greycat.types_by_name.get(io.CsvColumn.name);
+    this.mapped[86] = greycat.types_by_name.get(io.CsvColumnString.name);
+    this.mapped[87] = greycat.types_by_name.get(io.CsvColumnInteger.name);
+    this.mapped[88] = greycat.types_by_name.get(io.CsvColumnFloat.name);
+    this.mapped[89] = greycat.types_by_name.get(io.CsvColumnBoolean.name);
+    this.mapped[90] = greycat.types_by_name.get(io.CsvColumnTime.name);
+    this.mapped[91] = greycat.types_by_name.get(io.CsvColumnDuration.name);
+    this.mapped[92] = greycat.types_by_name.get(io.CsvColumnDate.name);
+    this.mapped[93] = greycat.types_by_name.get(io.CsvColumnIgnored.name);
+    this.mapped[94] = greycat.types_by_name.get(io.CsvFormat.name);
+    this.mapped[95] = greycat.types_by_name.get(io.CsvColumnStatistics.name);
+    this.mapped[96] = greycat.types_by_name.get(io.CsvStatistics.name);
+    this.mapped[97] = greycat.types_by_name.get(io.CsvAnalysisConfig.name);
+    this.mapped[98] = greycat.types_by_name.get(io.CsvAnalysis.name);
+    this.mapped[99] = greycat.types_by_name.get(io.File.name);
+    this.mapped[100] = greycat.types_by_name.get(io.FileWalker.name);
+    this.mapped[101] = greycat.types_by_name.get(io.Url.name);
+    this.mapped[102] = greycat.types_by_name.get(io.HttpHeader.name);
+    this.mapped[103] = greycat.types_by_name.get(io.Http.name);
+    this.mapped[104] = greycat.types_by_name.get(io.Email.name);
+    this.mapped[105] = greycat.types_by_name.get(io.SmtpMode.name);
+    if (null != this.mapped[105]) {
+      this.mapped[105].resolveGeneratedOffsets("plain", "ssl_tls", "starttls");
+    }
+    this.mapped[106] = greycat.types_by_name.get(io.SmtpAuth.name);
+    if (null != this.mapped[106]) {
+      this.mapped[106].resolveGeneratedOffsets("none", "plain", "login");
+    }
+    this.mapped[107] = greycat.types_by_name.get(io.Smtp.name);
+    this.mapped[108] = greycat.types_by_name.get(util.Queue.name);
+    this.mapped[109] = greycat.types_by_name.get(util.Stack.name);
+    this.mapped[110] = greycat.types_by_name.get(util.SlidingWindow.name);
+    this.mapped[111] = greycat.types_by_name.get(util.TimeWindow.name);
+    this.mapped[112] = greycat.types_by_name.get(util.Gaussian.name);
+    this.mapped[113] = greycat.types_by_name.get(util.Random.name);
+    this.mapped[114] = greycat.types_by_name.get(util.Assert.name);
+    this.mapped[115] = greycat.types_by_name.get(util.ProgressTracker.name);
+    this.mapped[116] = greycat.types_by_name.get(util.Quantizer.name);
+    this.mapped[117] = greycat.types_by_name.get(util.LinearQuantizer.name);
+    this.mapped[118] = greycat.types_by_name.get(util.LogQuantizer.name);
+    this.mapped[119] = greycat.types_by_name.get(util.CustomQuantizer.name);
+    this.mapped[120] = greycat.types_by_name.get(util.MultiQuantizer.name);
+    this.mapped[121] = greycat.types_by_name.get(util.GaussianProfile.name);
+    this.mapped[122] = greycat.types_by_name.get(util.Histogram.name);
+    this.mapped[123] = greycat.types_by_name.get(util.HistogramStats.name);
+    this.mapped[124] = greycat.types_by_name.get(util.Crypto.name);
+    this.mapped[125] = greycat.types_by_name.get(util.Plot.name);
+    this.mapped[126] = greycat.types_by_name.get(util.Root.name);
   }
 }
 

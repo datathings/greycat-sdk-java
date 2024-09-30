@@ -48,6 +48,7 @@ public class Generator {
         final boolean isEnum;
         final GreyCat.Type.Attribute[] attributes;
         final List<Function> methods = new ArrayList<>();
+        final List<java.lang.Object> static_values = new ArrayList<>();
 
         private Type(int offset, String lib, String module, String name, int genericAbiType, int g1AbiTypeDesc, int g2AbiTypeDesc, int mappedAbiTypeOffset, int maskedAbiTypeOffset, boolean isNative, boolean isEnum, GreyCat.Type.Attribute[] attributes) {
             this.offset = offset;
@@ -344,6 +345,7 @@ public class Generator {
         StringBuilder builder = new StringBuilder();
         //noinspection ResultOfMethodCallIgnored
         new File(OUT).mkdirs();
+        int typesInLib = 0;
         for (Library lib : LIBRARIES.values()) {
             builder.setLength(0);
             builder.append("// AUTO-GENERATED FILE PLEASE DO NOT MODIFY MANUALLY\n");
@@ -358,8 +360,21 @@ public class Generator {
             for (Module module : lib.modules.values()) {
                 builder.append(T1).append("public static final class ").append(protect(module.name)).append(" {\n");
                 for (Type type : module.types.values()) {
-                    if (0 == type.genericAbiType && !isPrimitive(type.offset)) {
-                        builder.append(T2).append("public static final class ").append(protect(type.name));
+                    if (0 != type.genericAbiType || isPrimitive(type.offset)) {
+                        continue;
+                    }
+                    ++typesInLib;
+                    builder.append(T2).append("public static final class ").append(protect(type.name));
+                    if (0 != type.g1AbiTypeDesc) {
+                        builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
+                        if (0 != type.g2AbiTypeDesc) {
+                            builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
+                        }
+                        builder.append('>');
+                    }
+                    builder.append(" extends ai.greycat.");
+                    if (type.isNative) {
+                        builder.append(protect(lib.name)).append("_n.").append(protect(module.name)).append('.').append(protect(type.name));
                         if (0 != type.g1AbiTypeDesc) {
                             builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
                             if (0 != type.g2AbiTypeDesc) {
@@ -367,106 +382,129 @@ public class Generator {
                             }
                             builder.append('>');
                         }
-                        builder.append(" extends ai.greycat.");
-                        if (type.isNative) {
-                            builder.append(protect(lib.name)).append("_n.").append(protect(module.name)).append('.').append(protect(type.name));
-                            if (0 != type.g1AbiTypeDesc) {
-                                builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
-                                if (0 != type.g2AbiTypeDesc) {
-                                    builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
-                                }
-                                builder.append('>');
-                            }
-                        } else if (type.isEnum) {
-                            builder.append("GreyCat.Enum");
-                        } else {
-                            builder.append("GreyCat.Object");
+                    } else if (type.isEnum) {
+                        builder.append("GreyCat.Enum");
+                    } else {
+                        builder.append("GreyCat.Object");
+                    }
+                    builder.append(" {\n");
+                    builder.append(T3).append("public static final java.lang.String name = \"").append(module.name).append("::").append(type.name).append("\";\n");
+                    builder.append(T3).append("private ").append(protect(type.name)).append("(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {\n");
+                    builder.append(T4).append("super(type");
+                    if (!type.isNative) {
+                        builder.append(", attributes");
+                    }
+                    builder.append(");\n");
+                    builder.append(T3).append("}\n");
+                    if (type.isEnum) {
+                        for (GreyCat.Type.Attribute attribute : type.attributes) {
+                            builder.append(T3).append("public static ai.greycat.").append(protect(lib.name)).append('.').append(protect(module.name)).append('.').append(protect(type.name)).append(' ').append(protect(attribute.name)).append("(ai.greycat.GreyCat greycat) {\n");
+                            builder.append(T4).append("final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.").append(protect(lib.name)).append(".name).mapped[").append(type.offset).append("];\n");
+                            builder.append(T4).append("return (ai.greycat.").append(protect(lib.name)).append('.').append(protect(module.name)).append('.').append(protect(type.name)).append(") t.enum_values[t.generated_offsets[").append(attribute.mappedAttOffset).append("]];\n");
+                            builder.append(T3).append("}\n");
                         }
-                        builder.append(" {\n");
-                        builder.append(T3).append("public static final java.lang.String name = \"").append(module.name).append("::").append(type.name).append("\";\n");
-                        builder.append(T3).append("private ").append(protect(type.name)).append("(ai.greycat.GreyCat.Type type, java.lang.Object... attributes) {\n");
-                        builder.append(T4).append("super(type");
-                        if (!type.isNative) {
-                            builder.append(", attributes");
+                    } else if (!type.isNative) {
+                        for (GreyCat.Type.Attribute attribute : type.attributes) {
+                            String fqn = TYPES[attribute.abiType].fqn();
+                            // getter
+                            builder.append(T3).append("public ").append(fqn).append(' ').append(protect(attribute.name)).append("() {\n");
+                            builder.append(T4).append("return (").append(fqn).append(") super.get(super.type.generated_offsets[").append(attribute.mappedAttOffset).append("]);\n");
+                            builder.append(T3).append("}\n");
+                            // setter
+                            builder.append(T3).append("public void set_").append(protect(attribute.name)).append('(').append(fqn).append(" v) {\n");
+                            builder.append(T4).append("super.set(super.type.generated_offsets[").append(attribute.mappedAttOffset).append("], v);\n");
+                            builder.append(T3).append("}\n");
+                        }
+                    }
+                    for (Function method : type.methods) {
+                        builder.append(T3).append("public static ").
+                                append(0 == method.returnTypeOffset ? "void" : TYPES[method.returnTypeOffset].fqn()).
+                                append(' ').append(protect(method.name)).append("(ai.greycat.GreyCat greycat");
+                        for (Function.Param param : method.params) {
+                            builder.append(", ").append(param.type.fqn()).append(' ').append(protect(param.name));
+                        }
+                        builder.append(") throws java.io.IOException {\n");
+                        builder.append(T4);
+                        if (0 != method.returnTypeOffset) {
+                            builder.append("return (").append(TYPES[method.returnTypeOffset].fqn()).append(") ");
+                        }
+                        builder.append("greycat.call(\"").append(type.module).append("::").append(type.name).append("::").append(method.name).append('"');
+                        for (Function.Param param : method.params) {
+                            builder.append(", ").append(protect(param.name));
                         }
                         builder.append(");\n");
                         builder.append(T3).append("}\n");
-                        if (type.isEnum) {
-                            for (GreyCat.Type.Attribute attribute : type.attributes) {
-                                builder.append(T3).append("public static ai.greycat.").append(protect(lib.name)).append('.').append(protect(module.name)).append('.').append(protect(type.name)).append(' ').append(protect(attribute.name)).append("(ai.greycat.GreyCat greycat) {\n");
-                                builder.append(T4).append("final ai.greycat.GreyCat.Type t = greycat.libs_by_name.get(ai.greycat.").append(protect(lib.name)).append(".name).mapped[").append(type.offset).append("];\n");
-                                builder.append(T4).append("return (ai.greycat.").append(protect(lib.name)).append('.').append(protect(module.name)).append('.').append(protect(type.name)).append(") t.enum_values[t.generated_offsets[").append(attribute.mappedAttOffset).append("]];\n");
-                                builder.append(T3).append("}\n");
-                            }
-                        } else if (!type.isNative) {
-                            for (GreyCat.Type.Attribute attribute : type.attributes) {
-                                String fqn = TYPES[attribute.abiType].fqn();
-                                // getter
-                                builder.append(T3).append("public ").append(fqn).append(' ').append(protect(attribute.name)).append("() {\n");
-                                builder.append(T4).append("return (").append(fqn).append(") super.get(super.type.generated_offsets[").append(attribute.mappedAttOffset).append("]);\n");
-                                builder.append(T3).append("}\n");
-                                // setter
-                                builder.append(T3).append("public void set_").append(protect(attribute.name)).append('(').append(fqn).append(" v) {\n");
-                                builder.append(T4).append("super.set(super.type.generated_offsets[").append(attribute.mappedAttOffset).append("], v);\n");
-                                builder.append(T3).append("}\n");
-                            }
-                        }
-                        for (Function method : type.methods) {
-                            builder.append(T3).append("public static ").
-                                    append(0 == method.returnTypeOffset ? "void" : TYPES[method.returnTypeOffset].fqn()).
-                                    append(' ').append(protect(method.name)).append("(ai.greycat.GreyCat greycat");
-                            for (Function.Param param : method.params) {
-                                builder.append(", ").append(param.type.fqn()).append(' ').append(protect(param.name));
-                            }
-                            builder.append(") throws java.io.IOException {\n");
-                            builder.append(T4);
-                            if (0 != method.returnTypeOffset) {
-                                builder.append("return (").append(TYPES[method.returnTypeOffset].fqn()).append(") ");
-                            }
-                            builder.append("greycat.call(\"").append(type.module).append("::").append(type.name).append("::").append(method.name).append('"');
-                            for (Function.Param param : method.params) {
-                                builder.append(", ").append(protect(param.name));
-                            }
-                            builder.append(");\n");
-                            builder.append(T3).append("}\n");
-                        }
-                        builder.append(T3).append("public static ");
-                        if (0 != type.g1AbiTypeDesc) {
-                            builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
-                            if (0 != type.g2AbiTypeDesc) {
-                                builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
-                            }
-                            builder.append("> ");
-                        }
-                        builder.append(protect(type.name));
-                        if (0 != type.g1AbiTypeDesc) {
-                            builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
-                            if (0 != type.g2AbiTypeDesc) {
-                                builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
-                            }
-                            builder.append('>');
-                        }
-                        builder.append(" create(ai.greycat.GreyCat greycat) {\n");
-                        builder.append(T4).append("return new ").append(protect(type.name));
-                        if (0 != type.g1AbiTypeDesc) {
-                            builder.append("<>");
-                        }
-                        builder.append("(greycat.libs_by_name.get(ai.greycat.").append(protect(lib.name)).append(".name).mapped[").append(type.offset).append("]);\n");
-                        builder.append(T3).append("}\n");
-                        builder.append(T2).append("}\n");
                     }
+                    builder.append(T3).append("public static ");
+                    if (0 != type.g1AbiTypeDesc) {
+                        builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
+                        if (0 != type.g2AbiTypeDesc) {
+                            builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
+                        }
+                        builder.append("> ");
+                    }
+                    builder.append(protect(type.name));
+                    if (0 != type.g1AbiTypeDesc) {
+                        builder.append('<').append(protect(SYMBOLS[type.g1AbiTypeDesc]));
+                        if (0 != type.g2AbiTypeDesc) {
+                            builder.append(", ").append(protect(SYMBOLS[type.g2AbiTypeDesc]));
+                        }
+                        builder.append('>');
+                    }
+                    builder.append(" create(ai.greycat.GreyCat greycat) {\n");
+                    builder.append(T4).append("return new ").append(protect(type.name));
+                    if (0 != type.g1AbiTypeDesc) {
+                        builder.append("<>");
+                    }
+                    builder.append("(greycat.libs_by_name.get(ai.greycat.").append(protect(lib.name)).append(".name).mapped[").append(type.offset).append("]);\n");
+                    builder.append(T3).append("}\n");
+                    builder.append(T2).append("}\n");
+
                 }
                 builder.append(T1).append("}\n");
             }
             // Library::configure
             builder.append(T1).append("@Override\n");
             builder.append(T1).append("public void configure(java.util.Map<java.lang.String, ai.greycat.GreyCat.Loader> loaders, java.util.Map<java.lang.String, ai.greycat.GreyCat.Factory> factories) {\n");
-            // TODO
+            for (Module module : lib.modules.values()) {
+                for (Type type : module.types.values()) {
+                    if (0 != type.genericAbiType || isPrimitive(type.offset)) {
+                        continue;
+                    }
+                    builder.append(T2).append("factories.put(").append(protect(module.name)).append('.').append(protect(type.name)).append(".name, ").append(protect(module.name)).append('.').append(protect(type.name)).append("::new);\n");
+                    if (type.isNative) {
+                        builder.append(T2).append("loaders.put(").append(protect(module.name)).append('.').append(protect(type.name)).append(".name, ai.greycat.").append(lib.name).append("_n.").append(protect(module.name)).append('.').append(protect(type.name)).append("::load);\n");
+                    }
+                }
+            }
             builder.append(T1).append("}\n");
             // Library::init
             builder.append(T1).append("@Override\n");
             builder.append(T1).append("public void init(ai.greycat.GreyCat greycat) {\n");
-            // TODO
+            builder.append(T2).append("this.mapped = new ai.greycat.GreyCat.Type[").append(typesInLib).append("];\n");
+            typesInLib = 0; // TODO: check
+            for (Module module : lib.modules.values()) {
+                for (Type type : module.types.values()) {
+                    if (0 != type.genericAbiType || isPrimitive(type.offset)) {
+                        continue;
+                    }
+                    builder.append(T2).append("this.mapped[").append(typesInLib).append("] = greycat.types_by_name.get(").append(protect(module.name)).append('.').append(protect(type.name)).append(".name);\n");
+                    if (type.isEnum) {
+                        builder.append(T2).append("if (null != this.mapped[").append(typesInLib).append("]) {\n");
+                        builder.append(T3).append("this.mapped[").append(typesInLib).append("].resolveGeneratedOffsets(");
+                        boolean first = true;
+                        for (GreyCat.Type.Attribute attribute : type.attributes) {
+                            if (!first || (first = false)) {
+                                builder.append(", ");
+                            }
+                            builder.append('"').append(attribute.name).append('"');
+                        }
+                        builder.append(");\n");
+                        builder.append(T2).append("}\n");
+                    }
+                    ++typesInLib;
+                }
+            }
             builder.append(T1).append("}\n");
             // EOF
             builder.append("}\n");
