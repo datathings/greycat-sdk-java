@@ -100,7 +100,7 @@ public class Generator {
             if (genericAbiType == 0) {
                 return "ai.greycat." + protect(lib) + '.' + protect(module) + '.' + protect(name);
             }
-            return "ai.greycat." + protect(lib) + '.' + protect(module) + '.' + protect(name.replaceAll("<.*>$", "")) + '<' + generics() + '>';
+            return "ai.greycat." + protect(lib) + '.' + protect(module) + '.' + protect(TYPES[genericAbiType].name) + '<' + generics() + '>';
         }
     }
 

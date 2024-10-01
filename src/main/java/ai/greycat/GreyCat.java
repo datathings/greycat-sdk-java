@@ -663,6 +663,9 @@ public final class GreyCat {
 
         public final int offset;
         public final String name;
+        public final int genericAbiType;
+        public final int g1AbiTypeDesc;
+        public final int g2AbiTypeDesc;
         public final int mapped_type_off;
         @SuppressWarnings({"unused", "FieldCanBeLocal"})
         public final int masked_type_off;
@@ -752,9 +755,24 @@ public final class GreyCat {
             }
         };
 
-        public Type(int offset, String name, int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
+        static final Factory monomorphic_factory = (type, parameters) -> {
+            Type genericType = type.greycat.types[type.genericAbiType];
+            System.out.println(type.name + ", " + genericType.name);
+            return genericType.factory.build(genericType, parameters);
+        };
+
+        static final Loader monomorphic_loader = (type, stream) -> {
+            Type genericType = type.greycat.types[type.genericAbiType];
+            System.out.println(type.name + ", " + genericType.name);
+            return genericType.loader.load(genericType, stream);
+        };
+
+        public Type(int offset, String name, int genericAbiType, int g1AbiTypeDesc, int g2AbiTypeDesc, int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
             this.offset = offset;
             this.name = name;
+            this.genericAbiType = genericAbiType;
+            this.g1AbiTypeDesc = g1AbiTypeDesc;
+            this.g2AbiTypeDesc = g2AbiTypeDesc;
             this.mapped_type_off = mapped_type_off;
             this.masked_type_off = masked_type_off;
             this.nullable_nb_bytes = nullable_nb_bytes;
@@ -767,7 +785,11 @@ public final class GreyCat {
                 attribute_off_by_name.put(typeAttributes[i].name, i);
             }
             this.greycat = greycat;
-            this.factory = factory;
+            if (0 == genericAbiType) {
+                this.factory = factory;
+            } else {
+                this.factory = monomorphic_factory;
+            }
             if (offset == mapped_type_off) {
                 /* this is a program type, so let init all needed fields */
                 /* for enum, create all values */
@@ -787,7 +809,9 @@ public final class GreyCat {
             } else {
                 this.enum_values = null;
             }
-            if (loader != null) {
+            if (0 != genericAbiType) {
+                this.loader = monomorphic_loader;
+            } else if (loader != null) {
                 this.loader = loader;
             } else if (this.is_native) {
                 this.loader = error_loader;
@@ -1202,7 +1226,7 @@ public final class GreyCat {
                 final boolean mapped = 0 != (attFlags & (1 << 1));
                 typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset, mappedAttOffset, sbiType, nullable, mapped);
             }
-            Type abiType = new Type(i, fqn, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isEnum, isNative, typeAttributes, factories.get(fqn), loaders.get(fqn), this);
+            Type abiType = new Type(i, fqn, genericAbiType, g1AbiTypeDesc, g2AbiTypeDesc, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isEnum, isNative, typeAttributes, factories.get(fqn), loaders.get(fqn), this);
             /* only the program related abi type (last version) is mapped to himself */
             if (abiType.mapped_type_off == i && fqn.length() != 0) {
                 types_by_name.put(abiType.name, abiType);

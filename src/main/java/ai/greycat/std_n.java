@@ -694,7 +694,10 @@ class std_n {
                 GreyCat.Type arrayType = null;
                 Object monotonicValue = null;
                 if (GreyCat.PrimitiveType.OBJECT == arrayPrimitiveType || GreyCat.PrimitiveType.STATIC_FIELD == arrayPrimitiveType) {
-                    arrayType = stream.greycat.types[stream.read_vu32()];
+                    int typeOffset = stream.read_vu32();
+                    if (-1 != typeOffset) {
+                        arrayType = stream.greycat.types[typeOffset];
+                    }
                 }
                 if (GreyCat.PrimitiveType.OBJECT != arrayPrimitiveType && GreyCat.PrimitiveType.UNDEFINED != arrayPrimitiveType) {
                     if (1 == stream.read_i8()) {
@@ -703,19 +706,25 @@ class std_n {
                 }
                 @SuppressWarnings("unchecked") final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
                 array.attributes = new java.lang.Object[size];
-                switch (arrayPrimitiveType) {
-                    case GreyCat.PrimitiveType.UNDEFINED:
+                if (GreyCat.PrimitiveType.UNDEFINED == arrayPrimitiveType) {
+                    for (int offset = 0; offset < size; ++offset) {
+                        array.set(offset, null != nullables && nullables[offset] ? null : stream.read());
+                        System.err.println(array.get(offset));
+                    }
+                } else if (GreyCat.PrimitiveType.OBJECT == arrayPrimitiveType || (GreyCat.PrimitiveType.STATIC_FIELD == arrayPrimitiveType && null == monotonicValue)) {
+                    if (null == arrayType) {
                         for (int offset = 0; offset < size; ++offset) {
-                            array.set(offset, null != nullables && nullables[offset] ? null : stream.read());
-                            System.err.println(array.get(offset));
+                            array.set(offset, null != nullables && nullables[offset] ? null : stream.read_object()); // TODO: check
                         }
-                        break;
-                    case GreyCat.PrimitiveType.OBJECT:
-                        // TODO
-                        break;
-                    default:
-                        // TODO
-                        break;
+                    } else {
+                        for (int offset = 0; offset < size; ++offset) {
+                            array.set(offset, null != nullables && nullables[offset] ? null : arrayType.loader.load(arrayType, stream));
+                        }
+                    }
+                } else if (null == monotonicValue) {
+                    for (int offset = 0; offset < size; ++offset) {
+                        array.set(offset, GreyCat.Stream.PRIMITIVE_LOADERS[arrayPrimitiveType].load(stream)); // TODO: check
+                    }
                 }
                 return array;
             }
