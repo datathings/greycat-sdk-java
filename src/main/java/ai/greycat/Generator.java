@@ -280,6 +280,7 @@ public class Generator {
             boolean isReturnNullable = 1 == (returnFlags & 1);
             LIBRARIES.get(libName).modules.get(moduleName).types.get(typeName).methods.add(new Function(functionName, params, isReturnNullable, returnTypeOffset));
         }
+        stream.close();
         generateTypes();
     }
 

@@ -54,7 +54,7 @@ public final class GreyCat {
 
         private final static byte ASCII_MAX = 127;
 
-        private static final PrimitiveLoader[] PRIMITIVE_LOADERS = new PrimitiveLoader[PrimitiveType.SIZE];
+        static final PrimitiveLoader[] PRIMITIVE_LOADERS = new PrimitiveLoader[PrimitiveType.SIZE];
 
         static {
             final PrimitiveLoader error_loader = (stream) -> {
@@ -175,9 +175,6 @@ public final class GreyCat {
 
         java.lang.Object read() throws java.io.IOException {
             byte primitiveOffset = read_i8();
-            if (61 == primitiveOffset) {
-                System.out.println("DEBUG");
-            }
             return PRIMITIVE_LOADERS[primitiveOffset].load(this);
         }
 
@@ -626,7 +623,7 @@ public final class GreyCat {
         }
 
         @FunctionalInterface
-        private interface PrimitiveLoader {
+        interface PrimitiveLoader {
             java.lang.Object load(Stream stream) throws java.io.IOException;
         }
     }
@@ -1177,6 +1174,9 @@ public final class GreyCat {
             }
             builder.append(typeName);
             final String fqn = builder.toString();
+            final int genericAbiType = abiStream.read_vu32();
+            final int g1AbiTypeDesc = abiStream.read_vu32();
+            final int g2AbiTypeDesc = abiStream.read_vu32();
             int attributesLen = abiStream.read_vu32();
             abiStream.read_vu32();/* unused field */
             abiStream.read_vu32();/* unused field */
@@ -1196,6 +1196,7 @@ public final class GreyCat {
                 final int mappedAnyOffset = abiStream.read_vu32();
                 final int mappedAttOffset = abiStream.read_vu32();
                 final byte sbiType = abiStream.read_i8();
+                final byte precision = abiStream.read_i8(); // TODO: manage
                 final byte attFlags = abiStream.read_i8();
                 final boolean nullable = 0 != (attFlags & 1);
                 final boolean mapped = 0 != (attFlags & (1 << 1));
@@ -1205,9 +1206,6 @@ public final class GreyCat {
             /* only the program related abi type (last version) is mapped to himself */
             if (abiType.mapped_type_off == i && fqn.length() != 0) {
                 types_by_name.put(abiType.name, abiType);
-            }
-            if (abiType.name.equals("core::Table")) {
-                System.out.println(i);
             }
             types[i] = abiType;
         }
