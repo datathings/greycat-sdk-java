@@ -98,9 +98,9 @@ public class Generator {
                 return "java.lang.Double";
             }
             if (genericAbiType == 0) {
-                return "ai.greycat." + lib + '.' + module + '.' + name;
+                return "ai.greycat." + protect(lib) + '.' + protect(module) + '.' + protect(name);
             }
-            return "ai.greycat." + lib + '.' + module + '.' + name.replaceAll("<.*>", "<" + generics() + ">");
+            return "ai.greycat." + protect(lib) + '.' + protect(module) + '.' + protect(name.replaceAll("<.*>$", "")) + '<' + generics() + '>';
         }
     }
 
@@ -482,7 +482,7 @@ public class Generator {
             builder.append(T1).append("@Override\n");
             builder.append(T1).append("public void init(ai.greycat.GreyCat greycat) {\n");
             builder.append(T2).append("this.mapped = new ai.greycat.GreyCat.Type[").append(typesInLib).append("];\n");
-            typesInLib = 0; // TODO: check
+            typesInLib = 0;
             for (Module module : lib.modules.values()) {
                 for (Type type : module.types.values()) {
                     if (0 != type.genericAbiType || isPrimitive(type.offset)) {
