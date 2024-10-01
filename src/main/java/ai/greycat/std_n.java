@@ -686,7 +686,6 @@ class std_n {
                         byte flags = stream.read_i8();
                         for (int flags_offset = 0; offset + flags_offset < size && flags_offset < 8; ++flags_offset) {
                             nullables[offset + flags_offset] = 1 == (flags >>> flags_offset & 1);
-                            System.err.println("" + (offset + flags_offset) + ": " + nullables[offset + flags_offset]);
                         }
                     }
                 }
@@ -714,7 +713,7 @@ class std_n {
                 } else if (GreyCat.PrimitiveType.OBJECT == arrayPrimitiveType || (GreyCat.PrimitiveType.STATIC_FIELD == arrayPrimitiveType && null == monotonicValue)) {
                     if (null == arrayType) {
                         for (int offset = 0; offset < size; ++offset) {
-                            array.set(offset, null != nullables && nullables[offset] ? null : stream.read_object()); // TODO: check
+                            array.set(offset, null != nullables && nullables[offset] ? null : stream.read_object()); // TODO: check for enums
                         }
                     } else {
                         for (int offset = 0; offset < size; ++offset) {
@@ -940,7 +939,6 @@ class std_n {
             public int cols;
 
             public int rows;
-            public core.Table.TableColumnMeta[] meta;
             public T[] data;
 
             protected Table(GreyCat.Type type) {
@@ -949,157 +947,86 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(cols);
-                stream.write_vu32(rows);
-                //noinspection ForLoopReplaceableByForEach
-                for (int i = 0; i < meta.length; ++i) {
-                    core.Table.TableColumnMeta colMeta = meta[i];
-                    stream.write_i8(colMeta.colType);
-                    stream.write_bool(colMeta.index);
-                    switch (colMeta.colType) {
-                        case GreyCat.PrimitiveType.OBJECT:
-                        case GreyCat.PrimitiveType.STATIC_FIELD:
-                            stream.write_vu32(colMeta.type);
-                            break;
-                        default:
-                            break;
-                    }
-                    if (colMeta.header.length() > 0) {
-                        stream.write_vu32(colMeta.header.length());
-                        byte[] colMetaHeaderBytes = colMeta.header.getBytes(StandardCharsets.UTF_8);
-                        stream.write_i8_array(colMetaHeaderBytes, 0, colMetaHeaderBytes.length);
-                    } else {
-                        stream.write_vu32(0);
-                    }
-                }
-                for (int c = 0; c < cols; ++c) {
-                    switch (meta[c].colType) {
-                        case GreyCat.PrimitiveType.NULL:
-                            break;
-                        case GreyCat.PrimitiveType.INT:
-                            for (int r = 0; r < rows; ++r) {
-                                Object i = data[c * rows + r];
-                                if (i instanceof Long) {
-                                    stream.write_vi64((long) i);
-                                } else if (i instanceof Integer) {
-                                    stream.write_vi64((int) i);
-                                } else if (i instanceof Short) {
-                                    stream.write_vi64((short) i);
-                                } else {
-                                    stream.write_vi64((byte) i);
-                                }
-                            }
-                            break;
-                        case GreyCat.PrimitiveType.FLOAT:
-                            for (int r = 0; r < rows; ++r) {
-                                Object f = data[c * rows + r];
-                                if (f instanceof Double) {
-                                    stream.write_f64((double) f);
-                                } else {
-                                    stream.write_f64((float) f);
-                                }
-                            }
-                            break;
-                        case GreyCat.PrimitiveType.TIME:
-                        case GreyCat.PrimitiveType.DURATION:
-                        case GreyCat.PrimitiveType.STATIC_FIELD:
-                            for (int r = 0; r < rows; ++r) {
-                                ((GreyCat.Object) data[c * rows + r]).save(stream);
-                            }
-                            break;
-                        default:
-                            for (int r = 0; r < rows; ++r) {
-                                stream.write(data[c * rows + r]);
-                            }
-                            break;
-                    }
-                }
+                // TODO
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int cols = stream.read_vu32();
                 final int rows = stream.read_vu32();
-                core.Table.TableColumnMeta[] meta = new core.Table.TableColumnMeta[cols];
-                for (int col = 0; col < cols; col++) {
-                    final byte metaColType = stream.read_i8();
-                    final boolean metaIndex = stream.read_bool();
-                    final int metaType;
-                    switch (metaColType) {
-                        case GreyCat.PrimitiveType.OBJECT:
-                        case GreyCat.PrimitiveType.STATIC_FIELD:
-                            metaType = stream.read_vu32();
-                            break;
-                        default:
-                            metaType = -1;
-                            break;
-                    }
-                    int metaHeaderLen = stream.read_vu32();
-                    java.lang.String metaHeader;
-                    if (metaHeaderLen > 0) {
-                        metaHeader = stream.read_string(metaHeaderLen);
-                    } else {
-                        metaHeader = "";
-                    }
-                    meta[col] = new core.Table.TableColumnMeta(metaColType, metaType, metaIndex, metaHeader);
-                }
+                final int cols = stream.read_vu32();
+                boolean[][] nullables = new boolean[cols][];
+                java.util.Arrays.fill(nullables, null);
                 final Object[] data = new Object[cols * rows];
-                for (int c = 0; c < cols; c++) {
-                    switch (meta[c].colType) {
-                        case GreyCat.PrimitiveType.NULL:
-                            break;
-                        case GreyCat.PrimitiveType.INT:
-                            for (int r = 0; r < rows; ++r) {
-                                data[c * rows + r] = stream.read_vi64();
+                java.util.Arrays.fill(data, null);
+                for (int col = 0; col < cols; ++col) {
+                    if (1 == stream.read_i8()) {
+                        nullables[col] = new boolean[rows];
+                        for (int row = 0; row < rows; row += 8) {
+                            byte flags = stream.read_i8();
+                            for (int offset = 0; row + offset < rows && offset < 8; ++offset) {
+                                nullables[col][row + offset] = 1 == (flags >>> offset & 1);
                             }
-                            break;
-                        case GreyCat.PrimitiveType.FLOAT:
-                            for (int r = 0; r < rows; ++r) {
-                                data[c * rows + r] = stream.read_f64();
+                        }
+                    }
+                    byte colPrimitiveType = stream.read_i8();
+                    GreyCat.Type colType = null;
+                    Object monotonicValue = null;
+                    if (GreyCat.PrimitiveType.OBJECT == colPrimitiveType || GreyCat.PrimitiveType.STATIC_FIELD == colPrimitiveType) {
+                        int typeOffset = stream.read_vu32();
+                        if (-1 != typeOffset) {
+                            colType = stream.greycat.types[typeOffset];
+                        }
+                    }
+                    if (GreyCat.PrimitiveType.OBJECT != colPrimitiveType && GreyCat.PrimitiveType.UNDEFINED != colPrimitiveType) {
+                        if (1 == stream.read_i8()) {
+                            monotonicValue = GreyCat.Stream.PRIMITIVE_LOADERS[colPrimitiveType].load(stream);
+                        }
+                    }
+                    if (GreyCat.PrimitiveType.UNDEFINED == colPrimitiveType) {
+                        for (int row = 0; row < rows; ++row) {
+                            if (null != nullables[col] && !nullables[col][row]) {
+                                data[col * rows + row] = stream.read();
                             }
-                            break;
-                        case GreyCat.PrimitiveType.TIME:
-                            for (int r = 0; r < rows; ++r) {
-                                data[c * rows + r] = time.load(type.greycat.types[type.greycat.type_offset_core_time], stream);
+                        }
+                    } else if (GreyCat.PrimitiveType.OBJECT == colPrimitiveType || (GreyCat.PrimitiveType.STATIC_FIELD == colPrimitiveType && null == monotonicValue)) {
+                        if (null == colType) {
+                            for (int row = 0; row < rows; ++row) {
+                                if (null != nullables[col] && !nullables[col][row]) {
+                                    data[col * rows + row] = stream.read_object(); // TODO: check for enums
+                                }
                             }
-                            break;
-                        case GreyCat.PrimitiveType.DURATION:
-                            for (int r = 0; r < rows; ++r) {
-                                data[c * rows + r] = duration.load(type.greycat.types[type.greycat.type_offset_core_duration], stream);
+                        } else {
+                            for (int row = 0; row < rows; ++row) {
+                                if (null != nullables[col] && !nullables[col][row]) {
+                                    data[col * rows + row] = colType.loader.load(colType, stream);
+                                }
                             }
-                            break;
-                        case GreyCat.PrimitiveType.STATIC_FIELD:
-                            for (int r = 0; r < rows; ++r) {
-                                GreyCat.Type enumType = type.greycat.types[meta[c].type];
-                                data[c * rows + r] = enumType.loader.load(enumType, stream);
-                            }
-                            break;
-                        default:
-                            for (int r = 0; r < rows; ++r) {
-                                data[c * rows + r] = stream.read();
-                            }
-                            break;
+                        }
+                    } else if (null == monotonicValue) {
+                        for (int row = 0; row < rows; ++row) {
+                            data[col * rows + row] = GreyCat.Stream.PRIMITIVE_LOADERS[colPrimitiveType].load(stream); // TODO: check
+                        }
                     }
                 }
                 @SuppressWarnings("unchecked") core.Table<java.lang.Object> t = (Table<java.lang.Object>) type.factory.build(type);
                 t.cols = cols;
                 t.rows = rows;
-                t.meta = meta;
                 t.data = data;
                 return t;
             }
 
-            public static final class TableColumnMeta {
-                public final byte colType;
-                public final int type;
-                public final boolean index;
-                public final java.lang.String header;
-
-                public TableColumnMeta(byte colType, int type, boolean index, java.lang.String header) {
-                    this.colType = colType;
-                    this.type = type;
-                    this.index = index;
-                    this.header = header;
+            @Override
+            public final java.lang.String toString() {
+                StringBuilder builder = new StringBuilder().append(type.name).append('{');
+                for (int col = 0; col < cols; ++col) {
+                    builder.append("\n\t");
+                    for (int row = 0; row < rows; ++row) {
+                        builder.append(data[col * rows + row]).append(", ");
+                    }
                 }
+                if (cols > 0 && rows > 0) {
+                    builder.append('\n');
+                }
+                return builder.append('}').toString();
             }
         }
 
