@@ -737,7 +737,7 @@ public final class GreyCat {
                         break;
                     }
                     default: {
-                        loadedField = Stream.PRIMITIVE_LOADERS[att.sbiType].load(stream);
+                        loadedField = Stream.PRIMITIVE_LOADERS[loadType].load(stream);
                         break;
                     }
                 }
