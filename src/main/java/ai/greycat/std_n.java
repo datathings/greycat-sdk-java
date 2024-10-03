@@ -679,7 +679,7 @@ class std_n {
                 for (int offset = 0; offset < attributes.length; ++offset) {
                     if (null == attributes[offset]) {
                         if (null == nullables) {
-                            nullables = new byte[attributes.length / 8];
+                            nullables = new byte[(int) Math.ceil((double) attributes.length / 8)];
                             java.util.Arrays.fill(nullables, (byte) 0);
                         }
                         nullables[offset >> 3] |= (byte) (1 << (offset & 7));
@@ -980,23 +980,44 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                // TODO
+                stream.write_vu32(rows);
+                stream.write_vu32(cols);
+
+                for (int col = 0; col < cols; ++col) {
+                    byte[] nullables = null;
+                    for (int row = 0; row < rows; ++row) {
+                        if (null == data[col * rows + row]) {
+                            if (null == nullables) {
+                                nullables = new byte[(int) Math.ceil((double) rows / 8)];
+                            }
+                            nullables[row >> 3] |= (byte) (1 << (row & 7));
+                        }
+                    }
+                    stream.write_i8((byte) (null == nullables ? 0 : 1));
+                    if (null != nullables) {
+                        stream.write_i8_array(nullables, 0, nullables.length);
+                    }
+                    stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
+                    for (int row = 0; row < rows; ++row) {
+                        java.lang.Object elem = data[col * rows + row];
+                        if (null != elem) stream.write(elem);
+                    }
+                }
             }
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 final int rows = stream.read_vu32();
                 final int cols = stream.read_vu32();
-                boolean[][] nullables = new boolean[cols][];
-                java.util.Arrays.fill(nullables, null);
                 final Object[] data = new Object[cols * rows];
                 java.util.Arrays.fill(data, null);
                 for (int col = 0; col < cols; ++col) {
+                    boolean[] nullables = null;
                     if (1 == stream.read_i8()) {
-                        nullables[col] = new boolean[rows];
+                        nullables = new boolean[rows];
                         for (int row = 0; row < rows; row += 8) {
                             byte flags = stream.read_i8();
                             for (int offset = 0; row + offset < rows && offset < 8; ++offset) {
-                                nullables[col][row + offset] = 1 == (flags >>> offset & 1);
+                                nullables[row + offset] = 1 == (flags >>> offset & 1);
                             }
                         }
                     }
@@ -1016,20 +1037,20 @@ class std_n {
                     }
                     if (GreyCat.PrimitiveType.UNDEFINED == colPrimitiveType) {
                         for (int row = 0; row < rows; ++row) {
-                            if (null != nullables[col] && !nullables[col][row]) {
+                            if (null != nullables && !nullables[row]) {
                                 data[col * rows + row] = stream.read();
                             }
                         }
                     } else if (GreyCat.PrimitiveType.OBJECT == colPrimitiveType || (GreyCat.PrimitiveType.STATIC_FIELD == colPrimitiveType && null == monotonicValue)) {
                         if (null == colType) {
                             for (int row = 0; row < rows; ++row) {
-                                if (null != nullables[col] && !nullables[col][row]) {
+                                if (null != nullables && !nullables[row]) {
                                     data[col * rows + row] = stream.read_object(); // TODO: check for enums
                                 }
                             }
                         } else {
                             for (int row = 0; row < rows; ++row) {
-                                if (null != nullables[col] && !nullables[col][row]) {
+                                if (null != nullables && !nullables[row]) {
                                     data[col * rows + row] = colType.loader.load(colType, stream);
                                 }
                             }

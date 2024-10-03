@@ -1040,7 +1040,7 @@ public final class GreyCat {
                         } else {
                             Object object = (Object) value;
                             if (field.abiType != object.type.offset &&
-                                    stream.greycat.types[field.abiType].genericAbiType != object.type.offset) {
+                                    type.greycat.types[field.abiType].genericAbiType != object.type.offset) {
                                 stream.write_vu32(object.type.offset);
                             }
                             object.save(stream);
