@@ -96,6 +96,8 @@ fn write_core(out: GcbWriter) {
   out.write(nodeList<int> {});
   out.write(TimeZone::Europe_Luxembourg);
   out.write(node<float> {13.37});
+  out.write([]);
+  out.write(Array<ErrorFrame> {});
   out.write(Error { stack: Array<ErrorFrame> {}, }); // TODO
   out.write(ErrorCode::none);
   out.write(SamplingMode::adaptative);
@@ -135,7 +137,7 @@ fn write_core(out: GcbWriter) {
     ]);
   out.write(Tuple<Array, Map> {x: Array<any?> {}, y: Map<any?, any?> {} });
   out.write(nodeIndex<Tuple, any?> {});
-  out.write(GeoPoly { points: [geo {13_, 37_}, geo {42_, 12_}, geo {13_, 37_}, ], });
+  out.write(GeoPoly { points: [geo {13_, 37_}, geo {42_, 12_}, geo {13_, 37_},], });
   out.write(12_time);
   // out.write(DatePart::days);
   out.write(nodeGeo<GeoPoly> {});

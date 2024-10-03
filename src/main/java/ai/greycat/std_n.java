@@ -670,14 +670,28 @@ class std_n {
 
             @Override
             protected final void save(GreyCat.Stream stream) throws IOException {
-                if (null == attributes) {
+                if (null == attributes || 0 == attributes.length) {
                     stream.write_vu32(0);
-                } else {
-                    stream.write_vu32(attributes.length);
-                    //noinspection ForLoopReplaceableByForEach
-                    for (int offset = 0; offset < attributes.length; ++offset) {
-                        stream.write(attributes[offset]);
+                    return;
+                }
+                stream.write_vu32(attributes.length);
+                byte[] nullables = null;
+                for (int offset = 0; offset < attributes.length; ++offset) {
+                    if (null == attributes[offset]) {
+                        if (null == nullables) {
+                            nullables = new byte[attributes.length / 8];
+                            java.util.Arrays.fill(nullables, (byte) 0);
+                        }
+                        nullables[offset >> 3] |= (byte) (1 << (offset & 7));
                     }
+                }
+                stream.write_i8((byte) (null == nullables ? 0 : 1));
+                if (null != nullables) {
+                    stream.write_i8_array(nullables, 0, nullables.length);
+                }
+                stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
+                for (java.lang.Object elem : attributes) {
+                    if (null != elem) stream.write(elem);
                 }
             }
 
@@ -699,7 +713,6 @@ class std_n {
                     }
                 }
                 byte arrayPrimitiveType = stream.read_i8();
-                System.err.println("\t" + arrayPrimitiveType);
                 GreyCat.Type arrayType = null;
                 Object monotonicValue = null;
                 if (GreyCat.PrimitiveType.OBJECT == arrayPrimitiveType || GreyCat.PrimitiveType.STATIC_FIELD == arrayPrimitiveType) {
@@ -716,7 +729,6 @@ class std_n {
                 if (GreyCat.PrimitiveType.UNDEFINED == arrayPrimitiveType) {
                     for (int offset = 0; offset < size; ++offset) {
                         array.set(offset, null != nullables && nullables[offset] ? null : stream.read());
-                        System.err.println(array.get(offset));
                     }
                 } else if (GreyCat.PrimitiveType.OBJECT == arrayPrimitiveType || (GreyCat.PrimitiveType.STATIC_FIELD == arrayPrimitiveType && null == monotonicValue)) {
                     if (null == arrayType) {
