@@ -683,6 +683,11 @@ class std_n {
 
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
                 final int size = stream.read_vu32();
+                @SuppressWarnings("unchecked") final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
+                array.attributes = new java.lang.Object[size];
+                if (0 == size) {
+                    return array;
+                }
                 boolean[] nullables = null;
                 if (1 == stream.read_i8()) {
                     nullables = new boolean[size];
@@ -694,6 +699,7 @@ class std_n {
                     }
                 }
                 byte arrayPrimitiveType = stream.read_i8();
+                System.err.println("\t" + arrayPrimitiveType);
                 GreyCat.Type arrayType = null;
                 Object monotonicValue = null;
                 if (GreyCat.PrimitiveType.OBJECT == arrayPrimitiveType || GreyCat.PrimitiveType.STATIC_FIELD == arrayPrimitiveType) {
@@ -707,8 +713,6 @@ class std_n {
                         monotonicValue = GreyCat.Stream.PRIMITIVE_LOADERS[arrayPrimitiveType].load(stream);
                     }
                 }
-                @SuppressWarnings("unchecked") final core.Array<java.lang.Object> array = (Array<Object>) type.factory.build(type);
-                array.attributes = new java.lang.Object[size];
                 if (GreyCat.PrimitiveType.UNDEFINED == arrayPrimitiveType) {
                     for (int offset = 0; offset < size; ++offset) {
                         array.set(offset, null != nullables && nullables[offset] ? null : stream.read());

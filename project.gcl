@@ -135,7 +135,7 @@ fn write_core(out: GcbWriter) {
     ]);
   out.write(Tuple<Array, Map> {x: Array<any?> {}, y: Map<any?, any?> {} });
   out.write(nodeIndex<Tuple, any?> {});
-  out.write(GeoPoly { points: [geo {13_, 37_}, geo {42_, 12_}, geo {13_, 37_},], });
+  out.write(GeoPoly { points: [geo {13_, 37_}, geo {42_, 12_}, geo {13_, 37_}, ], });
   out.write(12_time);
   // out.write(DatePart::days);
   out.write(nodeGeo<GeoPoly> {});
