@@ -52,7 +52,7 @@ public final class GreyCat {
 
     static final protected class Stream {
 
-        private final static byte ASCII_MAX = 127;
+        final static byte ASCII_MAX = 127;
 
         static final PrimitiveLoader[] PRIMITIVE_LOADERS = new PrimitiveLoader[PrimitiveType.SIZE];
 

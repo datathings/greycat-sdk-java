@@ -676,6 +676,10 @@ class std_n {
                 }
                 stream.write_vu32(attributes.length);
                 byte[] nullables = null;
+                boolean typeIsUnique = false;
+                Class<?> uniqueType = null;
+                boolean valueIsMonotonic = false;
+                Object monotonicValue = null;
                 for (int offset = 0; offset < attributes.length; ++offset) {
                     if (null == attributes[offset]) {
                         if (null == nullables) {
@@ -683,15 +687,92 @@ class std_n {
                             java.util.Arrays.fill(nullables, (byte) 0);
                         }
                         nullables[offset >> 3] |= (byte) (1 << (offset & 7));
+                    } else {
+                        Class<?> type = attributes[offset].getClass();
+                        if (Integer.class.equals(type) || Short.class.equals(type)) {
+                            type = Long.class;
+                        } else if (Float.class.equals(type)) {
+                            type = Double.class;
+                        }
+                        if (null == uniqueType) {
+                            typeIsUnique = true;
+                            uniqueType = type;
+                        } else if (typeIsUnique && !uniqueType.equals(type)) {
+                            typeIsUnique = false;
+                        }
+                        if (null == monotonicValue) {
+                            valueIsMonotonic = true;
+                            monotonicValue = attributes[offset];
+                        } else if (valueIsMonotonic && !monotonicValue.equals(attributes[offset])) {
+                            valueIsMonotonic = false;
+                        }
                     }
                 }
                 stream.write_i8((byte) (null == nullables ? 0 : 1));
                 if (null != nullables) {
                     stream.write_i8_array(nullables, 0, nullables.length);
                 }
-                stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
-                for (java.lang.Object elem : attributes) {
-                    if (null != elem) stream.write(elem);
+                if (!typeIsUnique) {
+                    stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
+                    for (java.lang.Object elem : attributes) {
+                        if (null != elem) stream.write(elem);
+                    }
+                } else {
+                    if (Boolean.class.equals(uniqueType)) {
+                        stream.write_i8(GreyCat.PrimitiveType.BOOL);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (java.lang.Object elem : attributes) {
+                            if (null != elem) stream.write_bool((Boolean) elem);
+                        }
+                    } else if (Character.class.equals(uniqueType)) {
+                        stream.write_i8(GreyCat.PrimitiveType.CHAR);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (java.lang.Object elem : attributes) {
+                            if (null == elem) continue;
+                            char c = (Character) elem;
+                            if ((int) c > GreyCat.Stream.ASCII_MAX) {
+                                throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
+                            }
+                            stream.write_i8((byte) c);
+                        }
+                    } else if (Long.class.equals(uniqueType)) {
+                        stream.write_i8(GreyCat.PrimitiveType.INT);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (java.lang.Object elem : attributes) {
+                            if (null == elem) continue;
+                            if (elem instanceof Long) {
+                                stream.write_vi64((long) elem);
+                            } else if (elem instanceof Integer) {
+                                stream.write_vi64((int) elem);
+                            } else if (elem instanceof Short) {
+                                stream.write_vi64((short) elem);
+                            }
+                        }
+                    } else if (Double.class.equals(uniqueType)) {
+                        stream.write_i8(GreyCat.PrimitiveType.FLOAT);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (java.lang.Object elem : attributes) {
+                            if (null != elem) stream.write_f64((double) elem);
+                        }
+                    } else if (java.lang.String.class.equals(uniqueType)) {
+                        stream.write_i8(GreyCat.PrimitiveType.OBJECT);
+                        stream.write_vu32(stream.greycat.type_offset_core_string);
+                        for (java.lang.Object elem : attributes) {
+                            if (null != elem) {
+                                java.lang.String string = (java.lang.String) elem;
+                                final byte[] data = string.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                                stream.write_vu32(data.length << 1);
+                                stream.write_i8_array(data, 0, data.length);
+                            }
+                        }
+                    } else if (GreyCat.Object.class.isAssignableFrom(uniqueType)) {
+                        ((GreyCat.Object) monotonicValue).saveType(stream);
+                        for (java.lang.Object elem : attributes) {
+                            if (null != elem) ((GreyCat.Object) elem).save(stream);
+                        }
+                    } else {
+                        throw new IllegalArgumentException("wrong state");
+                    }
                 }
             }
 
@@ -742,7 +823,9 @@ class std_n {
                     }
                 } else if (null == monotonicValue) {
                     for (int offset = 0; offset < size; ++offset) {
-                        array.set(offset, GreyCat.Stream.PRIMITIVE_LOADERS[arrayPrimitiveType].load(stream)); // TODO: check
+                        if (null == nullables || !nullables[offset]) {
+                            array.set(offset, GreyCat.Stream.PRIMITIVE_LOADERS[arrayPrimitiveType].load(stream));
+                        }
                     }
                 }
                 return array;
