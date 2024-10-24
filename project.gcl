@@ -285,8 +285,8 @@ fn write_util(out: GcbWriter) {
   out.write(Gaussian {});
   // out.write(Quantizer::new()); // unsupported
   out.write(GaussianProfile {quantizer: LinearQuantizer {min: 0.0, max: 1.0, bins: 12, }, precision: FloatPrecision::p1, });
-  out.write(TimeWindow { width: 42s, });
-  out.write(SlidingWindow { capacity: 42 });
+  out.write(TimeWindow { span: 42s, });
+  out.write(SlidingWindow { span: 42 });
   // out.write(Queue<SlidingWindow>::new()); // Deliberately(?) different on load & save
   /* wrong null for T fields
   out.write(BoxPlotF64{

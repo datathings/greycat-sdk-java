@@ -673,6 +673,7 @@ public final class GreyCat {
         public final boolean is_masked;
 
         public final boolean is_abstract;
+        public final boolean is_ambiguous;
         public final boolean is_enum;
         public final boolean is_native;
         /**
@@ -733,7 +734,8 @@ public final class GreyCat {
                     }
                     case PrimitiveType.OBJECT: {
                         Type fieldType = type.greycat.types[att.abiType];
-                        if (!fieldType.is_native && (fieldType.is_abstract || att.sbiType == PrimitiveType.UNDEFINED)) {
+                        if (fieldType.is_ambiguous || type.greycat.type_offset_core_any == fieldType.offset ||
+                                (!fieldType.is_native && att.sbiType == PrimitiveType.UNDEFINED)) {
                             fieldType = type.greycat.types[stream.read_vu32()];
                         }
                         loadedField = fieldType.loader.load(fieldType, stream);
@@ -757,17 +759,15 @@ public final class GreyCat {
 
         static final Factory monomorphic_factory = (type, parameters) -> {
             Type genericType = type.greycat.types[type.genericAbiType];
-            System.out.println(type.name + ", " + genericType.name);
             return genericType.factory.build(genericType, parameters);
         };
 
         static final Loader monomorphic_loader = (type, stream) -> {
             Type genericType = type.greycat.types[type.genericAbiType];
-            System.out.println(type.name + ", " + genericType.name);
-            return genericType.loader.load(genericType, stream);
+            return genericType.loader.load(type, stream);
         };
 
-        public Type(int offset, String name, int genericAbiType, int g1AbiTypeDesc, int g2AbiTypeDesc, int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
+        public Type(int offset, String name, int genericAbiType, int g1AbiTypeDesc, int g2AbiTypeDesc, int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract, boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
             this.offset = offset;
             this.name = name;
             this.genericAbiType = genericAbiType;
@@ -778,6 +778,7 @@ public final class GreyCat {
             this.nullable_nb_bytes = nullable_nb_bytes;
             this.is_masked = is_masked;
             this.is_abstract = is_abstract;
+            this.is_ambiguous = is_ambiguous;
             this.is_enum = is_enum;
             this.is_native = is_native;
             this.attributes = typeAttributes;
@@ -1116,6 +1117,7 @@ public final class GreyCat {
     public final java.util.Map<String, Function> functions_by_name = new java.util.HashMap<>();
     private final String runtime_url;
     private String token;
+    public final int type_offset_core_any;
     public final int type_offset_core_string;
     public final int type_offset_core_duration;
     public final int type_offset_core_time;
@@ -1213,6 +1215,7 @@ public final class GreyCat {
             boolean isAbstract = 0 != (flags & (1 << 1));
             boolean isEnum = 0 != (flags & (1 << 2));
             boolean isMasked = 0 != (flags & (1 << 3));
+            boolean isAmbiguous = 0 != (flags & (1 << 4));
             final Type.Attribute[] typeAttributes = new Type.Attribute[attributesLen];
             for (int enumOffset = 0; enumOffset < attributesLen; ++enumOffset) {
                 final String name = symbols[abiStream.read_vu32()];
@@ -1227,7 +1230,7 @@ public final class GreyCat {
                 final boolean mapped = 0 != (attFlags & (1 << 1));
                 typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset, mappedAttOffset, sbiType, nullable, mapped);
             }
-            Type abiType = new Type(i, fqn, genericAbiType, g1AbiTypeDesc, g2AbiTypeDesc, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isEnum, isNative, typeAttributes, factories.get(fqn), loaders.get(fqn), this);
+            Type abiType = new Type(i, fqn, genericAbiType, g1AbiTypeDesc, g2AbiTypeDesc, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isAmbiguous, isEnum, isNative, typeAttributes, factories.get(fqn), loaders.get(fqn), this);
             /* only the program related abi type (last version) is mapped to himself */
             if (abiType.mapped_type_off == i && fqn.length() != 0) {
                 types_by_name.put(abiType.name, abiType);
@@ -1266,7 +1269,12 @@ public final class GreyCat {
             functions_by_name.put(fqn, fn);
         }
         /* pre-resolve String type avoid runtime over-head */
-        Type tmp = types_by_name.get("core::String");
+        Type tmp = types_by_name.get("core::any");
+        if (tmp == null) {
+            throw new IllegalArgumentException("wrong state");
+        }
+        type_offset_core_any = tmp.offset;
+        tmp = types_by_name.get("core::String");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
