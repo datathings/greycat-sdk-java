@@ -1068,22 +1068,108 @@ class std_n {
 
                 for (int col = 0; col < cols; ++col) {
                     byte[] nullables = null;
+                    boolean typeIsUnique = false;
+                    Class<?> uniqueType = null;
+                    boolean valueIsMonotonic = false;
+                    Object monotonicValue = null;
                     for (int row = 0; row < rows; ++row) {
                         if (null == data[col * rows + row]) {
                             if (null == nullables) {
                                 nullables = new byte[(int) Math.ceil((double) rows / 8)];
                             }
                             nullables[row >> 3] |= (byte) (1 << (row & 7));
+                        } else {
+                            Class<?> type = data[col * rows + row].getClass();
+                            if (Integer.class.equals(type) || Short.class.equals(type)) {
+                                type = Long.class;
+                            } else if (Float.class.equals(type)) {
+                                type = Double.class;
+                            }
+                            if (null == uniqueType) {
+                                typeIsUnique = true;
+                                uniqueType = type;
+                            } else if (typeIsUnique && !uniqueType.equals(type)) {
+                                typeIsUnique = false;
+                            }
+                            if (null == monotonicValue) {
+                                valueIsMonotonic = true;
+                                monotonicValue = data[col * rows + row];
+                            } else if (valueIsMonotonic && !monotonicValue.equals(data[col * rows + row])) {
+                                valueIsMonotonic = false;
+                            }
                         }
                     }
                     stream.write_i8((byte) (null == nullables ? 0 : 1));
                     if (null != nullables) {
                         stream.write_i8_array(nullables, 0, nullables.length);
                     }
-                    stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
-                    for (int row = 0; row < rows; ++row) {
-                        java.lang.Object elem = data[col * rows + row];
-                        if (null != elem) stream.write(elem);
+                    if (!typeIsUnique) {
+                        stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
+                        for (int row = 0; row < rows; ++row) {
+                            java.lang.Object elem = data[col * rows + row];
+                            if (null != elem) stream.write(elem);
+                        }
+                    } else {
+                        if (Boolean.class.equals(uniqueType)) {
+                            stream.write_i8(GreyCat.PrimitiveType.BOOL);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                            for (int row = 0; row < rows; ++row) {
+                                java.lang.Object elem = data[col * rows + row];
+                                if (null != elem) stream.write_bool((Boolean) elem);
+                            }
+                        } else if (Character.class.equals(uniqueType)) {
+                            stream.write_i8(GreyCat.PrimitiveType.CHAR);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                            for (int row = 0; row < rows; ++row) {
+                                java.lang.Object elem = data[col * rows + row];
+                                if (null == elem) continue;
+                                char c = (Character) elem;
+                                if ((int) c > GreyCat.Stream.ASCII_MAX) {
+                                    throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
+                                }
+                                stream.write_i8((byte) c);
+                            }
+                        } else if (Long.class.equals(uniqueType)) {
+                            stream.write_i8(GreyCat.PrimitiveType.INT);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                            for (int row = 0; row < rows; ++row) {
+                                java.lang.Object elem = data[col * rows + row];
+                                if (null == elem) continue;
+                                if (elem instanceof Long) {
+                                    stream.write_vi64((long) elem);
+                                } else if (elem instanceof Integer) {
+                                    stream.write_vi64((int) elem);
+                                } else if (elem instanceof Short) {
+                                    stream.write_vi64((short) elem);
+                                }
+                            }
+                        } else if (Double.class.equals(uniqueType)) {
+                            stream.write_i8(GreyCat.PrimitiveType.FLOAT);
+                            for (int row = 0; row < rows; ++row) {
+                                java.lang.Object elem = data[col * rows + row];
+                                if (null != elem) stream.write_f64((double) elem);
+                            }
+                        } else if (java.lang.String.class.equals(uniqueType)) {
+                            stream.write_i8(GreyCat.PrimitiveType.OBJECT);
+                            stream.write_vu32(stream.greycat.type_offset_core_string);
+                            for (int row = 0; row < rows; ++row) {
+                                java.lang.Object elem = data[col * rows + row];
+                                if (null != elem) {
+                                    java.lang.String string = (java.lang.String) elem;
+                                    final byte[] data = string.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                                    stream.write_vu32(data.length << 1);
+                                    stream.write_i8_array(data, 0, data.length);
+                                }
+                            }
+                        } else if (GreyCat.Object.class.isAssignableFrom(uniqueType)) {
+                            ((GreyCat.Object) monotonicValue).saveType(stream);
+                            for (int row = 0; row < rows; ++row) {
+                                java.lang.Object elem = data[col * rows + row];
+                                if (null != elem) ((GreyCat.Object) elem).save(stream);
+                            }
+                        } else {
+                            throw new IllegalArgumentException("wrong state");
+                        }
                     }
                 }
             }
@@ -1120,27 +1206,27 @@ class std_n {
                     }
                     if (GreyCat.PrimitiveType.UNDEFINED == colPrimitiveType) {
                         for (int row = 0; row < rows; ++row) {
-                            if (null != nullables && !nullables[row]) {
-                                data[col * rows + row] = stream.read();
-                            }
+                            data[col * rows + row] = null != nullables && nullables[row] ? null : stream.read();
                         }
                     } else if (GreyCat.PrimitiveType.OBJECT == colPrimitiveType || (GreyCat.PrimitiveType.STATIC_FIELD == colPrimitiveType && null == monotonicValue)) {
                         if (null == colType) {
                             for (int row = 0; row < rows; ++row) {
-                                if (null != nullables && !nullables[row]) {
+                                if (null == nullables || !nullables[row]) {
                                     data[col * rows + row] = stream.read_object(); // TODO: check for enums
                                 }
                             }
                         } else {
                             for (int row = 0; row < rows; ++row) {
-                                if (null != nullables && !nullables[row]) {
+                                if (null == nullables || !nullables[row]) {
                                     data[col * rows + row] = colType.loader.load(colType, stream);
                                 }
                             }
                         }
                     } else if (null == monotonicValue) {
                         for (int row = 0; row < rows; ++row) {
-                            data[col * rows + row] = GreyCat.Stream.PRIMITIVE_LOADERS[colPrimitiveType].load(stream); // TODO: check
+                            if (null == nullables || !nullables[row]) {
+                                data[col * rows + row] = GreyCat.Stream.PRIMITIVE_LOADERS[colPrimitiveType].load(stream); // TODO: check
+                            }
                         }
                     }
                 }

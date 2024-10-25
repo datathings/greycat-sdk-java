@@ -98,19 +98,46 @@ fn write_core(out: GcbWriter) {
   out.write(node<float> {13.37});
   out.write([]);
   out.write(Array<ErrorFrame> {});
-  out.write(Array<int>{0, 1, 2});
-  out.write(Array<int?>{0, null, 2});
-  out.write(Array<String?>{"Hello", null, "world"});
+  out.write(Array<int> {0, 1, 2});
+  out.write(Array<int?> {0, null, 2});
+  out.write(Array<String?> {"Hello", null, "world"});
   out.write(Error { stack: Array<ErrorFrame> {}, }); // TODO
   out.write(ErrorCode::none);
   out.write(SamplingMode::adaptative);
   out.write(DurationUnit::days);
   out.write(TensorType::c128);
   out.write(Table<node> {});
-  var table = Table {};
-  for (var row = 0; row < 10; ++row) {
+  var table = Table<int> {};
+  for (var row = 0; row < 3; ++row) {
     table.set_cell(row, 0, row);
     table.set_cell(row, 1, row + 1);
+    table.set_cell(row, 2, row + 2);
+  }
+  out.write(table);
+  table = Table<int?> {};
+  for (var row = 0; row < 3; ++row) {
+    if (0 == row) {
+      table.set_cell(row, 0, null);
+    } else {
+      table.set_cell(row, 0, row);
+    }
+    if (1 == row) {
+      table.set_cell(row, 1, null);
+    } else {
+      table.set_cell(row, 1, row + 1);
+    }
+    if (2 == row) {
+      table.set_cell(row, 2, null);
+    } else {
+      table.set_cell(row, 2, row + 2);
+    }
+  }
+  out.write(table);
+  table = Table{};
+  for (row, data in [[0, 1.0, "2.0"], [null, "null", "${null}"], [[], Map<any?, any?>{}, Table{}]]) {
+    for (col, value in data) {
+      table.set_cell(row, col, value);
+    }
   }
   out.write(table);
   // out.write(Tensor::new());
