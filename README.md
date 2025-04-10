@@ -11,18 +11,27 @@
   ```xml
   <?xml version="1.0" encoding="UTF-8"?>
   <project>
-    […]
+    <!-- […] -->
+    <properties>
+        <!-- […] -->
+        <!-- Check latest version at https://get.greycat.io -->
+        <greycat.version.branch>testing</greycat.version.branch>
+        <greycat.version.major>7.0</greycat.version.major>
+        <greycat.version.minor>6</greycat.version.minor>
+        <greycat.version>${greycat.version.major}.${greycat.version.minor}-${greycat.version.branch}</greycat.version>
+    </properties>
+    <!-- […] -->
     <dependencies>
-        […]
+        <!-- […] -->
         <dependency>
             <groupId>ai.greycat</groupId>
             <artifactId>sdk</artifactId>
-            <version>7.0.1-testing</version><!-- Check latest version at https://get.greycat.io -->
+             <version>${greycat.version}</version>
         </dependency>
     </dependencies>
-    […]
+    <!-- […] -->
     <repositories>
-      […]
+      <!-- […] -->
       <repository>
         <name>GreyCat Java SDK repository</name>
         <id>get.greycat.io</id>
@@ -30,7 +39,7 @@
         <layout>default</layout>
       </repository>
     </repositories>
-    […]
+    <!-- […] -->
   </project>
   ```
 
