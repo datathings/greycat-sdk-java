@@ -3,7 +3,7 @@ set -e
 
 VERSION_MAJOR_MINOR=`cat VERSION`
 
-echo "${VERSION_MAJOR_MINOR} / ${VERSION}"
+echo "${VERSION_MAJOR_MINOR} / ${PROJECT_VERSION_SIMPLE}"
 
 sha256_hash=$(echo -n "$GET_GC_CI_PASS" | openssl dgst -sha256 | cut -d ' ' -f2)
 base64url_token=$(echo -n "root:$sha256_hash" | base64 -w 0 )
