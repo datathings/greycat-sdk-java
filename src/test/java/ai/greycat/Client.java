@@ -11,7 +11,7 @@ public class Client {
         String username = "admin";
         String password = "changeme";
 
-        GreyCat greycat = new GreyCat(url, username, password, null);
+        GreyCat greycat = new GreyCat(url, username, password, null, null);
 
         System.out.println("Session ready!");
 

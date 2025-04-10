@@ -1137,7 +1137,7 @@ public final class GreyCat {
     private final int abi_magic;
     private final int abi_version;
 
-    public GreyCat(String url, String username, String password, Boolean use_cookie, Library... libraries) throws Exception {
+    public GreyCat(String url, String username, String password, Boolean use_cookie, Boolean set_default, Library... libraries) throws Exception {
         this.runtime_url = url;
         this.token = null;
 
@@ -1400,6 +1400,9 @@ public final class GreyCat {
         abiStream.close();
         for (Library lib : libs_by_name.values()) {
             lib.init(this);
+        }
+        if (null == set_default || set_default) {
+            DEFAULT = this;
         }
     }
 
