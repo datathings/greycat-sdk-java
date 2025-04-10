@@ -1,3 +1,5 @@
+@library("std", "7.0.1757-testing");
+
 fn main() {
   var user: User = User {
     id: 0,
@@ -94,14 +96,14 @@ fn write_core(out: GcbWriter) {
   out.write(geo {42, 12});
   out.write(GeoBox {sw: geo {13, 37}, ne: geo {42, 12}, });
   out.write(nodeList<int> {});
-  out.write(TimeZone::Europe_Luxembourg);
+  out.write(TimeZone::"Europe/Luxembourg");
   out.write(node<float> {13.37});
   out.write([]);
   out.write(Array<ErrorFrame> {});
   out.write(Array<int> {0, 1, 2});
   out.write(Array<int?> {0, null, 2});
   out.write(Array<String?> {"Hello", null, "world"});
-  out.write(Error { stack: Array<ErrorFrame> {}, }); // TODO
+  out.write(Error { stack: Array<ErrorFrame> {}, });
   out.write(ErrorCode::none);
   out.write(SamplingMode::adaptative);
   out.write(DurationUnit::days);
@@ -133,8 +135,23 @@ fn write_core(out: GcbWriter) {
     }
   }
   out.write(table);
-  table = Table{};
+  table = Table{}; // TODO: fix
   for (row, data in [[0, 1.0, "2.0"], [null, "null", "${null}"], [[], Map<any?, any?>{}, Table{}]]) {
+    for (col, value in data) {
+      table.set_cell(row, col, value);
+    }
+  }
+  out.write(table);
+  table = Table{};
+  var arr = [0];
+  for (row, data in [[[0]], [[0]]]) {
+    for (col, value in data) {
+      table.set_cell(row, col, value);
+    }
+  }
+  out.write(table);
+  table = Table{};
+  for (row, data in [["test"], [[]]]) {
     for (col, value in data) {
       table.set_cell(row, col, value);
     }
@@ -162,7 +179,7 @@ fn write_core(out: GcbWriter) {
   out.write(Array<nodeTime> {});
   out.write([
       null, true, '*', 12, 13.37, "Hello world", geo {42_, 12_}, GeoBox {sw: geo {13_, 37_}, ne: geo {42_, 12_}, }, nodeList<int> {},
-      TimeZone::Europe_Luxembourg, node<float> {13.37}, Error {stack: Array<ErrorFrame> {}, },
+      TimeZone::"Europe/Luxembourg", node<float> {13.37}, Error {stack: Array<ErrorFrame> {}, },
       duration::new(12, DurationUnit::microseconds), nodeTime<nodeGeo> {}
     ]);
   out.write(Tuple<Array, Map> {x: Array<any?> {}, y: Map<any?, any?> {} });
@@ -263,10 +280,10 @@ fn write_runtime(out: GcbWriter) {
       url: "",
       clientId: "",
     });
-  out.write(UserRole {
-      name: "",
-      permissions: Array<String> {},
-    });
+  // out.write(UserRole { # TODO
+  //     name: "",
+  //     permissions: Array<String> {},
+  //   });
   // out.write(PeriodicTask {
   //     name: "",
   //     user_id: 12,
@@ -289,17 +306,17 @@ fn write_runtime(out: GcbWriter) {
   //     end: 37_time,
   //     max_memory: 42,
   //   });
-  out.write(StoreStat {
-      capacity_bytes: 13,
-      allocated_bytes: 37,
-      allocated_ratio: 13.37,
-      remained_bytes: 12,
-      remained_ratio: 4.20,
-      used_bytes: 42,
-      used_ratio: 0.1,
-      available_bytes: 0,
-      available_ratio: 0.2,
-    });
+  // out.write(StoreStat {
+  //     capacity_bytes: 13,
+  //     allocated_bytes: 37,
+  //     allocated_ratio: 13.37,
+  //     remained_bytes: 12,
+  //     remained_ratio: 4.20,
+  //     used_bytes: 42,
+  //     used_ratio: 0.1,
+  //     available_bytes: 0,
+  //     available_ratio: 0.2,
+  //   });
   out.write(System {});
   out.write(SecurityPolicy {});
 }

@@ -2,61 +2,151 @@ package ai.greycat;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 class std_n {
 
     public static final class core {
 
         // Primitive types
-        protected static class duration extends GreyCat.Object {
-            public long value;
 
-            protected duration(GreyCat.Type type) {
+        @SuppressWarnings("unused")
+        protected static class node<T> extends GreyCat.Object {
+            public long ref;
+
+            protected node(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.DURATION);
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(value);
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu64(ref);
             }
 
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.duration res = (duration) type.factory.build(type);
-                res.value = stream.read_vi64();
+            static core.node<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.node<?> res = (core.node<?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
+                return res;
+            }
+
+        }
+
+        @SuppressWarnings("unused")
+        protected static class nodeTime<T> extends GreyCat.Object {
+            public long ref;
+
+            protected nodeTime(GreyCat.Type type) {
+                super(type, null);
+
+            }
+
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_TIME);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu64(ref);
+            }
+
+            static core.nodeTime<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeTime<?> res = (core.nodeTime<?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
+                return res;
+            }
+        }
+
+        @SuppressWarnings("unused")
+        protected static class nodeIndex<T, U> extends GreyCat.Object {
+            public static final java.lang.String type_name = "core::nodeIndex";
+
+            public long ref;
+
+            protected nodeIndex(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_INDEX);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu64(ref);
+            }
+
+            static core.nodeIndex<?, ?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeIndex<?, ?> res = (core.nodeIndex<?, ?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
+                return res;
+            }
+        }
+
+        @SuppressWarnings("unused")
+        protected static class nodeList<T> extends GreyCat.Object {
+            public long ref;
+
+            protected nodeList(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_LIST);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu64(ref);
+            }
+
+            static core.nodeList<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeList<?> res = (core.nodeList<?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
+                return res;
+            }
+
+        }
+
+        @SuppressWarnings("unused")
+        protected static class nodeGeo<T> extends GreyCat.Object {
+            public long ref;
+
+            protected nodeGeo(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.NODE_GEO);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu64(ref);
+            }
+
+            static core.nodeGeo<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.nodeGeo<?> res = (core.nodeGeo<?>) type.factory.build(type);
+                res.ref = stream.read_vu64();
                 return res;
             }
 
         }
 
         protected static class field extends GreyCat.Object {
-            public int abi_type;
-            public int right;
-
             protected field(GreyCat.Type type) {
                 super(type, null);
             }
 
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.FIELD);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(abi_type);
-                stream.write_vu32(right);
-            }
-
-            static core.field load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.field res = (core.field) type.factory.build(type);
-                res.abi_type = stream.read_vu32();
-                res.right = stream.read_vu32();
-                return res;
+            static java.lang.Object load(@SuppressWarnings("unused") GreyCat.Type type, @SuppressWarnings("unused") GreyCat.Stream stream) throws IOException {
+                throw new RuntimeException("unsupported");
             }
         }
 
@@ -78,12 +168,12 @@ class std_n {
             private static final double GC_CORE_GEO_LNG_MAX = 180;
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.GEO);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i64(geocode);
             }
 
@@ -181,158 +271,63 @@ class std_n {
             }
         }
 
-        protected static class node<T> extends GreyCat.Object {
-            public long ref;
+        protected static class time extends GreyCat.Object {
+            public long value;
 
-            protected node(GreyCat.Type type) {
+            protected time(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE);
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.TIME);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vi64(value);
             }
 
-            static core.node<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.node<?> res = (core.node<?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.time res = (core.time) type.factory.build(type);
+                res.value = stream.read_vi64();
                 return res;
             }
 
         }
 
-        protected static class nodeGeo<T> extends GreyCat.Object {
-            public long ref;
+        protected static class duration extends GreyCat.Object {
+            public long value;
 
-            protected nodeGeo(GreyCat.Type type) {
+            protected duration(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_GEO);
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_i8(GreyCat.PrimitiveType.DURATION);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vi64(value);
             }
 
-            static core.nodeGeo<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeGeo<?> res = (core.nodeGeo<?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                core.duration res = (duration) type.factory.build(type);
+                res.value = stream.read_vi64();
                 return res;
             }
 
-        }
-
-        protected static class nodeIndex<T, U> extends GreyCat.Object {
-            public static final java.lang.String type_name = "core::nodeIndex";
-
-            public long ref;
-
-            protected nodeIndex(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_INDEX);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
-            }
-
-            static core.nodeIndex<?, ?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeIndex<?, ?> res = (core.nodeIndex<?, ?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
-                return res;
-            }
-        }
-
-        protected static class nodeList<T> extends GreyCat.Object {
-            public long ref;
-
-            protected nodeList(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_LIST);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
-            }
-
-            static core.nodeList<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeList<?> res = (core.nodeList<?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
-                return res;
-            }
-
-        }
-
-        protected static class nodeTime<T> extends GreyCat.Object {
-            public long ref;
-
-            protected nodeTime(GreyCat.Type type) {
-                super(type, null);
-
-            }
-
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.NODE_TIME);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu64(ref);
-            }
-
-            static core.nodeTime<?> load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.nodeTime<?> res = (core.nodeTime<?>) type.factory.build(type);
-                res.ref = stream.read_vu64();
-                return res;
-            }
         }
 
         protected static class str extends GreyCat.Object {
-            public long value;
-
             protected str(GreyCat.Type type) {
                 super(type, null);
             }
 
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.STR);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_i64(value);
-            }
-
-            static str load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                str res = (str) type.factory.build(type);
-                res.value = stream.read_i64();
-                return res;
-            }
-
-            @Override
-            public final java.lang.String toString() {
-                // TODO
-                throw new UnsupportedOperationException();
+            static java.lang.Object load(@SuppressWarnings("unused") GreyCat.Type type, @SuppressWarnings("unused") GreyCat.Stream stream) throws IOException {
+                throw new RuntimeException("unsupported");
             }
         }
 
@@ -346,12 +341,12 @@ class std_n {
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.T2);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -390,12 +385,12 @@ class std_n {
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.T3);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -434,12 +429,12 @@ class std_n {
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.T4);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -481,12 +476,12 @@ class std_n {
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.T2F);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -524,12 +519,12 @@ class std_n {
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.T3F);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -568,12 +563,12 @@ class std_n {
             }
 
             @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
+            protected final void saveType(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i8(GreyCat.PrimitiveType.T4F);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i64(interleave());
             }
 
@@ -612,52 +607,13 @@ class std_n {
             }
         }
 
-        protected static class time extends GreyCat.Object {
-            public long value;
-
-            protected time(GreyCat.Type type) {
-                super(type, null);
-            }
-
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TIME);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vi64(value);
-            }
-
-            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.time res = (core.time) type.factory.build(type);
-                res.value = stream.read_vi64();
-                return res;
-            }
-
-        }
-
         protected static class type extends GreyCat.Object {
-            public int abi_type;
-
             protected type(GreyCat.Type type) {
                 super(type, null);
             }
 
-            @Override
-            protected final void saveType(GreyCat.Stream stream) throws IOException {
-                stream.write_i8(GreyCat.PrimitiveType.TYPE);
-            }
-
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(abi_type);
-            }
-
-            static core.type load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.type res = (core.type) type.factory.build(type);
-                res.abi_type = stream.read_vu32();
-                return res;
+            static java.lang.Object load(@SuppressWarnings("unused") GreyCat.Type type, @SuppressWarnings("unused") GreyCat.Stream stream) throws IOException {
+                throw new RuntimeException("unsupported");
             }
         }
 
@@ -668,110 +624,278 @@ class std_n {
                 super(type, null);
             }
 
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                if (null == attributes || 0 == attributes.length) {
-                    stream.write_vu32(0);
-                    return;
-                }
-                stream.write_vu32(attributes.length);
+            private void save_typed(GreyCat.Stream stream, int type_offset, boolean type_nullable) throws IOException {
                 byte[] nullables = null;
-                boolean typeIsUnique = false;
-                Class<?> uniqueType = null;
-                boolean valueIsMonotonic = false;
-                Object monotonicValue = null;
-                for (int offset = 0; offset < attributes.length; ++offset) {
-                    if (null == attributes[offset]) {
-                        if (null == nullables) {
-                            nullables = new byte[(int) Math.ceil((double) attributes.length / 8)];
-                            java.util.Arrays.fill(nullables, (byte) 0);
+                if (type_nullable) {
+                    for (int offset = 0; offset < size(); ++offset) {
+                        Object e = attributes[offset];
+                        if (null == e) {
+                            if (null == nullables) {
+                                nullables = new byte[(int) Math.ceil((float) size() / 8)];
+                                Arrays.fill(nullables, (byte) 0);
+                            }
+                            nullables[offset >>> 3] |= (byte) (1 << (offset & 7));
                         }
-                        nullables[offset >> 3] |= (byte) (1 << (offset & 7));
-                    } else {
-                        Class<?> type = attributes[offset].getClass();
-                        if (Integer.class.equals(type) || Short.class.equals(type)) {
-                            type = Long.class;
-                        } else if (Float.class.equals(type)) {
-                            type = Double.class;
+                        stream.write_bool(null != nullables);
+                        if (null != nullables) {
+                            stream.write_i8_array(nullables, 0, nullables.length);
                         }
-                        if (null == uniqueType) {
-                            typeIsUnique = true;
-                            uniqueType = type;
-                        } else if (typeIsUnique && !uniqueType.equals(type)) {
-                            typeIsUnique = false;
-                        }
-                        if (null == monotonicValue) {
-                            valueIsMonotonic = true;
-                            monotonicValue = attributes[offset];
-                        } else if (valueIsMonotonic && !monotonicValue.equals(attributes[offset])) {
-                            valueIsMonotonic = false;
-                        }
-                    }
-                }
-                stream.write_i8((byte) (null == nullables ? 0 : 1));
-                if (null != nullables) {
-                    stream.write_i8_array(nullables, 0, nullables.length);
-                }
-                if (!typeIsUnique) {
-                    stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
-                    for (java.lang.Object elem : attributes) {
-                        if (null != elem) stream.write(elem);
                     }
                 } else {
-                    if (Boolean.class.equals(uniqueType)) {
-                        stream.write_i8(GreyCat.PrimitiveType.BOOL);
-                        stream.write_i8((byte) 0); // TODO: manage monotonic
-                        for (java.lang.Object elem : attributes) {
-                            if (null != elem) stream.write_bool((Boolean) elem);
+                    stream.write_bool(false);
+                }
+                if (stream.greycat.type_offset_core_bool == type_offset) {
+                    stream.write_i8(GreyCat.PrimitiveType.BOOL);
+                    stream.write_i8((byte) 0); // TODO: manage monotonic
+                    if (type_nullable) {
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                stream.write_bool((boolean) e);
+                            }
                         }
-                    } else if (Character.class.equals(uniqueType)) {
-                        stream.write_i8(GreyCat.PrimitiveType.CHAR);
-                        stream.write_i8((byte) 0); // TODO: manage monotonic
-                        for (java.lang.Object elem : attributes) {
-                            if (null == elem) continue;
-                            char c = (Character) elem;
-                            if ((int) c > GreyCat.Stream.ASCII_MAX) {
+                    } else {
+                        for (Object e : attributes) {
+                            stream.write_bool((boolean) e);
+                        }
+                    }
+                } else if (stream.greycat.type_offset_core_char == type_offset) {
+                    stream.write_i8(GreyCat.PrimitiveType.CHAR);
+                    stream.write_i8((byte) 0); // TODO: manage monotonic
+                    if (type_nullable) {
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                char c = (char) e;
+                                if (c > GreyCat.Stream.ASCII_MAX) {
+                                    throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
+                                }
+                                stream.write_i8((byte) c);
+                            }
+                        }
+                    } else {
+                        for (Object e : attributes) {
+                            char c = (char) e;
+                            if (c > GreyCat.Stream.ASCII_MAX) {
                                 throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
                             }
                             stream.write_i8((byte) c);
                         }
-                    } else if (Long.class.equals(uniqueType)) {
-                        stream.write_i8(GreyCat.PrimitiveType.INT);
-                        stream.write_i8((byte) 0); // TODO: manage monotonic
-                        for (java.lang.Object elem : attributes) {
-                            if (null == elem) continue;
-                            if (elem instanceof Long) {
-                                stream.write_vi64((long) elem);
-                            } else if (elem instanceof Integer) {
-                                stream.write_vi64((int) elem);
-                            } else if (elem instanceof Short) {
-                                stream.write_vi64((short) elem);
+                    }
+                } else if (stream.greycat.type_offset_core_int == type_offset) {
+                    stream.write_i8(GreyCat.PrimitiveType.INT);
+                    stream.write_i8((byte) 0); // TODO: manage monotonic
+                    if (type_nullable) {
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                stream.write_vi64((long) e);
                             }
                         }
-                    } else if (Double.class.equals(uniqueType)) {
+                    } else {
+                        for (Object e : attributes) {
+                            stream.write_vi64((long) e);
+                        }
+                    }
+                } else if (stream.greycat.type_offset_core_float == type_offset) {
+                    stream.write_i8(GreyCat.PrimitiveType.FLOAT);
+                    stream.write_i8((byte) 0); // TODO: manage monotonic
+                    if (type_nullable) {
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                stream.write_f64((double) e);
+                            }
+                        }
+                    } else {
+                        for (Object e : attributes) {
+                            stream.write_f64((double) e);
+                        }
+                    }
+                } else {
+                    if (stream.greycat.type_offset_core_node == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.NODE);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_node_time == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.NODE_TIME);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_node_index == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.NODE_INDEX);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_node_list == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.NODE_LIST);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_node_geo == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.NODE_GEO);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_geo == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.GEO);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_time == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.TIME);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_duration == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.DURATION);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_t2 == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.T2);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_t3 == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.T3);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_t4 == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.T4);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_t2f == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.T2F);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_t3f == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.T3F);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                    } else if (stream.greycat.type_offset_core_t4f == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.T4F);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        // } else if () { TODO: other types
+                    } else {
+                        stream.write_i8((GreyCat.PrimitiveType.OBJECT));
+                        stream.write_vu32(type_offset);
+                    }
+                    if (type_nullable) {
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                ((GreyCat.Object) e).save(stream, type_offset);
+                            }
+                        }
+                    } else {
+                        for (Object e : attributes) {
+                            ((GreyCat.Object) e).save(stream, type_offset);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                if (null == attributes || 0 == size()) {
+                    stream.write_vu32(0);
+                    return;
+                }
+                stream.write_vu32(size());
+                if (null != type_offset && 0 != stream.greycat.types[type_offset].generic_abi_type) {
+                    int g1_abi_type_desc = stream.greycat.types[type_offset].g1_abi_type_desc;
+                    save_typed(stream, g1_abi_type_desc >> 1, 1 == (g1_abi_type_desc & 1));
+                    return;
+                }
+                byte[] nullables = null;
+                boolean type_is_unique = false;
+                Class<?> unique_type = null;
+                boolean value_is_monotonic = false;
+                Object monotonic_value = null;
+                for (int offset = 0; offset < size(); ++offset) {
+                    Object e = attributes[offset];
+                    if (null == e) {
+                        if (null == nullables) {
+                            nullables = new byte[(int) Math.ceil((double) attributes.length / 8)];
+                            Arrays.fill(nullables, (byte) 0);
+                        }
+                        nullables[offset >>> 3] |= (byte) (1 << (offset & 7));
+                    } else {
+                        Class<?> type = e.getClass();
+                        if (null == unique_type) {
+                            type_is_unique = true;
+                            unique_type = type;
+                        } else if (type_is_unique && !unique_type.equals(type)) {
+                            type_is_unique = false;
+                        }
+                        if (null == monotonic_value) {
+                            value_is_monotonic = true;
+                            monotonic_value = e;
+                        } else if (value_is_monotonic && !monotonic_value.equals(e)) {
+                            value_is_monotonic = false;
+                        }
+                    }
+                }
+                System.out.println(null != nullables);
+                stream.write_bool(null != nullables);
+                if (null != nullables) {
+                    stream.write_i8_array(nullables, 0, nullables.length);
+                }
+                if (!type_is_unique) {
+                    stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
+                    for (Object e : attributes) {
+                        if (null != e) {
+                            stream.write(e);
+                        }
+                    }
+                } else {
+                    if (java.lang.Boolean.class.equals(unique_type)) {
+                        stream.write_i8(GreyCat.PrimitiveType.BOOL);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                stream.write_bool((boolean) e);
+                            }
+                        }
+                    } else if (java.lang.Character.class.equals(unique_type)) {
+                        stream.write_i8(GreyCat.PrimitiveType.CHAR);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                char c = (char) e;
+                                if (c > GreyCat.Stream.ASCII_MAX) {
+                                    throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
+                                }
+                                stream.write_i8((byte) c);
+                            }
+                        }
+                    } else if (java.lang.Long.class.equals(unique_type)) {
+                        stream.write_i8(GreyCat.PrimitiveType.INT);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                stream.write_vi64((long) e);
+                            }
+                        }
+                    } else if (java.lang.Integer.class.equals(unique_type)) {
+                        stream.write_i8(GreyCat.PrimitiveType.INT);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                stream.write_vi64((int) e);
+                            }
+                        }
+                    } else if (java.lang.Double.class.equals(unique_type)) {
                         stream.write_i8(GreyCat.PrimitiveType.FLOAT);
                         stream.write_i8((byte) 0); // TODO: manage monotonic
-                        for (java.lang.Object elem : attributes) {
-                            if (null != elem) stream.write_f64((double) elem);
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                stream.write_f64((double) e);
+                            }
                         }
-                    } else if (java.lang.String.class.equals(uniqueType)) {
+                    } else if (java.lang.Float.class.equals(unique_type)) {
+                        stream.write_i8(GreyCat.PrimitiveType.FLOAT);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                stream.write_f64((float) e);
+                            }
+                        }
+                    } else if (java.lang.String.class.equals(unique_type)) {
                         stream.write_i8(GreyCat.PrimitiveType.OBJECT);
                         stream.write_vu32(stream.greycat.type_offset_core_string);
-                        for (java.lang.Object elem : attributes) {
-                            if (null != elem) {
-                                java.lang.String string = (java.lang.String) elem;
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                java.lang.String string = (java.lang.String) e;
                                 final byte[] data = string.getBytes(java.nio.charset.StandardCharsets.UTF_8);
                                 stream.write_vu32(data.length << 1);
                                 stream.write_i8_array(data, 0, data.length);
                             }
                         }
-                    } else if (GreyCat.Object.class.isAssignableFrom(uniqueType)) {
-                        ((GreyCat.Object) monotonicValue).saveType(stream);
-                        for (java.lang.Object elem : attributes) {
-                            if (null != elem) ((GreyCat.Object) elem).save(stream);
+                    } else if (GreyCat.Object.class.isAssignableFrom(unique_type)) {
+                        ((GreyCat.Object) monotonic_value).saveType(stream);
+                        for (Object e : attributes) {
+                            if (null != e) {
+                                ((GreyCat.Object) e).save(stream);
+                            }
                         }
                     } else {
-                        throw new IllegalArgumentException("wrong state");
+                        throw new RuntimeException("wrong state");
                     }
                 }
             }
@@ -788,44 +912,48 @@ class std_n {
                     nullables = new boolean[size];
                     for (int offset = 0; offset < size; offset += 8) {
                         byte flags = stream.read_i8();
-                        for (int flags_offset = 0; offset + flags_offset < size && flags_offset < 8; ++flags_offset) {
+                        for (int flags_offset = 0; flags_offset < Math.min(size - offset, 8); ++flags_offset) {
                             nullables[offset + flags_offset] = 1 == (flags >>> flags_offset & 1);
                         }
                     }
                 }
-                byte arrayPrimitiveType = stream.read_i8();
-                GreyCat.Type arrayType = null;
-                Object monotonicValue = null;
-                if (GreyCat.PrimitiveType.OBJECT == arrayPrimitiveType || GreyCat.PrimitiveType.STATIC_FIELD == arrayPrimitiveType) {
-                    int typeOffset = stream.read_vu32();
-                    if (-1 != typeOffset) {
-                        arrayType = stream.greycat.types[typeOffset];
+                byte array_primitive_type = stream.read_i8();
+                GreyCat.Type array_type = null;
+                Object monotonic_value = null;
+                if (GreyCat.PrimitiveType.OBJECT == array_primitive_type || GreyCat.PrimitiveType.STATIC_FIELD == array_primitive_type) {
+                    int type_offset = stream.read_vu32();
+                    if (-1 != type_offset) {
+                        array_type = stream.greycat.types[type_offset];
                     }
                 }
-                if (GreyCat.PrimitiveType.OBJECT != arrayPrimitiveType && GreyCat.PrimitiveType.UNDEFINED != arrayPrimitiveType) {
+                if (GreyCat.PrimitiveType.OBJECT != array_primitive_type && GreyCat.PrimitiveType.UNDEFINED != array_primitive_type) {
                     if (1 == stream.read_i8()) {
-                        monotonicValue = GreyCat.Stream.PRIMITIVE_LOADERS[arrayPrimitiveType].load(stream);
+                        monotonic_value = GreyCat.Stream.PRIMITIVE_LOADERS[array_primitive_type].load(stream);
                     }
                 }
-                if (GreyCat.PrimitiveType.UNDEFINED == arrayPrimitiveType) {
+                if (GreyCat.PrimitiveType.UNDEFINED == array_primitive_type) {
                     for (int offset = 0; offset < size; ++offset) {
-                        array.set(offset, null != nullables && nullables[offset] ? null : stream.read());
+                        array.setAttribute(offset, null != nullables && nullables[offset] ? null : stream.read());
+                        System.out.println(array.getAttribute(offset));
                     }
-                } else if (GreyCat.PrimitiveType.OBJECT == arrayPrimitiveType || (GreyCat.PrimitiveType.STATIC_FIELD == arrayPrimitiveType && null == monotonicValue)) {
-                    if (null == arrayType) {
+                } else if (GreyCat.PrimitiveType.OBJECT == array_primitive_type || (GreyCat.PrimitiveType.STATIC_FIELD == array_primitive_type && null == monotonic_value)) {
+                    if (null == array_type) {
                         for (int offset = 0; offset < size; ++offset) {
-                            array.set(offset, null != nullables && nullables[offset] ? null : stream.read_object()); // TODO: check for enums
+                            // TODO: check for enums
+                            array.setAttribute(offset, null != nullables && nullables[offset] ? null : stream.read_object());
                         }
                     } else {
                         for (int offset = 0; offset < size; ++offset) {
-                            array.set(offset, null != nullables && nullables[offset] ? null : arrayType.loader.load(arrayType, stream));
+                            array.setAttribute(offset, null != nullables && nullables[offset] ? null : array_type.loader.load(array_type, stream));
                         }
                     }
-                } else if (null == monotonicValue) {
+                } else if (null == monotonic_value) {
                     for (int offset = 0; offset < size; ++offset) {
-                        if (null == nullables || !nullables[offset]) {
-                            array.set(offset, GreyCat.Stream.PRIMITIVE_LOADERS[arrayPrimitiveType].load(stream));
-                        }
+                        array.setAttribute(offset, null != nullables && nullables[offset] ? null : GreyCat.Stream.PRIMITIVE_LOADERS[array_primitive_type].load(stream));
+                    }
+                } else {
+                    for (int offset = 0; offset < size; ++offset) {
+                        array.setAttribute(offset, null != nullables && nullables[offset] ? null : monotonic_value);
                     }
                 }
                 return array;
@@ -875,28 +1003,18 @@ class std_n {
 
             @SuppressWarnings("unused")
             public final void add(T value) {
-                if (null == attributes) {
-                    attributes = new Object[1];
-                } else {
-                    attributes = java.util.Arrays.copyOf(attributes, attributes.length + 1);
-                }
+                attributes = java.util.Arrays.copyOf(attributes, attributes.length + 1);
                 attributes[attributes.length - 1] = value;
             }
 
             @SuppressWarnings("unused")
             public final void addAll(T[] values) {
-                int currentLength;
-                if (null == attributes) {
-                    currentLength = 0;
-                    attributes = new Object[values.length];
-                } else {
-                    currentLength = attributes.length;
-                    attributes = java.util.Arrays.copyOf(attributes, currentLength + values.length);
-                }
+                int currentLength = attributes.length;
+                attributes = java.util.Arrays.copyOf(attributes, currentLength + values.length);
                 java.lang.System.arraycopy(values, 0, attributes, currentLength, values.length);
             }
 
-            public final T get(int index) {
+            public final T getAttribute(int index) {
                 //noinspection unchecked
                 return (T) attributes[index];
             }
@@ -916,14 +1034,11 @@ class std_n {
 
             @SuppressWarnings("unused")
             public final int size() {
-                return null == attributes ? 0 : attributes.length;
+                return attributes.length;
             }
 
             @SuppressWarnings("unused")
             public final int indexOf(T value) {
-                if (null == attributes) {
-                    return -1;
-                }
                 for (int index = 0; index < attributes.length; ++index) {
                     if (value == attributes[index]) {
                         return index;
@@ -940,7 +1055,7 @@ class std_n {
 
             @Override
             public java.lang.String toString() {
-                StringBuilder b = new StringBuilder();
+                StringBuilder b = new StringBuilder(type.name);
                 b.append('[');
                 for (int i = 0; i < this.attributes.length; i++) {
                     if (i != 0) {
@@ -954,22 +1069,124 @@ class std_n {
         }
 
         protected static class Buffer extends GreyCat.Object {
-            public byte[] data;
+            private byte[] data;
 
             protected Buffer(GreyCat.Type type) {
                 super(type, null);
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_vu32(data.length);
                 stream.write_i8_array(data, 0, data.length);
             }
 
+            static Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                Buffer res = (Buffer) type.factory.build(type);
+                res.data = stream.read_i8_array(stream.read_vu32());
+                return res;
+            }
+        }
+
+        protected static class Date extends GreyCat.Object {
+            public long localizedEpochS;
+            public long epochUs;
+            public int timeZone;
+
+            protected Date(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vi64(localizedEpochS);
+                stream.write_vi64(epochUs);
+                stream.write_vu32(timeZone);
+            }
+
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                core.Buffer buf = (Buffer) type.factory.build(type);
-                buf.data = stream.read_i8_array(stream.read_vu32());
-                return buf;
+                Date res = (Date) type.factory.build(type);
+                res.localizedEpochS = stream.read_vi64();
+                res.epochUs = stream.read_vi64();
+                res.timeZone = stream.read_vu32();
+                return res;
+            }
+        }
+
+        protected static class Error extends GreyCat.Object {
+            public int code;
+            public core.Error.Frame[] frames;
+            public java.lang.String msg;
+
+            public Object value;
+
+            protected Error(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu32(code);
+                stream.write_vu32(frames.length);
+                final byte[] msg_bytes = msg.getBytes(StandardCharsets.UTF_8);
+                stream.write_vu32(msg_bytes.length);
+                int offset = 0;
+                while (offset < frames.length) {
+                    core.Error.Frame frame = frames[offset];
+                    stream.write_vu32(frame.modSymbol);
+                    stream.write_vu32(frame.typeSymbol);
+                    stream.write_vu32(frame.fnSymbol);
+                    stream.write_vu32(frame.line);
+                    stream.write_vu32(frame.column);
+                    offset++;
+                }
+                stream.write_i8_array(msg_bytes, 0, msg_bytes.length);
+                stream.write(value);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final int code = stream.read_vu32();
+                final int framesLen = stream.read_vu32();
+                final int msgLen = stream.read_vu32();
+                final core.Error.Frame[] frames = new core.Error.Frame[framesLen];
+                for (int offset = 0; offset < framesLen; offset++) {
+                    final int modSymbol = stream.read_vu32();
+                    final int typeSymbol = stream.read_vu32();
+                    final int fnSymbol = stream.read_vu32();
+                    final int line = stream.read_vu32();
+                    final int column = stream.read_vu32();
+                    frames[offset] = new core.Error.Frame(modSymbol, typeSymbol, fnSymbol, line, column);
+                }
+                core.Error res = (Error) type.factory.build(type);
+                res.code = code;
+                res.frames = frames;
+                res.msg = stream.read_string(msgLen);
+                res.value = stream.read();
+                return res;
+            }
+
+            public final static class Frame {
+                private final int modSymbol,
+                        typeSymbol,
+                        fnSymbol,
+                        line,
+                        column;
+
+                public Frame(int modSymbol, int typeSymbol, int fnSymbol, int line, int column) {
+                    this.modSymbol = modSymbol;
+                    this.typeSymbol = typeSymbol;
+                    this.fnSymbol = fnSymbol;
+                    this.line = line;
+                    this.column = column;
+                }
+            }
+
+            @Override
+            public java.lang.String toString() {
+                return type.name + "{" +
+                        "msg='" + msg + '\'' +
+                        ", value=" + value +
+                        '}';
             }
         }
 
@@ -984,7 +1201,7 @@ class std_n {
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_vu32(size());
                 for (T key : keys()) {
                     stream.write(key);
@@ -1061,193 +1278,364 @@ class std_n {
                 super(type, null);
             }
 
-            @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
-                stream.write_vu32(rows);
-                stream.write_vu32(cols);
-
+            private void save_typed(GreyCat.Stream stream, int type_offset, boolean type_nullable) throws IOException {
                 for (int col = 0; col < cols; ++col) {
                     byte[] nullables = null;
-                    boolean typeIsUnique = false;
-                    Class<?> uniqueType = null;
-                    boolean valueIsMonotonic = false;
-                    Object monotonicValue = null;
-                    for (int row = 0; row < rows; ++row) {
-                        if (null == data[col * rows + row]) {
-                            if (null == nullables) {
-                                nullables = new byte[(int) Math.ceil((double) rows / 8)];
+                    if (type_nullable) {
+                        for (int row = 0; row < rows; ++row) {
+                            Object e = data[col * rows + row];
+                            if (null == e) {
+                                if (null == nullables) {
+                                    nullables = new byte[(int) Math.ceil((double) rows / 8)];
+                                    Arrays.fill(nullables, (byte) 0);
+                                }
+                                nullables[row >>> 3] |= (byte) (1 << (row & 7));
                             }
-                            nullables[row >> 3] |= (byte) (1 << (row & 7));
+                            stream.write_bool(null != nullables);
+                            if (null != nullables) {
+                                stream.write_i8_array(nullables, 0, nullables.length);
+                            }
+                        }
+                    } else {
+                        stream.write_bool(false);
+                    }
+                    if (stream.greycat.type_offset_core_bool == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.BOOL);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        if (type_nullable) {
+                            for (int row = 0; row < rows; ++row) {
+                                Object e = data[col * rows + row];
+                                if (null != e) {
+                                    stream.write_bool((boolean) e);
+                                }
+                            }
+                        }
+                    } else if (stream.greycat.type_offset_core_char == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.CHAR);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        if (type_nullable) {
+                            for (int row = 0; row < rows; ++row) {
+                                Object e = data[col * rows + row];
+                                if (null != e) {
+                                    char c = (char) e;
+                                    if (GreyCat.Stream.ASCII_MAX < c) {
+                                        throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
+                                    }
+                                    stream.write_i8((byte) c);
+                                }
+                            }
+                        }
+                    } else if (stream.greycat.type_offset_core_int == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.INT);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        if (type_nullable) {
+                            for (int row = 0; row < rows; ++row) {
+                                Object e = data[col * rows + row];
+                                if (null != e) {
+                                    stream.write_vi64((long) e);
+                                }
+                            }
+                        }
+                    } else if (stream.greycat.type_offset_core_float == type_offset) {
+                        stream.write_i8(GreyCat.PrimitiveType.FLOAT);
+                        stream.write_i8((byte) 0); // TODO: manage monotonic
+                        if (type_nullable) {
+                            for (int row = 0; row < rows; ++row) {
+                                Object e = data[col * rows + row];
+                                if (null != e) {
+                                    stream.write_f64((double) e);
+                                }
+                            }
+                        }
+                    } else {
+                        if (stream.greycat.type_offset_core_node == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.NODE);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_node_time == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.NODE_TIME);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_node_index == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.NODE_INDEX);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_node_list == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.NODE_LIST);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_node_geo == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.NODE_GEO);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_geo == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.GEO);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_time == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.TIME);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_duration == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.DURATION);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_t2 == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.T2);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_t3 == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.T3);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_t4 == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.T4);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_t2f == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.T2F);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_t3f == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.T3F);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                        } else if (stream.greycat.type_offset_core_t4f == type_offset) {
+                            stream.write_i8(GreyCat.PrimitiveType.T4F);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                            // } else if () { TODO: other types
                         } else {
-                            Class<?> type = data[col * rows + row].getClass();
-                            if (Integer.class.equals(type) || Short.class.equals(type)) {
-                                type = Long.class;
-                            } else if (Float.class.equals(type)) {
-                                type = Double.class;
+                            stream.write_i8((GreyCat.PrimitiveType.OBJECT));
+                            stream.write_vu32(type_offset);
+                        }
+                        if (type_nullable) {
+                            for (int row = 0; row < rows; ++row) {
+                                Object e = data[col * rows + row];
+                                if (null != e) {
+                                    ((GreyCat.Object) e).save(stream, type_offset);
+                                }
                             }
-                            if (null == uniqueType) {
-                                typeIsUnique = true;
-                                uniqueType = type;
-                            } else if (typeIsUnique && !uniqueType.equals(type)) {
-                                typeIsUnique = false;
-                            }
-                            if (null == monotonicValue) {
-                                valueIsMonotonic = true;
-                                monotonicValue = data[col * rows + row];
-                            } else if (valueIsMonotonic && !monotonicValue.equals(data[col * rows + row])) {
-                                valueIsMonotonic = false;
+                        } else {
+                            for (int row = 0; row < rows; ++row) {
+                                Object e = data[col * rows + row];
+                                ((GreyCat.Object) e).save(stream, type_offset);
                             }
                         }
                     }
-                    stream.write_i8((byte) (null == nullables ? 0 : 1));
+                }
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu32(rows);
+                stream.write_vu32(cols);
+                if (null != type_offset && 0 != stream.greycat.types[type_offset].generic_abi_type) {
+                    int g1_abi_type_desc = stream.greycat.types[type_offset].g1_abi_type_desc;
+                    save_typed(stream, g1_abi_type_desc >>> 1, 1 == (g1_abi_type_desc & 1));
+                    return;
+                }
+                for (int col = 0; col < cols; ++col) {
+                    byte[] nullables = null;
+                    boolean type_is_unique = false;
+                    Class<?> unique_type = null;
+                    boolean value_is_monotonic = false;
+                    Object monotonic_value = null;
+                    for (int row = 0; row < rows; ++row) {
+                        Object e = data[col * rows + row];
+                        if (null == e) {
+                            if (null == nullables) {
+                                nullables = new byte[(int) Math.ceil((float) rows / 8)];
+                            }
+                            nullables[row >>> 3] |= (byte) (1 << (row & 7));
+                        } else {
+                            Class<?> type = e.getClass();
+                            if (null == unique_type) {
+                                type_is_unique = true;
+                                unique_type = type;
+                            } else if (type_is_unique && !unique_type.equals(type)) {
+                                type_is_unique = false;
+                            }
+                            if (null == monotonic_value) {
+                                value_is_monotonic = true;
+                                monotonic_value = e;
+                            } else if (value_is_monotonic && !monotonic_value.equals(e)) {
+                                value_is_monotonic = false;
+                            }
+                        }
+                    }
+                    stream.write_bool(null != nullables);
                     if (null != nullables) {
                         stream.write_i8_array(nullables, 0, nullables.length);
                     }
-                    if (!typeIsUnique) {
+                    if (!type_is_unique) {
                         stream.write_i8(GreyCat.PrimitiveType.UNDEFINED);
                         for (int row = 0; row < rows; ++row) {
-                            java.lang.Object elem = data[col * rows + row];
-                            if (null != elem) stream.write(elem);
+                            Object e = data[col * rows + row];
+                            if (null != e) {
+                                stream.write(e);
+                            }
                         }
                     } else {
-                        if (Boolean.class.equals(uniqueType)) {
+                        if (Boolean.class.equals(unique_type)) {
                             stream.write_i8(GreyCat.PrimitiveType.BOOL);
                             stream.write_i8((byte) 0); // TODO: manage monotonic
                             for (int row = 0; row < rows; ++row) {
-                                java.lang.Object elem = data[col * rows + row];
-                                if (null != elem) stream.write_bool((Boolean) elem);
+                                Boolean b = (Boolean) data[col * rows + row];
+                                if (null != b) {
+                                    stream.write_bool(b);
+                                }
                             }
-                        } else if (Character.class.equals(uniqueType)) {
+                        } else if (Character.class.equals(unique_type)) {
                             stream.write_i8(GreyCat.PrimitiveType.CHAR);
                             stream.write_i8((byte) 0); // TODO: manage monotonic
                             for (int row = 0; row < rows; ++row) {
-                                java.lang.Object elem = data[col * rows + row];
-                                if (null == elem) continue;
-                                char c = (Character) elem;
-                                if ((int) c > GreyCat.Stream.ASCII_MAX) {
-                                    throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
+                                Character c = (Character) data[col * rows + row];
+                                if (null != c) {
+                                    if (c > GreyCat.Stream.ASCII_MAX) {
+                                        throw new IllegalArgumentException("Only ASCII characters are allowed: " + c);
+                                    }
+                                    stream.write_i8((byte) ((char) c));
                                 }
-                                stream.write_i8((byte) c);
                             }
-                        } else if (Long.class.equals(uniqueType)) {
+                        } else if (Long.class.equals(unique_type)) {
                             stream.write_i8(GreyCat.PrimitiveType.INT);
                             stream.write_i8((byte) 0); // TODO: manage monotonic
                             for (int row = 0; row < rows; ++row) {
-                                java.lang.Object elem = data[col * rows + row];
-                                if (null == elem) continue;
-                                if (elem instanceof Long) {
-                                    stream.write_vi64((long) elem);
-                                } else if (elem instanceof Integer) {
-                                    stream.write_vi64((int) elem);
-                                } else if (elem instanceof Short) {
-                                    stream.write_vi64((short) elem);
+                                Long l = (Long) data[col * rows + row];
+                                if (null != l) {
+                                    stream.write_vi64(l);
                                 }
                             }
-                        } else if (Double.class.equals(uniqueType)) {
-                            stream.write_i8(GreyCat.PrimitiveType.FLOAT);
+                        } else if (Integer.class.equals(unique_type)) {
+                            stream.write_i8(GreyCat.PrimitiveType.INT);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
                             for (int row = 0; row < rows; ++row) {
-                                java.lang.Object elem = data[col * rows + row];
-                                if (null != elem) stream.write_f64((double) elem);
+                                Integer i = (Integer) data[col * rows + row];
+                                if (null != i) {
+                                    stream.write_vi64(i);
+                                }
                             }
-                        } else if (java.lang.String.class.equals(uniqueType)) {
-                            stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                            stream.write_vu32(stream.greycat.type_offset_core_string);
+                        } else if (Double.class.equals(unique_type)) {
+                            stream.write_i8(GreyCat.PrimitiveType.FLOAT);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
                             for (int row = 0; row < rows; ++row) {
-                                java.lang.Object elem = data[col * rows + row];
-                                if (null != elem) {
-                                    java.lang.String string = (java.lang.String) elem;
-                                    final byte[] data = string.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                                Double d = (Double) data[col * rows + row];
+                                if (null != d) {
+                                    stream.write_f64(d);
+                                }
+                            }
+                        } else if (Float.class.equals(unique_type)) {
+                            stream.write_i8(GreyCat.PrimitiveType.FLOAT);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                            for (int row = 0; row < rows; ++row) {
+                                Float f = (Float) data[col * rows + row];
+                                if (null != f) {
+                                    stream.write_f64(f);
+                                }
+                            }
+                        } else if (java.lang.String.class.equals(unique_type)) {
+                            stream.write_i8(GreyCat.PrimitiveType.OBJECT);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
+                            for (int row = 0; row < rows; ++row) {
+                                java.lang.String s = (java.lang.String) data[col * rows + row];
+                                if (null != s) {
+                                    final byte[] data = s.getBytes(java.nio.charset.StandardCharsets.UTF_8);
                                     stream.write_vu32(data.length << 1);
                                     stream.write_i8_array(data, 0, data.length);
                                 }
                             }
-                        } else if (GreyCat.Object.class.isAssignableFrom(uniqueType)) {
-                            ((GreyCat.Object) monotonicValue).saveType(stream);
+                        } else if (GreyCat.Object.class.isAssignableFrom(unique_type)) {
+                            ((GreyCat.Object) monotonic_value).saveType(stream);
+                            stream.write_i8((byte) 0); // TODO: manage monotonic
                             for (int row = 0; row < rows; ++row) {
-                                java.lang.Object elem = data[col * rows + row];
-                                if (null != elem) ((GreyCat.Object) elem).save(stream);
+                                GreyCat.Object o = (GreyCat.Object) data[col * rows + row];
+                                if (null != o) {
+                                    o.save(stream);
+                                }
                             }
                         } else {
-                            throw new IllegalArgumentException("wrong state");
+                            throw new RuntimeException("wrong state");
                         }
                     }
                 }
             }
 
+            @SuppressWarnings("unchecked")
             static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
-                final int rows = stream.read_vu32();
-                final int cols = stream.read_vu32();
-                final Object[] data = new Object[cols * rows];
-                java.util.Arrays.fill(data, null);
+                int rows = stream.read_vu32();
+                int cols = stream.read_vu32();
+                Object[] data = new Object[rows * cols];
                 for (int col = 0; col < cols; ++col) {
-                    boolean[] nullables = null;
+                    // Read column metadata
+                    java.util.List<Boolean> nullables = null;
                     if (1 == stream.read_i8()) {
-                        nullables = new boolean[rows];
+                        nullables = new java.util.ArrayList<>(rows);
                         for (int row = 0; row < rows; row += 8) {
                             byte flags = stream.read_i8();
-                            for (int offset = 0; row + offset < rows && offset < 8; ++offset) {
-                                nullables[row + offset] = 1 == (flags >>> offset & 1);
+                            for (int offset = 0; offset < Math.min(rows - row, 8); ++offset) {
+                                nullables.add(1 == (flags >>> offset & 1));
                             }
                         }
                     }
-                    byte colPrimitiveType = stream.read_i8();
-                    GreyCat.Type colType = null;
-                    Object monotonicValue = null;
-                    if (GreyCat.PrimitiveType.OBJECT == colPrimitiveType || GreyCat.PrimitiveType.STATIC_FIELD == colPrimitiveType) {
-                        int typeOffset = stream.read_vu32();
-                        if (-1 != typeOffset) {
-                            colType = stream.greycat.types[typeOffset];
+                    byte col_primitive_type = stream.read_i8();
+                    GreyCat.Type col_type = null;
+                    Object monotonic_value = null;
+                    if (GreyCat.PrimitiveType.OBJECT == col_primitive_type || GreyCat.PrimitiveType.STATIC_FIELD == col_primitive_type) {
+                        int type_offset = stream.read_vu32();
+                        if (-1 != type_offset) {
+                            col_type = stream.greycat.types[type_offset];
                         }
                     }
-                    if (GreyCat.PrimitiveType.OBJECT != colPrimitiveType && GreyCat.PrimitiveType.UNDEFINED != colPrimitiveType) {
+                    if (GreyCat.PrimitiveType.OBJECT != col_primitive_type && GreyCat.PrimitiveType.UNDEFINED != col_primitive_type) {
                         if (1 == stream.read_i8()) {
-                            monotonicValue = GreyCat.Stream.PRIMITIVE_LOADERS[colPrimitiveType].load(stream);
+                            monotonic_value = GreyCat.Stream.PRIMITIVE_LOADERS[col_primitive_type].load(stream);
                         }
                     }
-                    if (GreyCat.PrimitiveType.UNDEFINED == colPrimitiveType) {
-                        for (int row = 0; row < rows; ++row) {
-                            data[col * rows + row] = null != nullables && nullables[row] ? null : stream.read();
-                        }
-                    } else if (GreyCat.PrimitiveType.OBJECT == colPrimitiveType || (GreyCat.PrimitiveType.STATIC_FIELD == colPrimitiveType && null == monotonicValue)) {
-                        if (null == colType) {
+                    // Read column data
+                    if (null != monotonic_value || (null != nullables && !nullables.contains(false))) {
+                        Arrays.fill(data, col * rows, (col + 1) * rows, monotonic_value);
+                    } else if (GreyCat.PrimitiveType.FLOAT == col_primitive_type) {
+                        if (null == nullables) {
+                            Arrays.fill(data, col * rows, (col + 1) * rows, stream.read_i8_array(8 * rows));
+                        } else {
                             for (int row = 0; row < rows; ++row) {
-                                if (null == nullables || !nullables[row]) {
-                                    data[col * rows + row] = stream.read_object(); // TODO: check for enums
-                                }
+                                data[col * rows + row] = nullables.get(row) ? null : stream.read_f64();
+                            }
+                        }
+                    } else if (GreyCat.PrimitiveType.UNDEFINED == col_primitive_type) {
+                        for (int row = 0; row < rows; ++row) {
+                            data[col * rows + row] = null != nullables && nullables.get(row) ? null : stream.read();
+                        }
+                    } else if (GreyCat.PrimitiveType.OBJECT == col_primitive_type || GreyCat.PrimitiveType.STATIC_FIELD == col_primitive_type) {
+                        if (null == col_type) {
+                            for (int row = 0; row < rows; ++row) {
+                                data[col * rows + row] = null != nullables && nullables.get(row) ? null : stream.read_object();
                             }
                         } else {
                             for (int row = 0; row < rows; ++row) {
-                                if (null == nullables || !nullables[row]) {
-                                    data[col * rows + row] = colType.loader.load(colType, stream);
-                                }
+                                data[col * rows + row] = null != nullables && nullables.get(row) ? null : col_type.loader.load(col_type, stream);
                             }
                         }
-                    } else if (null == monotonicValue) {
+                    } else {
                         for (int row = 0; row < rows; ++row) {
-                            if (null == nullables || !nullables[row]) {
-                                data[col * rows + row] = GreyCat.Stream.PRIMITIVE_LOADERS[colPrimitiveType].load(stream); // TODO: check
-                            }
+                            data[col * rows + row] = null != nullables && nullables.get(row) ? null : GreyCat.Stream.PRIMITIVE_LOADERS[col_primitive_type].load(stream);
                         }
                     }
                 }
-                @SuppressWarnings("unchecked") core.Table<java.lang.Object> t = (Table<java.lang.Object>) type.factory.build(type);
-                t.cols = cols;
-                t.rows = rows;
-                t.data = data;
-                return t;
+                Table<Object> table = (Table<Object>) type.factory.build(type);
+                table.rows = rows;
+                table.cols = cols;
+                table.data = data;
+                return table;
             }
 
             @Override
-            public final java.lang.String toString() {
-                StringBuilder builder = new StringBuilder().append(type.name).append('{');
-                for (int col = 0; col < cols; ++col) {
-                    builder.append("\n\t");
-                    for (int row = 0; row < rows; ++row) {
-                        builder.append(data[col * rows + row]).append(", ");
+            public java.lang.String toString() {
+                java.lang.StringBuilder builder = new java.lang.StringBuilder(type.name).append('{');
+                boolean firstRow = true;
+                for (int row = 0; row < rows; ++row) {
+                    if (firstRow) {
+                        builder.append('\n');
+                        firstRow = false;
                     }
-                }
-                if (cols > 0 && rows > 0) {
-                    builder.append('\n');
+                    builder.append("\t[");
+                    boolean firstCol = true;
+                    for (int col = 0; col < cols; ++col) {
+                        if (firstCol) {
+                            firstCol = false;
+                        } else {
+                            builder.append(", ");
+                        }
+                        builder.append(data[col * rows + row]);
+                    }
+                    builder.append("],\n");
                 }
                 return builder.append('}').toString();
             }
@@ -1264,7 +1652,7 @@ class std_n {
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i8((byte) shape.length);
                 stream.write_i8(tensorType);
                 int i = 0;
@@ -1309,6 +1697,41 @@ class std_n {
                 res.data = stream.read_i8_array(bin_size);
                 return res;
             }
+        }
+
+        // Deliberately unsupported types
+
+        protected static class nodeIndexBucket extends GreyCat.Object {
+            protected nodeIndexBucket(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                if (attributes == null) {
+                    stream.write_i32(0);
+                } else {
+                    stream.write_i32(attributes.length);
+                    int i = 0;
+                    while (i < attributes.length) {
+                        Object object = attributes[i];
+                        stream.write(object);
+                        i++;
+                    }
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final int size = stream.read_i32();
+                final Object[] data = new Object[size];
+                for (int offset = 0; offset < size; offset++) {
+                    data[offset] = stream.read();
+                }
+                core.nodeIndexBucket res = (nodeIndexBucket) type.factory.build(type);
+                res.attributes = data;
+                return res;
+            }
+
         }
 
         // ti*d & tf*d (de)interleaving algorithms
@@ -1451,6 +1874,38 @@ class std_n {
 
     public static final class util {
 
+        protected static class Quantizer extends GreyCat.Object {
+
+            protected Quantizer(GreyCat.Type type) {
+                super(type, null);
+                throw new RuntimeException("unsupported");
+            }
+
+            static java.lang.Object load(@SuppressWarnings("unused") GreyCat.Type type, @SuppressWarnings("unused") GreyCat.Stream stream) throws IOException {
+                throw new IOException("unsupported");
+            }
+        }
+
+        protected static class Buffer extends GreyCat.Object {
+            public byte[] data;
+
+            protected Buffer(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu32(data.length);
+                stream.write_i8_array(data, 0, data.length);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                util.Buffer buf = (Buffer) type.factory.build(type);
+                buf.data = stream.read_i8_array(stream.read_vu32());
+                return buf;
+            }
+        }
+
         @SuppressWarnings("unused")
         protected static class Gaussian extends GreyCat.Object {
             public double sum;
@@ -1469,7 +1924,7 @@ class std_n {
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_f64(sum);
                 stream.write_f64(sumSq);
                 stream.write_vi64(size);
@@ -1499,6 +1954,255 @@ class std_n {
 
         }
 
+        protected static class GaussianProfile extends GreyCat.Object {
+            //            public int size;
+            public byte[] data;
+            private int size;
+
+            protected GaussianProfile(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+//                stream.write_i32(size);
+                stream.write_i32(size);
+                stream.write_i32(data.length);
+                stream.write_i8_array(data, 0, data.length);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                util.GaussianProfile g = (GaussianProfile) type.factory.build(type);
+                g.size = stream.read_i32();
+                int bin_len = stream.read_i32();
+                g.data = stream.read_i8_array(bin_len);
+                return g;
+            }
+
+        }
+
+        protected static class HistogramFloat extends GreyCat.Object {
+            public double realMin;
+            public double realMax;
+            public double min;
+            public double max;
+            public long size;
+            public long nullCount;
+            public long maxRange;
+            public double sum;
+            public double sumSq;
+            public int unitMagnitude;
+            public int significantFigures;
+            public int subBucketHalfCountMagnitude;
+            public int subBucketHalfCount;
+            public long subBucketMask;
+            public int subBucketCount;
+            public int bucketCount;
+            public long minValue;
+            public long maxValue;
+            public int normalizingIndexOffset;
+            public int countsLen;
+            public long totalCount;
+            public long[] counts;
+
+            protected HistogramFloat(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_f64(realMin);
+                stream.write_f64(realMax);
+                stream.write_f64(min);
+                stream.write_f64(max);
+                stream.write_i64(size);
+                stream.write_i64(nullCount);
+                stream.write_i64(maxRange);
+                stream.write_f64(sum);
+                stream.write_f64(sumSq);
+                stream.write_i32(unitMagnitude);
+                stream.write_i32(significantFigures);
+                stream.write_i32(subBucketHalfCountMagnitude);
+                stream.write_i32(subBucketHalfCount);
+                stream.write_i64(subBucketMask);
+                stream.write_i32(subBucketCount);
+                stream.write_i32(bucketCount);
+                stream.write_i64(minValue);
+                stream.write_i64(maxValue);
+                stream.write_i32(normalizingIndexOffset);
+                stream.write_i32(countsLen);
+                stream.write_i64(totalCount);
+                int i = 0;
+                while (i < counts.length) {
+                    stream.write_i64(counts[i]);
+                    i++;
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final double realMin = stream.read_f64();
+                final double realMax = stream.read_f64();
+                final double min = stream.read_f64();
+                final double max = stream.read_f64();
+                final long size = stream.read_i64();
+                final long nullCount = stream.read_i64();
+                final long maxRange = stream.read_i64();
+                final double sum = stream.read_f64();
+                final double sumSq = stream.read_f64();
+                final int unitMagnitude = stream.read_i32();
+                final int significantFigures = stream.read_i32();
+                final int subBucketHalfCountMagnitude = stream.read_i32();
+                final int subBucketHalfCount = stream.read_i32();
+                final long subBucketMask = stream.read_i64();
+                final int subBucketCount = stream.read_i32();
+                final int bucketCount = stream.read_i32();
+                final long minValue = stream.read_i64();
+                final long maxValue = stream.read_i64();
+                final int normalizingIndexOffset = stream.read_i32();
+                final int countsLen = stream.read_i32();
+                long totalCount = stream.read_i64();
+                final long[] counts = new long[countsLen];
+                for (int offset = 0; offset < countsLen; offset++) {
+                    counts[offset] = stream.read_i64();
+                }
+                HistogramFloat h = (HistogramFloat) type.factory.build(type);
+                h.realMin = realMin;
+                h.realMax = realMax;
+                h.min = min;
+                h.max = max;
+                h.size = size;
+                h.nullCount = nullCount;
+                h.maxRange = maxRange;
+                h.sum = sum;
+                h.sumSq = sumSq;
+                h.unitMagnitude = unitMagnitude;
+                h.significantFigures = significantFigures;
+                h.subBucketHalfCountMagnitude = subBucketHalfCountMagnitude;
+                h.subBucketHalfCount = subBucketHalfCount;
+                h.subBucketMask = subBucketMask;
+                h.subBucketCount = subBucketCount;
+                h.bucketCount = bucketCount;
+                h.minValue = minValue;
+                h.maxValue = maxValue;
+                h.normalizingIndexOffset = normalizingIndexOffset;
+                h.countsLen = countsLen;
+                h.totalCount = totalCount;
+                h.counts = counts;
+                return h;
+            }
+        }
+
+        protected static class HistogramInt extends GreyCat.Object {
+            public long realMin;
+            public long realMax;
+            public long min;
+            public long max;
+            public long size;
+            public long nullCount;
+            public long maxRange;
+            public double sum;
+            public double sumSq;
+            public int unitMagnitude;
+            public int significantFigures;
+            public int subBucketHalfCountMagnitude;
+            public int subBucketHalfCount;
+            public long subBucketMask;
+            public int subBucketCount;
+            public int bucketCount;
+            public long minValue;
+            public long maxValue;
+            public int normalizingIndexOffset;
+            public int countsLen;
+            public long totalCount;
+            public long[] counts;
+
+            protected HistogramInt(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_i64(realMin);
+                stream.write_i64(realMax);
+                stream.write_i64(min);
+                stream.write_i64(max);
+                stream.write_i64(size);
+                stream.write_i64(nullCount);
+                stream.write_i64(maxRange);
+                stream.write_f64(sum);
+                stream.write_f64(sumSq);
+                stream.write_i32(unitMagnitude);
+                stream.write_i32(significantFigures);
+                stream.write_i32(subBucketHalfCountMagnitude);
+                stream.write_i32(subBucketHalfCount);
+                stream.write_i64(subBucketMask);
+                stream.write_i32(subBucketCount);
+                stream.write_i32(bucketCount);
+                stream.write_i64(minValue);
+                stream.write_i64(maxValue);
+                stream.write_i32(normalizingIndexOffset);
+                stream.write_i32(countsLen);
+                stream.write_i64(totalCount);
+                int i = 0;
+                while (i < counts.length) {
+                    stream.write_i64(counts[i]);
+                    i++;
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final long realMin = stream.read_i64();
+                final long realMax = stream.read_i64();
+                final long min = stream.read_i64();
+                final long max = stream.read_i64();
+                final long size = stream.read_i64();
+                final long nullCount = stream.read_i64();
+                final long maxRange = stream.read_i64();
+                final double sum = stream.read_f64();
+                final double sumSq = stream.read_f64();
+                final int unitMagnitude = stream.read_i32();
+                final int significantFigures = stream.read_i32();
+                final int subBucketHalfCountMagnitude = stream.read_i32();
+                final int subBucketHalfCount = stream.read_i32();
+                final long subBucketMask = stream.read_i64();
+                final int subBucketCount = stream.read_i32();
+                final int bucketCount = stream.read_i32();
+                final long minValue = stream.read_i64();
+                final long maxValue = stream.read_i64();
+                final int normalizingIndexOffset = stream.read_i32();
+                final int countsLen = stream.read_i32();
+                final long totalCount = stream.read_i64();
+                final long[] counts = new long[countsLen];
+                for (int offset = 0; offset < countsLen; offset++) {
+                    counts[offset] = stream.read_i64();
+                }
+                HistogramInt h = (HistogramInt) type.factory.build(type);
+                h.realMin = realMin;
+                h.realMax = realMax;
+                h.min = min;
+                h.max = max;
+                h.size = size;
+                h.nullCount = nullCount;
+                h.maxRange = maxRange;
+                h.sum = sum;
+                h.sumSq = sumSq;
+                h.unitMagnitude = unitMagnitude;
+                h.significantFigures = significantFigures;
+                h.subBucketHalfCountMagnitude = subBucketHalfCountMagnitude;
+                h.subBucketHalfCount = subBucketHalfCount;
+                h.subBucketMask = subBucketMask;
+                h.subBucketCount = subBucketCount;
+                h.bucketCount = bucketCount;
+                h.minValue = minValue;
+                h.maxValue = maxValue;
+                h.normalizingIndexOffset = normalizingIndexOffset;
+                h.countsLen = countsLen;
+                h.totalCount = totalCount;
+                h.counts = counts;
+                return h;
+            }
+        }
+
         @SuppressWarnings("unused")
         protected static class ProgressTracker extends GreyCat.Object {
             public long initialTime;
@@ -1519,7 +2223,7 @@ class std_n {
             }
 
             @Override
-            protected final void save(GreyCat.Stream stream) throws IOException {
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
                 stream.write_i64(initialTime);
                 stream.write_i64(lastTime);
                 stream.write_i64(previousTime);
@@ -1561,6 +2265,228 @@ class std_n {
                 pt.progress = progress;
                 pt.remainingTime = remainingTime;
                 return pt;
+            }
+        }
+
+        protected static class Iban extends GreyCat.Object {
+
+            public int infoOff;
+            public byte[] data;
+
+            public Iban(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vu32(infoOff);
+                stream.write_vu32(data.length);
+                stream.write_i8_array(data, 0, data.length);
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                util.Iban iban = (Iban) type.factory.build(type);
+                iban.infoOff = stream.read_vu32();
+                iban.data = stream.read_i8_array(stream.read_vu32());
+                return iban;
+            }
+
+        }
+
+        protected static class Queue<T> extends GreyCat.Object {
+
+            private final java.util.Queue<T> queue = new java.util.LinkedList<>();
+
+            protected Queue(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vi64(size()); // width
+                stream.write_vu32(size()); // size
+                stream.write_vu32(size()); // capacity
+                stream.write_vi64(size()); // TODO: head - values
+                stream.write_vi64(0); // TODO: tail - values
+                for (T t : queue) {
+                    stream.write(t);
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                stream.read_vi64(); // width
+                final int size = stream.read_vu32();
+                final int capacity = stream.read_vu32();
+                stream.read_vi64(); // head - values;
+                stream.read_vi64(); // tail - values;
+                @SuppressWarnings("unchecked") final util.Queue<Object> queue = (Queue<Object>) type.factory.build(type);
+                int offset;
+                for (offset = 0; offset < size; offset++) {
+                    queue.enqueue(stream.read());
+                }
+                for (; offset < capacity; offset++) {
+                    stream.read();
+                }
+                return queue;
+            }
+
+            public int size() {
+                return queue.size();
+            }
+
+            @SuppressWarnings({"unused", "FieldCanBeLocal"})
+            public void clear() {
+                queue.clear();
+            }
+
+            public void enqueue(T t) {
+                queue.offer(t);
+            }
+
+            @SuppressWarnings({"unused", "FieldCanBeLocal"})
+            public T dequeue() {
+                return queue.poll();
+            }
+
+            @SuppressWarnings({"unused", "FieldCanBeLocal"})
+            public T poll() {
+                return queue.poll();
+            }
+
+            @SuppressWarnings({"unused", "FieldCanBeLocal"})
+            public T head() {
+                return queue.peek();
+            }
+        }
+
+        protected static class SlidingWindow extends GreyCat.Object {
+            public long width;
+            public byte sumType;
+            public double sum;
+            public double sumSq;
+            public int size;
+            public int capacity;
+            public long toHead;
+            public long toTail;
+            public Object[] values;
+
+            protected SlidingWindow(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vi64(width);
+                stream.write_i8(sumType);
+                stream.write_f64(sum);
+                stream.write_f64(sumSq);
+                stream.write_vu32(size);
+                stream.write_vu32(capacity);
+                stream.write_vi64(toHead);
+                stream.write_vi64(toTail);
+                int i = 0;
+                while (i < values.length) {
+                    stream.write(values[i]);
+                    i++;
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final long width = stream.read_vi64();
+                final byte sumType = stream.read_i8();
+                final double sum = stream.read_f64();
+                final double sumSq = stream.read_f64();
+                final int size = stream.read_vu32();
+                final int capacity = stream.read_vu32();
+                final long toHead = stream.read_vi64();
+                final long toTail = stream.read_vi64();
+                final Object[] values = new Object[capacity];
+                for (int offset = 0; offset < capacity; offset++) {
+                    values[offset] = stream.read();
+                }
+                util.SlidingWindow sw = (SlidingWindow) type.factory.build(type);
+                sw.width = width;
+                sw.sumType = sumType;
+                sw.sum = sum;
+                sw.sumSq = sumSq;
+                sw.size = size;
+                sw.capacity = capacity;
+                sw.toHead = toHead;
+                sw.toTail = toTail;
+                sw.values = values;
+                return sw;
+            }
+
+        }
+
+        protected static class TimeWindow extends GreyCat.Object {
+            public long timeWidth;
+            public byte sumType;
+            public double sum;
+            public double sumSq;
+            public int size;
+            public int capacity;
+            public long toHead;
+            public long toTail;
+            public ValueTime[] valueTimes;
+
+            protected TimeWindow(GreyCat.Type type) {
+                super(type, null);
+            }
+
+            @Override
+            protected final void save(GreyCat.Stream stream, Integer type_offset) throws IOException {
+                stream.write_vi64(timeWidth);
+                stream.write_i8(sumType);
+                stream.write_f64(sum);
+                stream.write_f64(sumSq);
+                stream.write_vu32(size);
+                stream.write_vu32(capacity);
+                stream.write_vi64(toHead);
+                stream.write_vi64(toTail);
+                int i = 0;
+                while (i < valueTimes.length) {
+                    final ValueTime valueTime = valueTimes[i];
+                    stream.write(valueTime.value);
+                    stream.write_i64(valueTime.time);
+                    i++;
+                }
+            }
+
+            static java.lang.Object load(GreyCat.Type type, GreyCat.Stream stream) throws IOException {
+                final long timeWidth = stream.read_vi64();
+                final byte sumType = stream.read_i8();
+                final double sum = stream.read_f64();
+                final double sumSq = stream.read_f64();
+                final int size = stream.read_vu32();
+                final int capacity = stream.read_vu32();
+                final long toHead = stream.read_vi64();
+                final long toTail = stream.read_vi64();
+                final util.TimeWindow.ValueTime[] values = new util.TimeWindow.ValueTime[capacity];
+                for (int offset = 0; offset < capacity; offset++) {
+                    values[offset] = new util.TimeWindow.ValueTime(stream.read(), stream.read_i64());
+                }
+                util.TimeWindow tw = (TimeWindow) type.factory.build(type);
+                tw.timeWidth = timeWidth;
+                tw.sumType = sumType;
+                tw.sum = sum;
+                tw.sumSq = sumSq;
+                tw.size = size;
+                tw.capacity = capacity;
+                tw.toHead = toHead;
+                tw.toTail = toTail;
+                tw.valueTimes = values;
+                return tw;
+            }
+
+            public final static class ValueTime {
+                public final Object value;
+                public final long time;
+
+                public ValueTime(Object value, long time) {
+                    this.value = value;
+                    this.time = time;
+                }
             }
         }
     }

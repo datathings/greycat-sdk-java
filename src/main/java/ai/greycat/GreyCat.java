@@ -1,8 +1,15 @@
 package ai.greycat;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+
 @SuppressWarnings("IOStreamConstructor")
 public final class GreyCat {
     public static final short abi_proto = 2;
+
+    static GreyCat DEFAULT = null; // TODO: set and use
 
     public static final class AbiReader {
 
@@ -111,10 +118,6 @@ public final class GreyCat {
                 final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t4];
                 return t.loader.load(t, stream);
             };
-            PRIMITIVE_LOADERS[PrimitiveType.STR] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_str];
-                return t.loader.load(t, stream);
-            };
             PRIMITIVE_LOADERS[PrimitiveType.T2F] = (GreyCat.Stream stream) -> {
                 final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t2f];
                 return t.loader.load(t, stream);
@@ -125,14 +128,6 @@ public final class GreyCat {
             };
             PRIMITIVE_LOADERS[PrimitiveType.T4F] = (GreyCat.Stream stream) -> {
                 final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t4f];
-                return t.loader.load(t, stream);
-            };
-            PRIMITIVE_LOADERS[PrimitiveType.TYPE] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_type];
-                return t.loader.load(t, stream);
-            };
-            PRIMITIVE_LOADERS[PrimitiveType.FIELD] = (GreyCat.Stream stream) -> {
-                final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_field];
                 return t.loader.load(t, stream);
             };
 //            PRIMITIVE_LOADERS[PrimitiveType.BLOCK] = error_loader;
@@ -185,6 +180,10 @@ public final class GreyCat {
         }
 
         void write(java.lang.Object value) throws java.io.IOException {
+            write(value, null);
+        }
+
+        void write(java.lang.Object value, Integer type_offset) throws java.io.IOException {
             if (value == null) {
                 write_i8(GreyCat.PrimitiveType.NULL);
             } else if (value instanceof Boolean) {
@@ -224,8 +223,8 @@ public final class GreyCat {
                 }
             } else if (value instanceof Object) {
                 Object object = (Object) value;
-                object.saveType(this);
-                object.save(this);
+                object.saveType(this, type_offset);
+                object.save(this, type_offset);
             } else {
                 throw new IllegalArgumentException("wrong state");
             }
@@ -663,9 +662,9 @@ public final class GreyCat {
 
         public final int offset;
         public final String name;
-        public final int genericAbiType;
-        public final int g1AbiTypeDesc;
-        public final int g2AbiTypeDesc;
+        public final int generic_abi_type;
+        public final int g1_abi_type_desc;
+        public final int g2_abi_type_desc;
         public final int mapped_type_off;
         @SuppressWarnings({"unused", "FieldCanBeLocal"})
         public final int masked_type_off;
@@ -734,8 +733,10 @@ public final class GreyCat {
                     }
                     case PrimitiveType.OBJECT: {
                         Type fieldType = type.greycat.types[att.abiType];
-                        if (fieldType.is_ambiguous || type.greycat.type_offset_core_any == fieldType.offset ||
-                                (!fieldType.is_native && att.sbiType == PrimitiveType.UNDEFINED)) {
+                        if (
+                                (fieldType.is_ambiguous) ||
+                                        (type.greycat.type_offset_core_any == fieldType.offset) ||
+                                        ((!fieldType.is_native) && (PrimitiveType.UNDEFINED == att.sbiType))) {
                             fieldType = type.greycat.types[stream.read_vu32()];
                         }
                         loadedField = fieldType.loader.load(fieldType, stream);
@@ -757,22 +758,17 @@ public final class GreyCat {
             }
         };
 
-        static final Factory monomorphic_factory = (type, parameters) -> {
-            Type genericType = type.greycat.types[type.genericAbiType];
+        private static final GreyCat.Factory monomorphic_factory = (type, parameters) -> {
+            GreyCat.Type genericType = type.greycat.types[type.generic_abi_type];
             return genericType.factory.build(genericType, parameters);
         };
 
-        static final Loader monomorphic_loader = (type, stream) -> {
-            Type genericType = type.greycat.types[type.genericAbiType];
-            return genericType.loader.load(type, stream);
-        };
-
-        public Type(int offset, String name, int genericAbiType, int g1AbiTypeDesc, int g2AbiTypeDesc, int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract, boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
+        public Type(int offset, String name, int generic_abi_type, int g1_abi_type_desc, int g2_abi_type_desc, int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract, boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
             this.offset = offset;
             this.name = name;
-            this.genericAbiType = genericAbiType;
-            this.g1AbiTypeDesc = g1AbiTypeDesc;
-            this.g2AbiTypeDesc = g2AbiTypeDesc;
+            this.generic_abi_type = generic_abi_type;
+            this.g1_abi_type_desc = g1_abi_type_desc;
+            this.g2_abi_type_desc = g2_abi_type_desc;
             this.mapped_type_off = mapped_type_off;
             this.masked_type_off = masked_type_off;
             this.nullable_nb_bytes = nullable_nb_bytes;
@@ -786,7 +782,7 @@ public final class GreyCat {
                 attribute_off_by_name.put(typeAttributes[i].name, i);
             }
             this.greycat = greycat;
-            if (0 == genericAbiType) {
+            if (0 == generic_abi_type) {
                 this.factory = factory;
             } else {
                 this.factory = monomorphic_factory;
@@ -810,9 +806,7 @@ public final class GreyCat {
             } else {
                 this.enum_values = null;
             }
-            if (0 != genericAbiType) {
-                this.loader = monomorphic_loader;
-            } else if (loader != null) {
+            if (loader != null) {
                 this.loader = loader;
             } else if (this.is_native) {
                 this.loader = error_loader;
@@ -861,13 +855,13 @@ public final class GreyCat {
         }
 
         @Override
-        protected final void saveType(Stream stream) throws java.io.IOException {
+        protected final void saveType(Stream stream, Integer type_offset) throws java.io.IOException {
             stream.write_i8(GreyCat.PrimitiveType.STATIC_FIELD);
             stream.write_vu32(type.offset);
         }
 
         @Override
-        protected final void save(Stream stream) throws java.io.IOException {
+        protected final void save(Stream stream, Integer type_offset) throws java.io.IOException {
             stream.write_vu32(offset);
         }
 
@@ -945,36 +939,47 @@ public final class GreyCat {
         }
 
         @SuppressWarnings({"unused"})
-        public final java.lang.Object get(String attributeName) {
-            return get(type.attribute_off_by_name.get(attributeName));
+        public final java.lang.Object getAttribute(String attributeName) {
+            return getAttribute(type.attribute_off_by_name.get(attributeName));
         }
 
         @SuppressWarnings({"unused"})
-        public final void set(String attributeName, java.lang.Object value) {
-            set(type.attribute_off_by_name.get(attributeName), value);
+        public final void setAttribute(String attributeName, java.lang.Object value) {
+            setAttribute(type.attribute_off_by_name.get(attributeName), value);
         }
 
-        protected java.lang.Object get(int offset) {
+        protected java.lang.Object getAttribute(int offset) {
             return attributes[offset];
         }
 
-        protected void set(int offset, java.lang.Object value) {
+        protected void setAttribute(int offset, java.lang.Object value) {
             attributes[offset] = value;
         }
 
-        protected void saveType(Stream stream) throws java.io.IOException {
-            stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-            stream.write_vu32(type.offset);
+        final void saveType(Stream stream) throws IOException {
+            saveType(stream, null);
         }
 
-        protected void save(Stream stream) throws java.io.IOException {
+        protected void saveType(Stream stream, Integer type_offset) throws java.io.IOException {
+            stream.write_i8(GreyCat.PrimitiveType.OBJECT);
+            stream.write_vu32(null == type_offset ? type.offset : type_offset);
+        }
+
+        protected void save(Stream stream, Integer type_offset) throws IOException {
+            this.save(stream);
+        }
+
+        final void save(Stream stream) throws java.io.IOException {
+            if ("core::Tuple<core::Array,core::Map>".equals(type.name)) {
+                System.out.println("DEBUG");
+            }
             byte[] nullable_bitset = new byte[type.nullable_nb_bytes];
             byte nullable_offset = 0;
             Type.Attribute field;
             for (int offset = 0; offset < type.attributes.length; ++offset) {
                 field = type.attributes[offset];
                 if (field.nullable) {
-                    nullable_bitset[nullable_offset >> 3] |= (byte) ((null == get(offset) ? 0 : 1) << (nullable_offset & 7));
+                    nullable_bitset[nullable_offset >> 3] |= (byte) ((null == getAttribute(offset) ? 0 : 1) << (nullable_offset & 7));
                     ++nullable_offset;
                 }
             }
@@ -983,7 +988,7 @@ public final class GreyCat {
             java.lang.Object value;
             for (int offset = 0; offset < type.attributes.length; ++offset) {
                 field = type.attributes[offset];
-                value = get(offset);
+                value = getAttribute(offset);
                 if (field.nullable && null == value) {
                     continue;
                 }
@@ -1015,17 +1020,14 @@ public final class GreyCat {
                     case PrimitiveType.T2:
                     case PrimitiveType.T3:
                     case PrimitiveType.T4:
-                    case PrimitiveType.STR:
                     case PrimitiveType.T2F:
                     case PrimitiveType.T3F:
                     case PrimitiveType.T4F:
                     case PrimitiveType.TIME:
                     case PrimitiveType.DURATION:
-                    case PrimitiveType.TYPE:
-                    case PrimitiveType.FIELD:
 //                    case PrimitiveType.CUBIC: // TODO
                     case PrimitiveType.STATIC_FIELD:
-                        ((Object) value).save(stream);
+                        ((Object) value).save(stream, null);
                         break;
                     case PrimitiveType.OBJECT:
                         if (value instanceof String) {
@@ -1035,16 +1037,17 @@ public final class GreyCat {
                                 stream.write_vu32((symbolOffset << 1) | 1);
                             } else {
                                 final byte[] data = string.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                                stream.write_vu32(data.length << 1);
+                                stream.write_vu32(data.length);
                                 stream.write_i8_array(data, 0, data.length);
                             }
                         } else {
                             Object object = (Object) value;
-                            if (field.abiType != object.type.offset &&
-                                    type.greycat.types[field.abiType].genericAbiType != object.type.offset) {
+                            if (field.abiType != object.type.offset && type.greycat.types[field.abiType].generic_abi_type != object.type.offset) {
                                 stream.write_vu32(object.type.offset);
+                                object.save(stream, null);
+                            } else {
+                                object.save(stream, field.abiType);
                             }
-                            object.save(stream);
                         }
                         break;
 //                    case PrimitiveType.BLOCK_REF: // TODO
@@ -1058,13 +1061,6 @@ public final class GreyCat {
                         throw new IllegalArgumentException("wrong state");
                 }
             }
-//            if (attributes != null) {
-//                int offset = 0;
-//                while (offset < attributes.length) {
-//                    stream.write_object(get(offset));
-//                    offset++;
-//                }
-//            }
         }
 
         @Override
@@ -1118,6 +1114,10 @@ public final class GreyCat {
     private final String runtime_url;
     private String token;
     public final int type_offset_core_any;
+    public final int type_offset_core_bool;
+    public final int type_offset_core_char;
+    public final int type_offset_core_int;
+    public final int type_offset_core_float;
     public final int type_offset_core_string;
     public final int type_offset_core_duration;
     public final int type_offset_core_time;
@@ -1130,12 +1130,9 @@ public final class GreyCat {
     public final int type_offset_core_t2;
     public final int type_offset_core_t3;
     public final int type_offset_core_t4;
-    public final int type_offset_core_str;
     public final int type_offset_core_t2f;
     public final int type_offset_core_t3f;
     public final int type_offset_core_t4f;
-    public final int type_offset_core_type;
-    public final int type_offset_core_field;
     private boolean is_remote = false;
     private final int abi_magic;
     private final int abi_version;
@@ -1201,9 +1198,10 @@ public final class GreyCat {
             }
             builder.append(typeName);
             final String fqn = builder.toString();
-            final int genericAbiType = abiStream.read_vu32();
-            final int g1AbiTypeDesc = abiStream.read_vu32();
-            final int g2AbiTypeDesc = abiStream.read_vu32();
+            int generic_abi_type = abiStream.read_vu32();
+            int g1_abi_type_desc = abiStream.read_vu32();
+            int g2_abi_type_desc = abiStream.read_vu32();
+            int parent_type_id = abiStream.read_vu32();
             int attributesLen = abiStream.read_vu32();
             abiStream.read_vu32();/* unused field */
             abiStream.read_vu32();/* unused field */
@@ -1216,6 +1214,7 @@ public final class GreyCat {
             boolean isEnum = 0 != (flags & (1 << 2));
             boolean isMasked = 0 != (flags & (1 << 3));
             boolean isAmbiguous = 0 != (flags & (1 << 4));
+            boolean isVolatile = 0 != (flags & (1 << 5));
             final Type.Attribute[] typeAttributes = new Type.Attribute[attributesLen];
             for (int enumOffset = 0; enumOffset < attributesLen; ++enumOffset) {
                 final String name = symbols[abiStream.read_vu32()];
@@ -1224,15 +1223,25 @@ public final class GreyCat {
                 final int mappedAnyOffset = abiStream.read_vu32();
                 final int mappedAttOffset = abiStream.read_vu32();
                 final byte sbiType = abiStream.read_i8();
-                final byte precision = abiStream.read_i8(); // TODO: manage
+                final byte precision = abiStream.read_i8();
                 final byte attFlags = abiStream.read_i8();
                 final boolean nullable = 0 != (attFlags & 1);
                 final boolean mapped = 0 != (attFlags & (1 << 1));
                 typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset, mappedAttOffset, sbiType, nullable, mapped);
             }
-            Type abiType = new Type(i, fqn, genericAbiType, g1AbiTypeDesc, g2AbiTypeDesc, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isAmbiguous, isEnum, isNative, typeAttributes, factories.get(fqn), loaders.get(fqn), this);
+            Factory factory;
+            Loader loader;
+            if (0 == generic_abi_type) {
+                factory = factories.get(fqn);
+                loader = loaders.get(fqn);
+            } else {
+                java.lang.String superFqn = types[generic_abi_type].name;
+                factory = factories.get(superFqn);
+                loader = loaders.get(superFqn);
+            }
+            Type abiType = new Type(i, fqn, generic_abi_type, g1_abi_type_desc, g2_abi_type_desc, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isAmbiguous, isEnum, isNative, typeAttributes, factory, loader, this);
             /* only the program related abi type (last version) is mapped to himself */
-            if (abiType.mapped_type_off == i && fqn.length() != 0) {
+            if (abiType.mapped_type_off == i && !fqn.isEmpty()) {
                 types_by_name.put(abiType.name, abiType);
             }
             types[i] = abiType;
@@ -1274,26 +1283,55 @@ public final class GreyCat {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_any = tmp.offset;
+
+        tmp = types_by_name.get("core::bool");
+        if (tmp == null) {
+            throw new IllegalArgumentException("wrong state");
+        }
+        type_offset_core_bool = tmp.offset;
+
+        tmp = types_by_name.get("core::char");
+        if (tmp == null) {
+            throw new IllegalArgumentException("wrong state");
+        }
+        type_offset_core_char = tmp.offset;
+
+        tmp = types_by_name.get("core::int");
+        if (tmp == null) {
+            throw new IllegalArgumentException("wrong state");
+        }
+        type_offset_core_int = tmp.offset;
+
+        tmp = types_by_name.get("core::float");
+        if (tmp == null) {
+            throw new IllegalArgumentException("wrong state");
+        }
+        type_offset_core_float = tmp.offset;
+
         tmp = types_by_name.get("core::String");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_string = tmp.offset;
+
         tmp = types_by_name.get("core::duration");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_duration = tmp.offset;
+
         tmp = types_by_name.get("core::time");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_time = tmp.offset;
+
         tmp = types_by_name.get("core::geo");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_geo = tmp.offset;
+
         tmp = types_by_name.get("core::nodeList");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
@@ -1305,66 +1343,60 @@ public final class GreyCat {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_index = tmp.offset;
+
         tmp = types_by_name.get("core::nodeTime");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_time = tmp.offset;
+
         tmp = types_by_name.get("core::nodeGeo");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node_geo = tmp.offset;
+
         tmp = types_by_name.get("core::node");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_node = tmp.offset;
+
         tmp = types_by_name.get("core::t2");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_t2 = tmp.offset;
+
         tmp = types_by_name.get("core::t3");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_t3 = tmp.offset;
+
         tmp = types_by_name.get("core::t4");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_t4 = tmp.offset;
-        tmp = types_by_name.get("core::str");
-        if (tmp == null) {
-            throw new IllegalArgumentException("wrong state");
-        }
-        type_offset_core_str = tmp.offset;
+
         tmp = types_by_name.get("core::t2f");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_t2f = tmp.offset;
+
         tmp = types_by_name.get("core::t3f");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_t3f = tmp.offset;
+
         tmp = types_by_name.get("core::t4f");
         if (tmp == null) {
             throw new IllegalArgumentException("wrong state");
         }
         type_offset_core_t4f = tmp.offset;
-        tmp = types_by_name.get("core::type");
-        if (tmp == null) {
-            throw new IllegalArgumentException("wrong state");
-        }
-        type_offset_core_type = tmp.offset;
-        tmp = types_by_name.get("core::field");
-        if (tmp == null) {
-            throw new IllegalArgumentException("wrong state");
-        }
-        type_offset_core_field = tmp.offset;
         abiStream.close();
         for (Library lib : libs_by_name.values()) {
             lib.init(this);
