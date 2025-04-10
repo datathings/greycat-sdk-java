@@ -630,9 +630,23 @@ public final class GreyCat {
     public static final class Function {
 
         public final String name;
+        public final Parameter[] params;
 
-        public Function(String name) {
+        public Function(String name, Parameter... params) {
             this.name = name;
+            this.params = params;
+        }
+
+        public static final class Parameter {
+            public final boolean nullable;
+            public final int type_offset;
+            public final int symbol_offset;
+
+            public Parameter(boolean nullable, int typeOffset, int symbolOffset) {
+                this.nullable = nullable;
+                type_offset = typeOffset;
+                symbol_offset = symbolOffset;
+            }
         }
     }
 
@@ -1266,15 +1280,16 @@ public final class GreyCat {
             }
             builder.append(functionName);
             final String fqn = builder.toString();
-            int nb_params = abiStream.read_vu32();
-            for (int j = 0; j < nb_params; j++) {
-                abiStream.read_i8();
-                abiStream.read_vu32();
-                abiStream.read_vu32();
+            Function.Parameter[] params = new Function.Parameter[abiStream.read_vu32()];
+            for (int j = 0; j < params.length; j++) {
+                boolean nullable = abiStream.read_bool();
+                int type_offset = abiStream.read_vu32();
+                int symbol_offset = abiStream.read_vu32();
+                params[j] = new Function.Parameter(nullable, type_offset, symbol_offset);
             }
             abiStream.read_vu32();
             abiStream.read_i8();
-            Function fn = new Function(fqn);
+            Function fn = new Function(fqn, params);
             functions_by_name.put(fqn, fn);
         }
         /* pre-resolve String type avoid runtime over-head */
@@ -1423,15 +1438,15 @@ public final class GreyCat {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept", "application/octet-stream");
         connection.setRequestProperty("Content-Type", "application/octet-stream");
+        GreyCat.Function fun = functions_by_name.get(fqn);
         if (parameters.length > 0) {
             connection.setDoOutput(true);
             java.io.OutputStream os = connection.getOutputStream();
             Stream b = new Stream(this, new java.io.BufferedOutputStream(os));
             b.writeAbiHeader();
-            int paramOffset = 0;
-            while (paramOffset < parameters.length) {
-                b.write(parameters[paramOffset]);
-                paramOffset++;
+            for (int paramOffset = 0; paramOffset < parameters.length; ++paramOffset) {
+                int param_type = fun.params[paramOffset].type_offset;
+                b.write(parameters[paramOffset], type_offset_core_any == param_type ? null : param_type);
             }
             b.close();
         }
