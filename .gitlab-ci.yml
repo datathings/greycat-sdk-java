@@ -1,5 +1,3 @@
-image: oci.datathings.com/greycat/build/java:1.0.9-main
-
 variables:
   GIT_STRATEGY: clone
   GIT_DEPTH: "0"
@@ -9,10 +7,14 @@ stages:
   - publish
 
 before_script:
-  - export VERSION=`git2version -s`
+  - export PROJECT_VERSION_MAJOR_MINOR=`cat VERSION`
+  - export PROJECT_VERSION=`greycat build-version-full`
+  - export PROJECT_VERSION_SIMPLE=`greycat build-version`
+  - echo "${PROJECT_VERSION} / ${PROJECT_VERSION_SIMPLE}"
 
 build:
   stage: build
+  tags: [ linux ]
   script:
     - ./build.sh
   artifacts:
@@ -23,6 +25,7 @@ build:
 
 publish:
   stage: publish
+  tags: [ linux ]
   when: manual
   script:
     - ./publish.sh
