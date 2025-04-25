@@ -1,4 +1,4 @@
-package ai.greycat;
+package io.greycat;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

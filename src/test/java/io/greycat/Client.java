@@ -1,4 +1,4 @@
-package ai.greycat;
+package io.greycat;
 
 import java.util.Iterator;
 
