@@ -1522,7 +1522,7 @@ class std_n {
                             }
                         } else if (java.lang.String.class.equals(unique_type)) {
                             stream.write_i8(GreyCat.PrimitiveType.OBJECT);
-                            stream.write_i8((byte) 0); // TODO: manage monotonic
+//                            stream.write_i8((byte) 0); // TODO: manage monotonic
                             for (int row = 0; row < rows; ++row) {
                                 java.lang.String s = (java.lang.String) data[col * rows + row];
                                 if (null != s) {
@@ -1533,11 +1533,11 @@ class std_n {
                             }
                         } else if (GreyCat.Object.class.isAssignableFrom(unique_type)) {
                             ((GreyCat.Object) monotonic_value).saveType(stream);
-                            stream.write_i8((byte) 0); // TODO: manage monotonic
+//                            stream.write_i8((byte) 0); // TODO: manage monotonic
                             for (int row = 0; row < rows; ++row) {
                                 GreyCat.Object o = (GreyCat.Object) data[col * rows + row];
                                 if (null != o) {
-                                    o.save(stream);
+                                    o.save(stream, null);
                                 }
                             }
                         } else {

@@ -984,9 +984,6 @@ public final class GreyCat {
         }
 
         final void save(Stream stream) throws java.io.IOException {
-            if ("core::Tuple<core::Array,core::Map>".equals(type.name)) {
-                System.out.println("DEBUG");
-            }
             byte[] nullable_bitset = new byte[type.nullable_nb_bytes];
             byte nullable_offset = 0;
             Type.Attribute field;

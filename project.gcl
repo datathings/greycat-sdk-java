@@ -1,5 +1,4 @@
-@library("std", "7.0.1757-testing");
-
+@library("std", "7.0.1850-testing");
 fn main() {
   var user: User = User {
     id: 0,
@@ -143,7 +142,6 @@ fn write_core(out: GcbWriter) {
   }
   out.write(table);
   table = Table{};
-  var arr = [0];
   for (row, data in [[[0]], [[0]]]) {
     for (col, value in data) {
       table.set_cell(row, col, value);
