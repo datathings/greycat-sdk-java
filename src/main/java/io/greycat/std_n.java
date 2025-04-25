@@ -160,7 +160,7 @@ class std_n {
             }
         }
 
-        protected static class geo extends GreyCat.Object {
+        static class geo extends GreyCat.Object {
             private static final double GC_CORE_GEO_LAT_EPS = 0.00000001;
             private static final double GC_CORE_GEO_LAT_MIN = -85.05112878;
             private static final double GC_CORE_GEO_LAT_MAX = 85.05112878;
