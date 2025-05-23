@@ -1,7 +1,5 @@
 package io.greycat;
 
-import java.io.IOException;
-
 @SuppressWarnings("IOStreamConstructor")
 public final class GreyCat {
     public static final short abi_proto = 2;
@@ -967,7 +965,7 @@ public final class GreyCat {
             attributes[offset] = value;
         }
 
-        final void saveType(Stream stream) throws IOException {
+        final void saveType(Stream stream) throws java.io.IOException {
             saveType(stream, null);
         }
 
@@ -976,7 +974,7 @@ public final class GreyCat {
             stream.write_vu32(null == type_offset ? type.offset : type_offset);
         }
 
-        protected void save(Stream stream, Integer type_offset) throws IOException {
+        protected void save(Stream stream, Integer type_offset) throws java.io.IOException {
             this.save(stream);
         }
 
@@ -1482,6 +1480,32 @@ public final class GreyCat {
         java.lang.Object result = buf.read();
         buf.close();
         return result;
+    }
+
+    public void putFile(String path, java.io.File file) throws java.io.IOException {
+        if (!this.is_remote) {
+            throw new RuntimeException("Remote Call is not available on this GreyCat handle");
+        }
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
+                this.runtime_url + "/" + path
+        ).openConnection();
+
+        if (this.token != null) {
+            connection.setRequestProperty("Authorization", this.token);
+        }
+        connection.setRequestMethod("PUT");
+        java.io.OutputStream os = connection.getOutputStream();
+        java.io.InputStream is = new java.io.FileInputStream(file);
+        byte[] buf = new byte[4096];
+        for (int n = is.read(buf); n > -1; n = is.read(buf)) {
+            os.write(buf, 0, n);
+        }
+        is.close();
+        os.close();
+        int status = connection.getResponseCode();
+        if (status < 200 || status >= 300) {
+            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+        }
     }
 
     public void login(String username, String password, Boolean useCookie) throws Exception {
