@@ -4,7 +4,7 @@ package io.greycat;
 public final class GreyCat {
     public static final short abi_proto = 2;
 
-    static GreyCat DEFAULT = null; // TODO: set and use
+    public static GreyCat DEFAULT = null;
 
     public static final class AbiReader {
 
