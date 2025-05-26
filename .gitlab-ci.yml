@@ -16,20 +16,12 @@ build:
   stage: build
   tags: [ linux ]
   script:
-    - ./build.sh
-  artifacts:
-    when: on_success
-    expire_in: '30 days'
-    paths:
-      - dist
+    - ./script/build.sh
 
 publish:
   stage: publish
   tags: [ linux ]
   when: manual
   script:
-    - ./publish.sh
-  artifacts:
-    expire_in: 1 week
-    paths:
-      - dist
+    - ./script/build.sh
+    - ./script/publish.sh

@@ -2,7 +2,6 @@
 set -e
 
 VERSION_MAJOR_MINOR=`cat VERSION`
-
 echo "${VERSION_MAJOR_MINOR} / ${PROJECT_VERSION_SIMPLE}"
 
 sha256_hash=$(echo -n "$GET_GC_CI_PASS" | openssl dgst -sha256 | cut -d ' ' -f2)
@@ -35,5 +34,5 @@ EOF
 
 cd dist
 
-mvn deploy:deploy-file -Dfile=sdk.jar -DpomFile=sdk.pom -DrepositoryId=deploy -Durl=https://get.greycat.io/files/sdk/java/"${CI_COMMIT_REF_NAME}"/"${VERSION_MAJOR_MINOR}"/
+mvn deploy:deploy-file -Dfile=sdk.jar -DpomFile=sdk.pom -DrepositoryId=deploy -Durl=https://get.greycat.io/files/sdk/java/
 curl -s -X PUT -H "Authorization: $token" -d "${VERSION_MAJOR_MINOR}/${PROJECT_VERSION_SIMPLE}" -H "Content-Type: text/plain" "https://get.greycat.io/files/sdk/java/${CI_COMMIT_REF_NAME}/latest"

@@ -1,15 +1,10 @@
-package ai.greycat;
-
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
+package io.greycat;
 
 @SuppressWarnings("IOStreamConstructor")
 public final class GreyCat {
     public static final short abi_proto = 2;
 
-    static GreyCat DEFAULT = null; // TODO: set and use
+    public static GreyCat DEFAULT = null;
 
     public static final class AbiReader {
 
@@ -970,7 +965,7 @@ public final class GreyCat {
             attributes[offset] = value;
         }
 
-        final void saveType(Stream stream) throws IOException {
+        final void saveType(Stream stream) throws java.io.IOException {
             saveType(stream, null);
         }
 
@@ -979,14 +974,11 @@ public final class GreyCat {
             stream.write_vu32(null == type_offset ? type.offset : type_offset);
         }
 
-        protected void save(Stream stream, Integer type_offset) throws IOException {
+        protected void save(Stream stream, Integer type_offset) throws java.io.IOException {
             this.save(stream);
         }
 
         final void save(Stream stream) throws java.io.IOException {
-            if ("core::Tuple<core::Array,core::Map>".equals(type.name)) {
-                System.out.println("DEBUG");
-            }
             byte[] nullable_bitset = new byte[type.nullable_nb_bytes];
             byte nullable_offset = 0;
             Type.Attribute field;
@@ -1488,6 +1480,35 @@ public final class GreyCat {
         java.lang.Object result = buf.read();
         buf.close();
         return result;
+    }
+
+    public void putFile(String path, java.io.File file) throws java.io.IOException {
+        if (!this.is_remote) {
+            throw new RuntimeException("Remote Call is not available on this GreyCat handle");
+        }
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
+                this.runtime_url + "/files/" + path
+        ).openConnection();
+        System.out.println(connection.getURL());
+        connection.setDoOutput(true);
+
+        if (this.token != null) {
+            connection.setRequestProperty("Authorization", this.token);
+        }
+        connection.setRequestMethod("PUT");
+        connection.connect();
+        java.io.InputStream is = new java.io.FileInputStream(file);
+        java.io.OutputStream os = connection.getOutputStream();
+        byte[] buf = new byte[4096];
+        for (int n = is.read(buf); n > -1; n = is.read(buf)) {
+            os.write(buf, 0, n);
+        }
+        os.close();
+        is.close();
+        int status = connection.getResponseCode();
+        if (status < 200 || status >= 300) {
+            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+        }
     }
 
     public void login(String username, String password, Boolean useCookie) throws Exception {
