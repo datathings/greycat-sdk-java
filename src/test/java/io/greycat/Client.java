@@ -1,6 +1,5 @@
 package io.greycat;
 
-import ;
 import java.util.Iterator;
 
 public class Client {
