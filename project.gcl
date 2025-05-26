@@ -5,7 +5,7 @@ fn main() {
     name: "admin",
     activated: true,
     external: false,
-    role: "user",
+    role: "admin",
   };
   SecurityEntity::set(user);
   info(Crypto::sha256hex("admin"));

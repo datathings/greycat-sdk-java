@@ -1,5 +1,6 @@
 package io.greycat;
 
+import ;
 import java.util.Iterator;
 
 public class Client {
@@ -10,6 +11,7 @@ public class Client {
         String password = "changeme";
 
         GreyCat greycat = new GreyCat(url, username, password, null, null);
+        greycat.putFile("pom.xml", new java.io.File("pom.xml"));
 
         std.core.Array<Object> gcb = (std.core.Array<Object>) greycat.call("project::get_gcb");
         Iterator<Object> gcbIt = gcb.iterator();

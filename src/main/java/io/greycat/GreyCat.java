@@ -1487,21 +1487,24 @@ public final class GreyCat {
             throw new RuntimeException("Remote Call is not available on this GreyCat handle");
         }
         java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
-                this.runtime_url + "/" + path
+                this.runtime_url + "/files/" + path
         ).openConnection();
+        System.out.println(connection.getURL());
+        connection.setDoOutput(true);
 
         if (this.token != null) {
             connection.setRequestProperty("Authorization", this.token);
         }
         connection.setRequestMethod("PUT");
-        java.io.OutputStream os = connection.getOutputStream();
+        connection.connect();
         java.io.InputStream is = new java.io.FileInputStream(file);
+        java.io.OutputStream os = connection.getOutputStream();
         byte[] buf = new byte[4096];
         for (int n = is.read(buf); n > -1; n = is.read(buf)) {
             os.write(buf, 0, n);
         }
-        is.close();
         os.close();
+        is.close();
         int status = connection.getResponseCode();
         if (status < 200 || status >= 300) {
             throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
