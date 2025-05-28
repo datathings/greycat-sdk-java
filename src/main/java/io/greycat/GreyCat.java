@@ -1151,7 +1151,7 @@ public final class GreyCat {
             login(username, password, use_cookie);
         }
 
-        std std = new std();
+        gc.std std = new gc.std();
         this.libs_by_name.put(std.name(), std);
 
         for (Library lib : libraries) {
@@ -1558,25 +1558,25 @@ public final class GreyCat {
         return t.factory.build(t, parameters);
     }
 
-    public std.core.geo createGeo(double lat, double lng) {
+    public gc.core.geo createGeo(double lat, double lng) {
         final GreyCat.Type type = this.types[this.type_offset_core_geo];
-        std.core.geo geo = (std.core.geo) type.factory.build(type);
+        gc.core.geo geo = (gc.core.geo) type.factory.build(type);
         geo.lat = lat;
         geo.lng = lng;
         return geo;
     }
 
-    public std.core.time createTime(long epoch_us) {
+    public gc.core.time createTime(long epoch_us) {
         final GreyCat.Type type = this.types[this.type_offset_core_time];
-        std.core.time t = (std.core.time) type.factory.build(type);
+        gc.core.time t = (gc.core.time) type.factory.build(type);
         t.value = epoch_us;
         return t;
     }
 
     @SuppressWarnings("unused")
-    public std.core.duration createDuration(long duration_us) {
+    public gc.core.duration createDuration(long duration_us) {
         final GreyCat.Type type = this.types[this.type_offset_core_duration];
-        std.core.duration dur = (std.core.duration) type.factory.build(type);
+        gc.core.duration dur = (gc.core.duration) type.factory.build(type);
         dur.value = duration_us;
         return dur;
     }
