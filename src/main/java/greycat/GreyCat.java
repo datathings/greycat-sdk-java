@@ -1,4 +1,4 @@
-package io.greycat;
+package greycat;
 
 @SuppressWarnings("IOStreamConstructor")
 public final class GreyCat {

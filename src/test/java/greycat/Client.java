@@ -1,4 +1,6 @@
-package io.greycat;
+package greycat;
+
+import greycat.GreyCat;
 
 public class Client {
 
