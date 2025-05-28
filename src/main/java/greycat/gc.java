@@ -1497,7 +1497,7 @@ public final class gc {
 			}
 		}
 	}
-	public static final class io_ {
+	public static final class io {
 		public static final class SmtpAuth extends GreyCat.Enum {
 			public static final java.lang.String name = "io::SmtpAuth";
 
@@ -2049,16 +2049,16 @@ public final class gc {
 			public void set_pos(java.lang.Long v) {
 				setAttribute(type.generated_offsets[1], v);
 			}
-			public greycat.gc.io_.CsvFormat format() {
-				return (greycat.gc.io_.CsvFormat) getAttribute(type.generated_offsets[2]);
+			public greycat.gc.io.CsvFormat format() {
+				return (greycat.gc.io.CsvFormat) getAttribute(type.generated_offsets[2]);
 			}
-			public void set_format(greycat.gc.io_.CsvFormat v) {
+			public void set_format(greycat.gc.io.CsvFormat v) {
 				setAttribute(type.generated_offsets[2], v);
 			}
-			public greycat.gc.io_.CsvSharding sharding() {
-				return (greycat.gc.io_.CsvSharding) getAttribute(type.generated_offsets[3]);
+			public greycat.gc.io.CsvSharding sharding() {
+				return (greycat.gc.io.CsvSharding) getAttribute(type.generated_offsets[3]);
 			}
-			public void set_sharding(greycat.gc.io_.CsvSharding v) {
+			public void set_sharding(greycat.gc.io.CsvSharding v) {
 				setAttribute(type.generated_offsets[3], v);
 			}
 		}
@@ -2118,10 +2118,10 @@ public final class gc {
 			public void set_append(java.lang.Boolean v) {
 				setAttribute(type.generated_offsets[1], v);
 			}
-			public greycat.gc.io_.CsvFormat format() {
-				return (greycat.gc.io_.CsvFormat) getAttribute(type.generated_offsets[2]);
+			public greycat.gc.io.CsvFormat format() {
+				return (greycat.gc.io.CsvFormat) getAttribute(type.generated_offsets[2]);
 			}
-			public void set_format(greycat.gc.io_.CsvFormat v) {
+			public void set_format(greycat.gc.io.CsvFormat v) {
 				setAttribute(type.generated_offsets[2], v);
 			}
 		}
@@ -2211,10 +2211,10 @@ public final class gc {
 			public void set_thousands_separator(java.lang.Character v) {
 				setAttribute(type.generated_offsets[4], v);
 			}
-			public greycat.gc.core.Array<greycat.gc.io_.CsvColumnStatistics> columns() {
-				return (greycat.gc.core.Array<greycat.gc.io_.CsvColumnStatistics>) getAttribute(type.generated_offsets[5]);
+			public greycat.gc.core.Array<greycat.gc.io.CsvColumnStatistics> columns() {
+				return (greycat.gc.core.Array<greycat.gc.io.CsvColumnStatistics>) getAttribute(type.generated_offsets[5]);
 			}
-			public void set_columns(greycat.gc.core.Array<greycat.gc.io_.CsvColumnStatistics> v) {
+			public void set_columns(greycat.gc.core.Array<greycat.gc.io.CsvColumnStatistics> v) {
 				setAttribute(type.generated_offsets[5], v);
 			}
 			public java.lang.Long line_count() {
@@ -2280,25 +2280,25 @@ public final class gc {
 			public Csv(java.lang.Object... attributes) {
 				super(GreyCat.DEFAULT.libs_by_name.get(std.name).mapped[66], attributes);
 			}
-			public static <T> greycat.gc.core.Table<T> sample(greycat.gc.io_.CsvReader<T>  reader, java.lang.Long max_lines) throws java.io.IOException {
+			public static <T> greycat.gc.core.Table<T> sample(greycat.gc.io.CsvReader<T>  reader, java.lang.Long max_lines) throws java.io.IOException {
 				return sample(reader, max_lines, GreyCat.DEFAULT);
 			}
 
-			public static <T> greycat.gc.core.Table<T> sample(greycat.gc.io_.CsvReader<T>  reader, java.lang.Long max_lines, GreyCat greycat) throws java.io.IOException {
+			public static <T> greycat.gc.core.Table<T> sample(greycat.gc.io.CsvReader<T>  reader, java.lang.Long max_lines, GreyCat greycat) throws java.io.IOException {
 				return (greycat.gc.core.Table<T>) greycat.call("io::Csv::sample", reader, max_lines);
 			}
-			public static greycat.gc.io_.CsvStatistics analyze(greycat.gc.core.Array<greycat.gc.io_.File> files, greycat.gc.io_.CsvAnalysisConfig config) throws java.io.IOException {
+			public static greycat.gc.io.CsvStatistics analyze(greycat.gc.core.Array<greycat.gc.io.File> files, greycat.gc.io.CsvAnalysisConfig config) throws java.io.IOException {
 				return analyze(files, config, GreyCat.DEFAULT);
 			}
 
-			public static greycat.gc.io_.CsvStatistics analyze(greycat.gc.core.Array<greycat.gc.io_.File> files, greycat.gc.io_.CsvAnalysisConfig config, GreyCat greycat) throws java.io.IOException {
-				return (greycat.gc.io_.CsvStatistics) greycat.call("io::Csv::analyze", files, config);
+			public static greycat.gc.io.CsvStatistics analyze(greycat.gc.core.Array<greycat.gc.io.File> files, greycat.gc.io.CsvAnalysisConfig config, GreyCat greycat) throws java.io.IOException {
+				return (greycat.gc.io.CsvStatistics) greycat.call("io::Csv::analyze", files, config);
 			}
-			public static java.lang.String generate(greycat.gc.io_.CsvStatistics stats) throws java.io.IOException {
+			public static java.lang.String generate(greycat.gc.io.CsvStatistics stats) throws java.io.IOException {
 				return generate(stats, GreyCat.DEFAULT);
 			}
 
-			public static java.lang.String generate(greycat.gc.io_.CsvStatistics stats, GreyCat greycat) throws java.io.IOException {
+			public static java.lang.String generate(greycat.gc.io.CsvStatistics stats, GreyCat greycat) throws java.io.IOException {
 				return (java.lang.String) greycat.call("io::Csv::generate", stats);
 			}
 		}
@@ -2324,16 +2324,16 @@ public final class gc {
 			public void set_port(java.lang.Long v) {
 				setAttribute(type.generated_offsets[1], v);
 			}
-			public greycat.gc.io_.SmtpMode mode() {
-				return (greycat.gc.io_.SmtpMode) getAttribute(type.generated_offsets[2]);
+			public greycat.gc.io.SmtpMode mode() {
+				return (greycat.gc.io.SmtpMode) getAttribute(type.generated_offsets[2]);
 			}
-			public void set_mode(greycat.gc.io_.SmtpMode v) {
+			public void set_mode(greycat.gc.io.SmtpMode v) {
 				setAttribute(type.generated_offsets[2], v);
 			}
-			public greycat.gc.io_.SmtpAuth authenticate() {
-				return (greycat.gc.io_.SmtpAuth) getAttribute(type.generated_offsets[3]);
+			public greycat.gc.io.SmtpAuth authenticate() {
+				return (greycat.gc.io.SmtpAuth) getAttribute(type.generated_offsets[3]);
 			}
-			public void set_authenticate(greycat.gc.io_.SmtpAuth v) {
+			public void set_authenticate(greycat.gc.io.SmtpAuth v) {
 				setAttribute(type.generated_offsets[3], v);
 			}
 			public java.lang.String user() {
@@ -4356,32 +4356,32 @@ public final class gc {
 			loaders.put(core.function.name, core.function::load);
 			factories.put(core.str.name, core.str::new);
 			loaders.put(core.str.name, core.str::load);
-			factories.put(io_.SmtpAuth.name, io_.SmtpAuth::new);
-			factories.put(io_.Url.name, io_.Url::new);
-			factories.put(io_.File.name, io_.File::new);
-			factories.put(io_.CsvAnalysisConfig.name, io_.CsvAnalysisConfig::new);
-			factories.put(io_.Writer.name, io_.Writer::new);
-			factories.put(io_.GcbWriter.name, io_.GcbWriter::new);
-			factories.put(io_.TextWriter.name, io_.TextWriter::new);
-			factories.put(io_.GcbReader.name, io_.GcbReader::new);
-			factories.put(io_.SmtpMode.name, io_.SmtpMode::new);
-			factories.put(io_.CsvColumnStatistics.name, io_.CsvColumnStatistics::new);
-			factories.put(io_.CsvFormat.name, io_.CsvFormat::new);
-			factories.put(io_.CsvSharding.name, io_.CsvSharding::new);
-			factories.put(io_.Email.name, io_.Email::new);
-			factories.put(io_.CsvReader.name, io_.CsvReader::new);
-			factories.put(io_.Reader.name, io_.Reader::new);
-			factories.put(io_.Http.name, io_.Http::new);
-			factories.put(io_.CsvWriter.name, io_.CsvWriter::new);
-			factories.put(io_.TextReader.name, io_.TextReader::new);
-			factories.put(io_.JsonWriter.name, io_.JsonWriter::new);
-			factories.put(io_.CsvStatistics.name, io_.CsvStatistics::new);
-			factories.put(io_.JsonReader.name, io_.JsonReader::new);
-			factories.put(io_.Json.name, io_.Json::new);
-			factories.put(io_.Csv.name, io_.Csv::new);
-			factories.put(io_.Smtp.name, io_.Smtp::new);
-			factories.put(io_.FileWalker.name, io_.FileWalker::new);
-			factories.put(io_.HttpHeader.name, io_.HttpHeader::new);
+			factories.put(io.SmtpAuth.name, io.SmtpAuth::new);
+			factories.put(io.Url.name, io.Url::new);
+			factories.put(io.File.name, io.File::new);
+			factories.put(io.CsvAnalysisConfig.name, io.CsvAnalysisConfig::new);
+			factories.put(io.Writer.name, io.Writer::new);
+			factories.put(io.GcbWriter.name, io.GcbWriter::new);
+			factories.put(io.TextWriter.name, io.TextWriter::new);
+			factories.put(io.GcbReader.name, io.GcbReader::new);
+			factories.put(io.SmtpMode.name, io.SmtpMode::new);
+			factories.put(io.CsvColumnStatistics.name, io.CsvColumnStatistics::new);
+			factories.put(io.CsvFormat.name, io.CsvFormat::new);
+			factories.put(io.CsvSharding.name, io.CsvSharding::new);
+			factories.put(io.Email.name, io.Email::new);
+			factories.put(io.CsvReader.name, io.CsvReader::new);
+			factories.put(io.Reader.name, io.Reader::new);
+			factories.put(io.Http.name, io.Http::new);
+			factories.put(io.CsvWriter.name, io.CsvWriter::new);
+			factories.put(io.TextReader.name, io.TextReader::new);
+			factories.put(io.JsonWriter.name, io.JsonWriter::new);
+			factories.put(io.CsvStatistics.name, io.CsvStatistics::new);
+			factories.put(io.JsonReader.name, io.JsonReader::new);
+			factories.put(io.Json.name, io.Json::new);
+			factories.put(io.Csv.name, io.Csv::new);
+			factories.put(io.Smtp.name, io.Smtp::new);
+			factories.put(io.FileWalker.name, io.FileWalker::new);
+			factories.put(io.HttpHeader.name, io.HttpHeader::new);
 			factories.put(runtime.CallPerf.name, runtime.CallPerf::new);
 			factories.put(runtime.License.name, runtime.License::new);
 			factories.put(runtime.SecurityEntity.name, runtime.SecurityEntity::new);
@@ -4543,101 +4543,101 @@ public final class gc {
 			}
 			mapped[42] = greycat.types_by_name.get(core.function.name);
 			mapped[43] = greycat.types_by_name.get(core.str.name);
-			mapped[44] = greycat.types_by_name.get(io_.SmtpAuth.name);
+			mapped[44] = greycat.types_by_name.get(io.SmtpAuth.name);
 			if(this.mapped[44] != null){
 				this.mapped[44].resolveGeneratedOffsetWithValues("none", 0L,"plain", 1L,"login", 2L);
 			}
-			mapped[45] = greycat.types_by_name.get(io_.Url.name);
+			mapped[45] = greycat.types_by_name.get(io.Url.name);
 			if(this.mapped[45] != null){
 				this.mapped[45].resolveGeneratedOffsets("protocol","host","port","path","params","hash");
 			}
-			mapped[46] = greycat.types_by_name.get(io_.File.name);
+			mapped[46] = greycat.types_by_name.get(io.File.name);
 			if(this.mapped[46] != null){
 				this.mapped[46].resolveGeneratedOffsets("path","size","last_modification");
 			}
-			mapped[47] = greycat.types_by_name.get(io_.CsvAnalysisConfig.name);
+			mapped[47] = greycat.types_by_name.get(io.CsvAnalysisConfig.name);
 			if(this.mapped[47] != null){
 				this.mapped[47].resolveGeneratedOffsets("header_lines","separator","string_delimiter","decimal_separator","thousands_separator","row_limit","enumerable_limit","date_check_limit","date_formats");
 			}
 			if(this.mapped[47] != null){
 				this.mapped[47].static_values = new java.lang.Object[]{100L,100L};
 			}
-			mapped[48] = greycat.types_by_name.get(io_.Writer.name);
+			mapped[48] = greycat.types_by_name.get(io.Writer.name);
 			if(this.mapped[48] != null){
 				this.mapped[48].resolveGeneratedOffsets("path","append");
 			}
-			mapped[49] = greycat.types_by_name.get(io_.GcbWriter.name);
+			mapped[49] = greycat.types_by_name.get(io.GcbWriter.name);
 			if(this.mapped[49] != null){
 				this.mapped[49].resolveGeneratedOffsets("path","append");
 			}
-			mapped[50] = greycat.types_by_name.get(io_.TextWriter.name);
+			mapped[50] = greycat.types_by_name.get(io.TextWriter.name);
 			if(this.mapped[50] != null){
 				this.mapped[50].resolveGeneratedOffsets("path","append");
 			}
-			mapped[51] = greycat.types_by_name.get(io_.GcbReader.name);
+			mapped[51] = greycat.types_by_name.get(io.GcbReader.name);
 			if(this.mapped[51] != null){
 				this.mapped[51].resolveGeneratedOffsets("path","pos");
 			}
-			mapped[52] = greycat.types_by_name.get(io_.SmtpMode.name);
+			mapped[52] = greycat.types_by_name.get(io.SmtpMode.name);
 			if(this.mapped[52] != null){
 				this.mapped[52].resolveGeneratedOffsetWithValues("plain", 0L,"ssl_tls", 1L,"starttls", 2L);
 			}
-			mapped[53] = greycat.types_by_name.get(io_.CsvColumnStatistics.name);
+			mapped[53] = greycat.types_by_name.get(io.CsvColumnStatistics.name);
 			if(this.mapped[53] != null){
 				this.mapped[53].resolveGeneratedOffsets("name","example","null_count","bool_count","int_count","float_count","string_count","date_count","date_format_count","enumerable_count","profile");
 			}
-			mapped[54] = greycat.types_by_name.get(io_.CsvFormat.name);
+			mapped[54] = greycat.types_by_name.get(io.CsvFormat.name);
 			if(this.mapped[54] != null){
 				this.mapped[54].resolveGeneratedOffsets("header_lines","separator","string_delimiter","decimal_separator","thousands_separator","trim","format","tz","strict","nearest_time");
 			}
-			mapped[55] = greycat.types_by_name.get(io_.CsvSharding.name);
+			mapped[55] = greycat.types_by_name.get(io.CsvSharding.name);
 			if(this.mapped[55] != null){
 				this.mapped[55].resolveGeneratedOffsets("id","column","modulo");
 			}
-			mapped[56] = greycat.types_by_name.get(io_.Email.name);
+			mapped[56] = greycat.types_by_name.get(io.Email.name);
 			if(this.mapped[56] != null){
 				this.mapped[56].resolveGeneratedOffsets("from","subject","body","body_is_html","to","cc","bcc");
 			}
-			mapped[57] = greycat.types_by_name.get(io_.CsvReader.name);
+			mapped[57] = greycat.types_by_name.get(io.CsvReader.name);
 			if(this.mapped[57] != null){
 				this.mapped[57].resolveGeneratedOffsets("path","pos","format","sharding");
 			}
-			mapped[58] = greycat.types_by_name.get(io_.Reader.name);
+			mapped[58] = greycat.types_by_name.get(io.Reader.name);
 			if(this.mapped[58] != null){
 				this.mapped[58].resolveGeneratedOffsets("path","pos");
 			}
-			mapped[59] = greycat.types_by_name.get(io_.Http.name);
-			mapped[60] = greycat.types_by_name.get(io_.CsvWriter.name);
+			mapped[59] = greycat.types_by_name.get(io.Http.name);
+			mapped[60] = greycat.types_by_name.get(io.CsvWriter.name);
 			if(this.mapped[60] != null){
 				this.mapped[60].resolveGeneratedOffsets("path","append","format");
 			}
-			mapped[61] = greycat.types_by_name.get(io_.TextReader.name);
+			mapped[61] = greycat.types_by_name.get(io.TextReader.name);
 			if(this.mapped[61] != null){
 				this.mapped[61].resolveGeneratedOffsets("path","pos");
 			}
-			mapped[62] = greycat.types_by_name.get(io_.JsonWriter.name);
+			mapped[62] = greycat.types_by_name.get(io.JsonWriter.name);
 			if(this.mapped[62] != null){
 				this.mapped[62].resolveGeneratedOffsets("path","append");
 			}
-			mapped[63] = greycat.types_by_name.get(io_.CsvStatistics.name);
+			mapped[63] = greycat.types_by_name.get(io.CsvStatistics.name);
 			if(this.mapped[63] != null){
 				this.mapped[63].resolveGeneratedOffsets("header_lines","separator","string_delimiter","decimal_separator","thousands_separator","columns","line_count","fail_count","file_count");
 			}
-			mapped[64] = greycat.types_by_name.get(io_.JsonReader.name);
+			mapped[64] = greycat.types_by_name.get(io.JsonReader.name);
 			if(this.mapped[64] != null){
 				this.mapped[64].resolveGeneratedOffsets("path","pos");
 			}
-			mapped[65] = greycat.types_by_name.get(io_.Json.name);
-			mapped[66] = greycat.types_by_name.get(io_.Csv.name);
-			mapped[67] = greycat.types_by_name.get(io_.Smtp.name);
+			mapped[65] = greycat.types_by_name.get(io.Json.name);
+			mapped[66] = greycat.types_by_name.get(io.Csv.name);
+			mapped[67] = greycat.types_by_name.get(io.Smtp.name);
 			if(this.mapped[67] != null){
 				this.mapped[67].resolveGeneratedOffsets("host","port","mode","authenticate","user","pass");
 			}
-			mapped[68] = greycat.types_by_name.get(io_.FileWalker.name);
+			mapped[68] = greycat.types_by_name.get(io.FileWalker.name);
 			if(this.mapped[68] != null){
 				this.mapped[68].resolveGeneratedOffsets("path");
 			}
-			mapped[69] = greycat.types_by_name.get(io_.HttpHeader.name);
+			mapped[69] = greycat.types_by_name.get(io.HttpHeader.name);
 			if(this.mapped[69] != null){
 				this.mapped[69].resolveGeneratedOffsets("name","value");
 			}
