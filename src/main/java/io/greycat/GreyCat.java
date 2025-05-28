@@ -1489,7 +1489,6 @@ public final class GreyCat {
         java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
                 this.runtime_url + "/files/" + path
         ).openConnection();
-        System.out.println(connection.getURL());
         connection.setDoOutput(true);
 
         if (this.token != null) {
