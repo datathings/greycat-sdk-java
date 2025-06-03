@@ -894,7 +894,7 @@ public final class GreyCat {
         java.lang.Object build(Type type, java.lang.Object... parameters);
     }
 
-    public abstract static class Library {
+    public static abstract class Library {
 
         GreyCat.Type[] mapped = null;
 
@@ -1151,11 +1151,34 @@ public final class GreyCat {
             login(username, password, use_cookie);
         }
 
-        gc.std std = new gc.std();
-        this.libs_by_name.put(std.name(), std);
-
         for (Library lib : libraries) {
             this.libs_by_name.put(lib.name(), lib);
+        }
+
+        for (Class<?> type : gc.class.getDeclaredClasses()) {
+            if (GreyCat.Library.class.isAssignableFrom(type)) {
+                //noinspection unchecked
+                Class<? extends Library> libraryType = (Class<? extends Library>) type;
+                if (!this.libs_by_name.containsKey((String) libraryType.getDeclaredField("name").get(null))) {
+                    Library lib = libraryType.getDeclaredConstructor().newInstance();
+                    this.libs_by_name.put(lib.name(), lib);
+                }
+            }
+        }
+
+        try {
+            for (Class<?> type : Class.forName("greycat.project_types").getDeclaredClasses()) {
+                if (GreyCat.Library.class.isAssignableFrom(type)) {
+                    //noinspection unchecked
+                    Class<? extends Library> libraryType = (Class<? extends Library>) type;
+                    if (!this.libs_by_name.containsKey((String) libraryType.getDeclaredField("name").get(null))) {
+                        Library lib = libraryType.getDeclaredConstructor().newInstance();
+                        this.libs_by_name.put(lib.name(), lib);
+                    }
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            // noop
         }
 
         final java.util.Map<String, Loader> loaders = new java.util.HashMap<>();
