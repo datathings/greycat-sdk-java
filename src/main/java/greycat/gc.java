@@ -971,97 +971,6 @@ public final class gc {
 			public MathConstants(java.lang.Object... attributes) {
 				super(GreyCat.DEFAULT.libs_by_name.get(std.name).mapped[22], attributes);
 			}
-			public static java.lang.Double e() {
-				return e(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double e(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[0];
-			}
-			public static java.lang.Double log_2e() {
-				return log_2e(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double log_2e(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[1];
-			}
-			public static java.lang.Double log_10e() {
-				return log_10e(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double log_10e(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[2];
-			}
-			public static java.lang.Double ln2() {
-				return ln2(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double ln2(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[3];
-			}
-			public static java.lang.Double ln10() {
-				return ln10(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double ln10(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[4];
-			}
-			public static java.lang.Double pi() {
-				return pi(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double pi(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[5];
-			}
-			public static java.lang.Double pi_2() {
-				return pi_2(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double pi_2(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[6];
-			}
-			public static java.lang.Double pi_4() {
-				return pi_4(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double pi_4(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[7];
-			}
-			public static java.lang.Double m1_pi() {
-				return m1_pi(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double m1_pi(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[8];
-			}
-			public static java.lang.Double m2_pi() {
-				return m2_pi(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double m2_pi(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[9];
-			}
-			public static java.lang.Double m2_sqrt_pi() {
-				return m2_sqrt_pi(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double m2_sqrt_pi(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[10];
-			}
-			public static java.lang.Double sqrt2() {
-				return sqrt2(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double sqrt2(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[11];
-			}
-			public static java.lang.Double sqrt1_2() {
-				return sqrt1_2(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Double sqrt1_2(GreyCat greycat) {
-				return (java.lang.Double) greycat.libs_by_name.get(std.name).mapped[22].static_values[12];
-			}
 		}
 		public static final class type extends greycat.std_n.core.type {
 			public static final java.lang.String name = "core::type";
@@ -1663,20 +1572,6 @@ public final class gc {
 			}
 			public void set_date_formats(core.Array<java.lang.String> v) {
 				setAttribute(type.generated_offsets[8], v);
-			}
-			public static java.lang.Long enumerable_limit_default() {
-				return enumerable_limit_default(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Long enumerable_limit_default(GreyCat greycat) {
-				return (java.lang.Long) greycat.libs_by_name.get(std.name).mapped[47].static_values[0];
-			}
-			public static java.lang.Long date_check_limit_default() {
-				return date_check_limit_default(GreyCat.DEFAULT);
-			}
-
-			public static java.lang.Long date_check_limit_default(GreyCat greycat) {
-				return (java.lang.Long) greycat.libs_by_name.get(std.name).mapped[47].static_values[1];
 			}
 		}
 		public static final class Writer<T> extends GreyCat.Object {
