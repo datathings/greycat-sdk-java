@@ -1099,10 +1099,14 @@ public final class GreyCat {
             connection.setRequestProperty("Content-Type", "application/octet-stream");
             int status = connection.getResponseCode();
             if (200 > status || 300 <= status) {
-                Stream stream = new Stream(greycat, new java.io.BufferedInputStream(connection.getErrorStream()));
-                java.lang.Object result = stream.read();
-                stream.close();
-                throw new java.io.IOException(result.toString());
+                try {
+                    Stream stream = new Stream(greycat, new java.io.BufferedInputStream(connection.getErrorStream()));
+                    java.lang.Object result = stream.read();
+                    stream.close();
+                    throw new java.io.IOException(result.toString());
+                } catch (java.io.IOException e) {
+                    throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
+                }
             }
             Stream buf = new Stream(greycat, new java.io.BufferedInputStream(connection.getInputStream()));
             java.lang.Object result = buf.read();
@@ -1467,11 +1471,15 @@ public final class GreyCat {
         }
         int status = connection.getResponseCode();
         if (200 > status || 300 <= status) {
-            Stream stream = new Stream(this, new java.io.BufferedInputStream(connection.getErrorStream()));
-            stream.readAbiHeader();
-            java.lang.Object result = stream.read();
-            stream.close();
-            throw new java.io.IOException(result.toString());
+            try {
+                Stream stream = new Stream(this, new java.io.BufferedInputStream(connection.getErrorStream()));
+                stream.readAbiHeader();
+                java.lang.Object result = stream.read();
+                stream.close();
+                throw new java.io.IOException(result.toString());
+            } catch (java.io.IOException e) {
+                throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
+            }
         }
         Stream buf = new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
         buf.readAbiHeader();
@@ -1495,7 +1503,7 @@ public final class GreyCat {
         connection.setRequestMethod("GET");
         int status = connection.getResponseCode();
         if (status < 200 || status >= 300) {
-            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
         }
 
         Stream buf = new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
@@ -1529,7 +1537,7 @@ public final class GreyCat {
         is.close();
         int status = connection.getResponseCode();
         if (status < 200 || status >= 300) {
-            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
         }
     }
 
@@ -1559,7 +1567,7 @@ public final class GreyCat {
 
         int status = connection.getResponseCode();
         if (200 > status || 300 <= status) {
-            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
         }
         java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(connection.getInputStream()));
         StringBuilder builder = new StringBuilder();
@@ -1618,7 +1626,7 @@ public final class GreyCat {
             this.is_remote = true;
             return new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
         } else {
-            throw new RuntimeException("HTTP Error: " + status + " " + connection.getResponseMessage());
+            throw new java.io.IOException("HTTP Error: " + status + " " + connection.getResponseMessage());
         }
     }
 
