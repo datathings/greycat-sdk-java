@@ -1,4 +1,4 @@
-package io.greycat;
+package greycat;
 
 @SuppressWarnings("IOStreamConstructor")
 public final class GreyCat {
@@ -894,7 +894,7 @@ public final class GreyCat {
         java.lang.Object build(Type type, java.lang.Object... parameters);
     }
 
-    public abstract static class Library {
+    public static abstract class Library {
 
         GreyCat.Type[] mapped = null;
 
@@ -1099,10 +1099,14 @@ public final class GreyCat {
             connection.setRequestProperty("Content-Type", "application/octet-stream");
             int status = connection.getResponseCode();
             if (200 > status || 300 <= status) {
-                Stream stream = new Stream(greycat, new java.io.BufferedInputStream(connection.getErrorStream()));
-                java.lang.Object result = stream.read();
-                stream.close();
-                throw new java.io.IOException(result.toString());
+                try {
+                    Stream stream = new Stream(greycat, new java.io.BufferedInputStream(connection.getErrorStream()));
+                    java.lang.Object result = stream.read();
+                    stream.close();
+                    throw new java.io.IOException(result.toString());
+                } catch (java.io.IOException e) {
+                    throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
+                }
             }
             Stream buf = new Stream(greycat, new java.io.BufferedInputStream(connection.getInputStream()));
             java.lang.Object result = buf.read();
@@ -1151,11 +1155,34 @@ public final class GreyCat {
             login(username, password, use_cookie);
         }
 
-        std std = new std();
-        this.libs_by_name.put(std.name(), std);
-
         for (Library lib : libraries) {
             this.libs_by_name.put(lib.name(), lib);
+        }
+
+        for (Class<?> type : gc.class.getDeclaredClasses()) {
+            if (GreyCat.Library.class.isAssignableFrom(type)) {
+                //noinspection unchecked
+                Class<? extends Library> libraryType = (Class<? extends Library>) type;
+                if (!this.libs_by_name.containsKey((String) libraryType.getDeclaredField("name").get(null))) {
+                    Library lib = libraryType.getDeclaredConstructor().newInstance();
+                    this.libs_by_name.put(lib.name(), lib);
+                }
+            }
+        }
+
+        try {
+            for (Class<?> type : Class.forName("greycat.project_types").getDeclaredClasses()) {
+                if (GreyCat.Library.class.isAssignableFrom(type)) {
+                    //noinspection unchecked
+                    Class<? extends Library> libraryType = (Class<? extends Library>) type;
+                    if (!this.libs_by_name.containsKey((String) libraryType.getDeclaredField("name").get(null))) {
+                        Library lib = libraryType.getDeclaredConstructor().newInstance();
+                        this.libs_by_name.put(lib.name(), lib);
+                    }
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            // noop
         }
 
         final java.util.Map<String, Loader> loaders = new java.util.HashMap<>();
@@ -1444,11 +1471,15 @@ public final class GreyCat {
         }
         int status = connection.getResponseCode();
         if (200 > status || 300 <= status) {
-            Stream stream = new Stream(this, new java.io.BufferedInputStream(connection.getErrorStream()));
-            stream.readAbiHeader();
-            java.lang.Object result = stream.read();
-            stream.close();
-            throw new java.io.IOException(result.toString());
+            try {
+                Stream stream = new Stream(this, new java.io.BufferedInputStream(connection.getErrorStream()));
+                stream.readAbiHeader();
+                java.lang.Object result = stream.read();
+                stream.close();
+                throw new java.io.IOException(result.toString());
+            } catch (java.io.IOException e) {
+                throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
+            }
         }
         Stream buf = new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
         buf.readAbiHeader();
@@ -1472,7 +1503,7 @@ public final class GreyCat {
         connection.setRequestMethod("GET");
         int status = connection.getResponseCode();
         if (status < 200 || status >= 300) {
-            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
         }
 
         Stream buf = new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
@@ -1489,7 +1520,6 @@ public final class GreyCat {
         java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
                 this.runtime_url + "/files/" + path
         ).openConnection();
-        System.out.println(connection.getURL());
         connection.setDoOutput(true);
 
         if (this.token != null) {
@@ -1507,7 +1537,7 @@ public final class GreyCat {
         is.close();
         int status = connection.getResponseCode();
         if (status < 200 || status >= 300) {
-            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
         }
     }
 
@@ -1537,7 +1567,7 @@ public final class GreyCat {
 
         int status = connection.getResponseCode();
         if (200 > status || 300 <= status) {
-            throw new RuntimeException("HTTP " + status + ": " + connection.getResponseMessage());
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
         }
         java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(connection.getInputStream()));
         StringBuilder builder = new StringBuilder();
@@ -1558,25 +1588,25 @@ public final class GreyCat {
         return t.factory.build(t, parameters);
     }
 
-    public std.core.geo createGeo(double lat, double lng) {
+    public gc.core.geo createGeo(double lat, double lng) {
         final GreyCat.Type type = this.types[this.type_offset_core_geo];
-        std.core.geo geo = (std.core.geo) type.factory.build(type);
+        gc.core.geo geo = (gc.core.geo) type.factory.build(type);
         geo.lat = lat;
         geo.lng = lng;
         return geo;
     }
 
-    public std.core.time createTime(long epoch_us) {
+    public gc.core.time createTime(long epoch_us) {
         final GreyCat.Type type = this.types[this.type_offset_core_time];
-        std.core.time t = (std.core.time) type.factory.build(type);
+        gc.core.time t = (gc.core.time) type.factory.build(type);
         t.value = epoch_us;
         return t;
     }
 
     @SuppressWarnings("unused")
-    public std.core.duration createDuration(long duration_us) {
+    public gc.core.duration createDuration(long duration_us) {
         final GreyCat.Type type = this.types[this.type_offset_core_duration];
-        std.core.duration dur = (std.core.duration) type.factory.build(type);
+        gc.core.duration dur = (gc.core.duration) type.factory.build(type);
         dur.value = duration_us;
         return dur;
     }
@@ -1596,7 +1626,7 @@ public final class GreyCat {
             this.is_remote = true;
             return new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
         } else {
-            throw new RuntimeException("HTTP Error: " + status + " " + connection.getResponseMessage());
+            throw new java.io.IOException("HTTP Error: " + status + " " + connection.getResponseMessage());
         }
     }
 

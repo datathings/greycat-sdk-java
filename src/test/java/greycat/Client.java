@@ -1,8 +1,4 @@
-package io.greycat;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+package greycat;
 
 public class Client {
 
@@ -14,10 +10,8 @@ public class Client {
         GreyCat greycat = new GreyCat(url, username, password, null, null);
         greycat.putFile("pom.xml", new java.io.File("pom.xml"));
 
-        System.out.println("Session ready!");
-
-        std.core.Array<Object> gcb = (std.core.Array<Object>) greycat.call("project::get_gcb");
-        Iterator<Object> gcbIt = gcb.iterator();
+        gc.core.Array<Object> gcb = (gc.core.Array<Object>) greycat.call("project::get_gcb");
+        java.util.Iterator<Object> gcbIt = gcb.iterator();
         while (gcbIt.hasNext()) {
             Object o = gcbIt.next();
             System.out.println(o);
