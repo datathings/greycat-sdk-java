@@ -4350,7 +4350,7 @@ public final class gc {
 			factories.put(util.SlidingWindow.name, util.SlidingWindow::new);
 		}
 		public void init(GreyCat greycat) {
-			this.mapped = new GreyCat.Type[119];
+			mapped = new GreyCat.Type[119];
 			mapped[0] = greycat.types_by_name.get(core.ErrorCode.name);
 			if(this.mapped[0] != null){
 				this.mapped[0].resolveGeneratedOffsetWithValues("none", 0L,"interrupted", 1L,"await", 2L,"timeout", 6L,"forbidden", 7L,"runtime_error", 8L);
@@ -4372,7 +4372,7 @@ public final class gc {
 			}
 			mapped[7] = greycat.types_by_name.get(core.MathConstants.name);
 			if(this.mapped[7] != null){
-				this.mapped[7].static_values = new java.lang.Object[]{java.lang.Double.longBitsToDouble(4613303445314885481L),java.lang.Double.longBitsToDouble(4609176140021203710L),java.lang.Double.longBitsToDouble(4601495173785380110L),java.lang.Double.longBitsToDouble(4604418534313441775L),java.lang.Double.longBitsToDouble(4612367379483415830L),java.lang.Double.longBitsToDouble(4614256656552045848L),java.lang.Double.longBitsToDouble(4609753056924675352L),java.lang.Double.longBitsToDouble(4605249457297304856L),java.lang.Double.longBitsToDouble(4599405781057128579L),java.lang.Double.longBitsToDouble(4603909380684499075L),java.lang.Double.longBitsToDouble(4607760587169110893L),java.lang.Double.longBitsToDouble(4609047870845172685L),java.lang.Double.longBitsToDouble(4604544271217802189L)};
+				this.mapped[7].static_values = new java.lang.Object[]{java.lang.Double.longBitsToDouble(4613303445314885482L),java.lang.Double.longBitsToDouble(4609176140021203710L),java.lang.Double.longBitsToDouble(4601495173785380111L),java.lang.Double.longBitsToDouble(4604418534313441775L),java.lang.Double.longBitsToDouble(4612367379483415830L),java.lang.Double.longBitsToDouble(4614256656552045848L),java.lang.Double.longBitsToDouble(4609753056924675352L),java.lang.Double.longBitsToDouble(4605249457297304857L),java.lang.Double.longBitsToDouble(4599405781057128578L),java.lang.Double.longBitsToDouble(4603909380684499074L),java.lang.Double.longBitsToDouble(4607760587169110893L),java.lang.Double.longBitsToDouble(4609047870845172685L),java.lang.Double.longBitsToDouble(4604544271217802190L)};
 			}
 			mapped[8] = greycat.types_by_name.get(core.field.name);
 			mapped[9] = greycat.types_by_name.get(core.CalendarUnit.name);
@@ -4737,8 +4737,6 @@ public final class gc {
 			if(this.mapped[118] != null){
 				this.mapped[118].resolveGeneratedOffsets("values","span","sum","sumsq","field");
 			}
-			System.out.println(this.mapped);
-
 		}
 	}
 }
