@@ -896,7 +896,7 @@ public final class GreyCat {
 
     public static abstract class Library {
 
-        GreyCat.Type[] mapped = null;
+        GreyCat.Type[] mapped;
 
         abstract String name();
 

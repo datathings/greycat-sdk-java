@@ -4199,7 +4199,6 @@ public final class gc {
 	}
 	public static final class std extends GreyCat.Library {
 		public static final java.lang.String name = "std";
-		GreyCat.Type[] mapped = null;
 
 		public java.lang.String name() {
 			return name;
@@ -4351,7 +4350,7 @@ public final class gc {
 			factories.put(util.SlidingWindow.name, util.SlidingWindow::new);
 		}
 		public void init(GreyCat greycat) {
-			mapped = new GreyCat.Type[119];
+			this.mapped = new GreyCat.Type[119];
 			mapped[0] = greycat.types_by_name.get(core.ErrorCode.name);
 			if(this.mapped[0] != null){
 				this.mapped[0].resolveGeneratedOffsetWithValues("none", 0L,"interrupted", 1L,"await", 2L,"timeout", 6L,"forbidden", 7L,"runtime_error", 8L);
@@ -4738,6 +4737,8 @@ public final class gc {
 			if(this.mapped[118] != null){
 				this.mapped[118].resolveGeneratedOffsets("values","span","sum","sumsq","field");
 			}
+			System.out.println(this.mapped);
+
 		}
 	}
 }
