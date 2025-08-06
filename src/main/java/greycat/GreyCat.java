@@ -658,7 +658,7 @@ public final class GreyCat {
             public final boolean mapped;
 
             public Attribute(String name, int abiType, int progTypeOffset, int mappedAnyOffset, int mappedAttOffset,
-                    byte sbiType, boolean nullable, boolean mapped) {
+                             byte sbiType, boolean nullable, boolean mapped) {
                 this.name = name;
                 this.abiType = abiType;
                 this.progTypeOffset = progTypeOffset;
@@ -676,7 +676,7 @@ public final class GreyCat {
         public final int g1_abi_type_desc;
         public final int g2_abi_type_desc;
         public final int mapped_type_off;
-        @SuppressWarnings({ "unused", "FieldCanBeLocal" })
+        @SuppressWarnings({"unused", "FieldCanBeLocal"})
         public final int masked_type_off;
         public final int nullable_nb_bytes;
         public final boolean is_masked;
@@ -774,9 +774,9 @@ public final class GreyCat {
         };
 
         public Type(int offset, String name, int generic_abi_type, int g1_abi_type_desc, int g2_abi_type_desc,
-                int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract,
-                boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory,
-                Loader loader, GreyCat greycat) {
+                    int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract,
+                    boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory,
+                    Loader loader, GreyCat greycat) {
             this.offset = offset;
             this.name = name;
             this.generic_abi_type = generic_abi_type;
@@ -806,7 +806,7 @@ public final class GreyCat {
                 if (this.is_enum) {
                     this.enum_values = new Enum[typeAttributes.length];
                     for (int enumOffset = 0; enumOffset < typeAttributes.length; enumOffset++) {
-                        final java.lang.Object[] attributes = { enumOffset, typeAttributes[enumOffset].name, null };
+                        final java.lang.Object[] attributes = {enumOffset, typeAttributes[enumOffset].name, null};
                         if (this.factory == null) {
                             this.enum_values[enumOffset] = new Enum(this, attributes);
                         } else {
@@ -934,12 +934,13 @@ public final class GreyCat {
         static final byte T3F = 21;
         static final byte T4F = 22;
         static final byte BLOCK_REF = 23;
-        static final byte FUNCTION = 24;
-        static final byte UNDEFINED = 25;
-        static final byte TYPE = 26;
-        static final byte FIELD = 27;
-        static final byte STRING_LIT = 28;
-        static final byte SIZE = 29;
+        static final byte BLOCK_INLINE = 24;
+        static final byte FUNCTION = 25;
+        static final byte UNDEFINED = 26;
+        static final byte TYPE = 27;
+        static final byte FIELD = 28;
+        static final byte STRING_LIT = 29;
+        static final byte SIZE = 30;
     }
 
     public static class Object {
@@ -951,12 +952,12 @@ public final class GreyCat {
             this.attributes = attributes;
         }
 
-        @SuppressWarnings({ "unused" })
+        @SuppressWarnings({"unused"})
         public final java.lang.Object getAttribute(String attributeName) {
             return getAttribute(type.attribute_off_by_name.get(attributeName));
         }
 
-        @SuppressWarnings({ "unused" })
+        @SuppressWarnings({"unused"})
         public final void setAttribute(String attributeName, java.lang.Object value) {
             setAttribute(type.attribute_off_by_name.get(attributeName), value);
         }
@@ -1154,7 +1155,7 @@ public final class GreyCat {
     private final int abi_version;
 
     public GreyCat(String url, String username, String password, Boolean use_cookie, Boolean set_default,
-            Library... libraries) throws Exception {
+                   Library... libraries) throws Exception {
         this.runtime_url = url;
         this.token = null;
 
@@ -1242,6 +1243,7 @@ public final class GreyCat {
             int g1_abi_type_desc = abiStream.read_vu32();
             int g2_abi_type_desc = abiStream.read_vu32();
             int parent_type_id = abiStream.read_vu32();
+            int companion_type_id = abiStream.read_vu32();
             int attributesLen = abiStream.read_vu32();
             abiStream.read_vu32();/* unused field */
             abiStream.read_vu32();/* unused field */
@@ -1588,7 +1590,7 @@ public final class GreyCat {
         this.token = response.substring(1, response.length() - 1);
     }
 
-    @SuppressWarnings({ "unused" })
+    @SuppressWarnings({"unused"})
     public java.lang.Object create(String name, java.lang.Object[] parameters) {
         final Type t = types_by_name.get(name);
         if (t == null) {
