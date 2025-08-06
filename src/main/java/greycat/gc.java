@@ -1253,10 +1253,10 @@ public final class gc {
 			public void set_value(java.lang.Object v) {
 				setAttribute(type.generated_offsets[1], v);
 			}
-			public core.nodeIndexBucket<T, U>  next() {
-				return (core.nodeIndexBucket<T, U> ) getAttribute(type.generated_offsets[2]);
+			public core.nodeIndexBucket<K, V>  next() {
+				return (core.nodeIndexBucket<K, V> ) getAttribute(type.generated_offsets[2]);
 			}
-			public void set_next(core.nodeIndexBucket<T, U>  v) {
+			public void set_next(core.nodeIndexBucket<K, V>  v) {
 				setAttribute(type.generated_offsets[2], v);
 			}
 		}
@@ -1572,10 +1572,10 @@ public final class gc {
 			public void set_enumerable_count(core.Map<java.lang.Object, java.lang.Long> v) {
 				setAttribute(type.generated_offsets[9], v);
 			}
-			public <T> util.Gaussian<T>  profile() {
-				return (util.Gaussian<T> ) getAttribute(type.generated_offsets[10]);
+			public util.Gaussian profile() {
+				return (util.Gaussian) getAttribute(type.generated_offsets[10]);
 			}
-			public <T> void set_profile(util.Gaussian<T>  v) {
+			public void set_profile(util.Gaussian v) {
 				setAttribute(type.generated_offsets[10], v);
 			}
 		}
@@ -3090,10 +3090,10 @@ public final class gc {
 			public void set_user_id(java.lang.Long v) {
 				setAttribute(type.generated_offsets[1], v);
 			}
-			public <T> core.Array<T>  arguments() {
-				return (core.Array<T> ) getAttribute(type.generated_offsets[2]);
+			public core.Array arguments() {
+				return (core.Array) getAttribute(type.generated_offsets[2]);
 			}
-			public <T> void set_arguments(core.Array<T>  v) {
+			public void set_arguments(core.Array v) {
 				setAttribute(type.generated_offsets[2], v);
 			}
 			public greycat.gc.core.time start() {
