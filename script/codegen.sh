@@ -10,4 +10,4 @@ DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
 cd ${DIR}/..
 greycat install
-GREYCAT_CORE=1 greycat codegen java
+GREYCAT_CORE=1 ./bin/greycat codegen java

@@ -125,7 +125,7 @@ public final class GreyCat {
                 final GreyCat.Type t = stream.greycat.types[stream.greycat.type_offset_core_t4f];
                 return t.loader.load(t, stream);
             };
-//            PRIMITIVE_LOADERS[PrimitiveType.BLOCK] = error_loader;
+            // PRIMITIVE_LOADERS[PrimitiveType.BLOCK] = error_loader;
             PRIMITIVE_LOADERS[PrimitiveType.BLOCK_REF] = error_loader;
             PRIMITIVE_LOADERS[PrimitiveType.FUNCTION] = error_loader; // TODO?
             PRIMITIVE_LOADERS[PrimitiveType.UNDEFINED] = error_loader;
@@ -281,7 +281,7 @@ public final class GreyCat {
             value |= Byte.toUnsignedLong(current) & 0x7f;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(1);
                 return value;
             }
@@ -290,7 +290,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 7;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(2);
                 return value;
             }
@@ -299,7 +299,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 14;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(3);
                 return value;
             }
@@ -308,7 +308,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 21;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(4);
                 return value;
             }
@@ -350,7 +350,7 @@ public final class GreyCat {
             value |= Byte.toUnsignedLong(current) & 0x7f;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(1);
                 return value;
             }
@@ -359,7 +359,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 7;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(2);
                 return value;
             }
@@ -368,7 +368,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 14;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(3);
                 return value;
             }
@@ -377,7 +377,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 21;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(4);
                 return value;
             }
@@ -386,7 +386,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 28;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(5);
                 return value;
             }
@@ -395,7 +395,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 35;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(6);
                 return value;
             }
@@ -404,7 +404,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 42;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(7);
                 return value;
             }
@@ -413,7 +413,7 @@ public final class GreyCat {
             value |= (Byte.toUnsignedLong(current) & 0x7f) << 49;
             if (0 == (current & 0x80)) {
                 is.reset();
-                //noinspection ResultOfMethodCallIgnored
+                // noinspection ResultOfMethodCallIgnored
                 is.skip(8);
                 return value;
             }
@@ -657,7 +657,8 @@ public final class GreyCat {
             public final boolean nullable;
             public final boolean mapped;
 
-            public Attribute(String name, int abiType, int progTypeOffset, int mappedAnyOffset, int mappedAttOffset, byte sbiType, boolean nullable, boolean mapped) {
+            public Attribute(String name, int abiType, int progTypeOffset, int mappedAnyOffset, int mappedAttOffset,
+                    byte sbiType, boolean nullable, boolean mapped) {
                 this.name = name;
                 this.abiType = abiType;
                 this.progTypeOffset = progTypeOffset;
@@ -675,7 +676,7 @@ public final class GreyCat {
         public final int g1_abi_type_desc;
         public final int g2_abi_type_desc;
         public final int mapped_type_off;
-        @SuppressWarnings({"unused", "FieldCanBeLocal"})
+        @SuppressWarnings({ "unused", "FieldCanBeLocal" })
         public final int masked_type_off;
         public final int nullable_nb_bytes;
         public final boolean is_masked;
@@ -721,7 +722,8 @@ public final class GreyCat {
                 java.lang.Object loadedField;
                 if (att.nullable) {
                     ++nullable_offset;
-                    // #define gc_object__is_not_null(bitset, offset) ((((bitset)[(offset) >> 3]) >> ((offset) & (gc_object_bitset_block_size - 1))) & 1)
+                    // #define gc_object__is_not_null(bitset, offset) ((((bitset)[(offset) >> 3]) >>
+                    // ((offset) & (gc_object_bitset_block_size - 1))) & 1)
                     if (0 == (((nullable_bitset[(nullable_offset) >> 3]) >> ((nullable_offset) & 7)) & 1)) {
                         continue;
                     }
@@ -742,10 +744,9 @@ public final class GreyCat {
                     }
                     case PrimitiveType.OBJECT: {
                         Type fieldType = type.greycat.types[att.abiType];
-                        if (
-                                (fieldType.is_ambiguous) ||
-                                        (type.greycat.type_offset_core_any == fieldType.offset) ||
-                                        ((!fieldType.is_native) && (PrimitiveType.UNDEFINED == att.sbiType))) {
+                        if ((fieldType.is_ambiguous) ||
+                                (type.greycat.type_offset_core_any == fieldType.offset) ||
+                                ((!fieldType.is_native) && (PrimitiveType.UNDEFINED == att.sbiType))) {
                             fieldType = type.greycat.types[stream.read_vu32()];
                         }
                         loadedField = fieldType.loader.load(fieldType, stream);
@@ -772,7 +773,10 @@ public final class GreyCat {
             return genericType.factory.build(genericType, parameters);
         };
 
-        public Type(int offset, String name, int generic_abi_type, int g1_abi_type_desc, int g2_abi_type_desc, int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract, boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory, Loader loader, GreyCat greycat) {
+        public Type(int offset, String name, int generic_abi_type, int g1_abi_type_desc, int g2_abi_type_desc,
+                int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract,
+                boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory,
+                Loader loader, GreyCat greycat) {
             this.offset = offset;
             this.name = name;
             this.generic_abi_type = generic_abi_type;
@@ -802,7 +806,7 @@ public final class GreyCat {
                 if (this.is_enum) {
                     this.enum_values = new Enum[typeAttributes.length];
                     for (int enumOffset = 0; enumOffset < typeAttributes.length; enumOffset++) {
-                        final java.lang.Object[] attributes = {enumOffset, typeAttributes[enumOffset].name, null};
+                        final java.lang.Object[] attributes = { enumOffset, typeAttributes[enumOffset].name, null };
                         if (this.factory == null) {
                             this.enum_values[enumOffset] = new Enum(this, attributes);
                         } else {
@@ -896,7 +900,7 @@ public final class GreyCat {
 
     public static abstract class Library {
 
-        GreyCat.Type[] mapped = null;
+        GreyCat.Type[] mapped;
 
         abstract String name();
 
@@ -947,12 +951,12 @@ public final class GreyCat {
             this.attributes = attributes;
         }
 
-        @SuppressWarnings({"unused"})
+        @SuppressWarnings({ "unused" })
         public final java.lang.Object getAttribute(String attributeName) {
             return getAttribute(type.attribute_off_by_name.get(attributeName));
         }
 
-        @SuppressWarnings({"unused"})
+        @SuppressWarnings({ "unused" })
         public final void setAttribute(String attributeName, java.lang.Object value) {
             setAttribute(type.attribute_off_by_name.get(attributeName), value);
         }
@@ -985,7 +989,8 @@ public final class GreyCat {
             for (int offset = 0; offset < type.attributes.length; ++offset) {
                 field = type.attributes[offset];
                 if (field.nullable) {
-                    nullable_bitset[nullable_offset >> 3] |= (byte) ((null == getAttribute(offset) ? 0 : 1) << (nullable_offset & 7));
+                    nullable_bitset[nullable_offset >> 3] |= (byte) ((null == getAttribute(offset) ? 0
+                            : 1) << (nullable_offset & 7));
                     ++nullable_offset;
                 }
             }
@@ -1031,7 +1036,7 @@ public final class GreyCat {
                     case PrimitiveType.T4F:
                     case PrimitiveType.TIME:
                     case PrimitiveType.DURATION:
-//                    case PrimitiveType.CUBIC: // TODO
+                        // case PrimitiveType.CUBIC: // TODO
                     case PrimitiveType.STATIC_FIELD:
                         ((Object) value).save(stream, null);
                         break;
@@ -1043,12 +1048,13 @@ public final class GreyCat {
                                 stream.write_vu32((symbolOffset << 1) | 1);
                             } else {
                                 final byte[] data = string.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                                stream.write_vu32(data.length);
+                                stream.write_vu32(data.length << 1);
                                 stream.write_i8_array(data, 0, data.length);
                             }
                         } else {
                             Object object = (Object) value;
-                            if (field.abiType != object.type.offset && type.greycat.types[field.abiType].generic_abi_type != object.type.offset) {
+                            if (field.abiType != object.type.offset
+                                    && type.greycat.types[field.abiType].generic_abi_type != object.type.offset) {
                                 stream.write_vu32(object.type.offset);
                                 object.save(stream, null);
                             } else {
@@ -1056,10 +1062,10 @@ public final class GreyCat {
                             }
                         }
                         break;
-//                    case PrimitiveType.BLOCK_REF: // TODO
-//                        break;
-//                    case PrimitiveType.FUNCTION: // TODO
-//                        break;
+                    // case PrimitiveType.BLOCK_REF: // TODO
+                    // break;
+                    // case PrimitiveType.FUNCTION: // TODO
+                    // break;
                     case PrimitiveType.UNDEFINED:
                         stream.write(value);
                         break;
@@ -1147,7 +1153,8 @@ public final class GreyCat {
     private final int abi_magic;
     private final int abi_version;
 
-    public GreyCat(String url, String username, String password, Boolean use_cookie, Boolean set_default, Library... libraries) throws Exception {
+    public GreyCat(String url, String username, String password, Boolean use_cookie, Boolean set_default,
+            Library... libraries) throws Exception {
         this.runtime_url = url;
         this.token = null;
 
@@ -1161,7 +1168,7 @@ public final class GreyCat {
 
         for (Class<?> type : gc.class.getDeclaredClasses()) {
             if (GreyCat.Library.class.isAssignableFrom(type)) {
-                //noinspection unchecked
+                // noinspection unchecked
                 Class<? extends Library> libraryType = (Class<? extends Library>) type;
                 if (!this.libs_by_name.containsKey((String) libraryType.getDeclaredField("name").get(null))) {
                     Library lib = libraryType.getDeclaredConstructor().newInstance();
@@ -1173,7 +1180,7 @@ public final class GreyCat {
         try {
             for (Class<?> type : Class.forName("greycat.project_types").getDeclaredClasses()) {
                 if (GreyCat.Library.class.isAssignableFrom(type)) {
-                    //noinspection unchecked
+                    // noinspection unchecked
                     Class<? extends Library> libraryType = (Class<? extends Library>) type;
                     if (!this.libs_by_name.containsKey((String) libraryType.getDeclaredField("name").get(null))) {
                         Library lib = libraryType.getDeclaredConstructor().newInstance();
@@ -1260,7 +1267,8 @@ public final class GreyCat {
                 final byte attFlags = abiStream.read_i8();
                 final boolean nullable = 0 != (attFlags & 1);
                 final boolean mapped = 0 != (attFlags & (1 << 1));
-                typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset, mappedAttOffset, sbiType, nullable, mapped);
+                typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset,
+                        mappedAttOffset, sbiType, nullable, mapped);
             }
             Factory factory;
             Loader loader;
@@ -1272,7 +1280,9 @@ public final class GreyCat {
                 factory = factories.get(superFqn);
                 loader = loaders.get(superFqn);
             }
-            Type abiType = new Type(i, fqn, generic_abi_type, g1_abi_type_desc, g2_abi_type_desc, mappedAbiTypeOffset, maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isAmbiguous, isEnum, isNative, typeAttributes, factory, loader, this);
+            Type abiType = new Type(i, fqn, generic_abi_type, g1_abi_type_desc, g2_abi_type_desc, mappedAbiTypeOffset,
+                    maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isAmbiguous, isEnum, isNative,
+                    typeAttributes, factory, loader, this);
             /* only the program related abi type (last version) is mapped to himself */
             if (abiType.mapped_type_off == i && !fqn.isEmpty()) {
                 types_by_name.put(abiType.name, abiType);
@@ -1478,7 +1488,8 @@ public final class GreyCat {
                 stream.close();
                 throw new java.io.IOException(result.toString());
             } catch (java.io.IOException e) {
-                throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
+                throw new java.io.IOException(
+                        "HTTP " + status + ": " + connection.getResponseMessage() + "error:" + e.getMessage());
             }
         }
         Stream buf = new Stream(this, new java.io.BufferedInputStream(connection.getInputStream()));
@@ -1493,8 +1504,7 @@ public final class GreyCat {
             throw new RuntimeException("Remote Call is not available on this GreyCat handle");
         }
         java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
-                this.runtime_url + "/" + path
-        ).openConnection();
+                this.runtime_url + "/" + path).openConnection();
 
         if (this.token != null) {
             connection.setRequestProperty("Authorization", this.token);
@@ -1518,8 +1528,7 @@ public final class GreyCat {
             throw new RuntimeException("Remote Call is not available on this GreyCat handle");
         }
         java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
-                this.runtime_url + "/files/" + path
-        ).openConnection();
+                this.runtime_url + "/files/" + path).openConnection();
         connection.setDoOutput(true);
 
         if (this.token != null) {
@@ -1547,16 +1556,15 @@ public final class GreyCat {
         }
 
         java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
-                this.runtime_url + "/runtime::User::login"
-        ).openConnection();
+                this.runtime_url + "/runtime::User::login").openConnection();
 
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Accept", "application/json");
 
-
         String credentials = username + ":" + hashPassword(password);
-        String encodedCredentials = java.util.Base64.getEncoder().encodeToString(credentials.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        String encodedCredentials = java.util.Base64.getEncoder()
+                .encodeToString(credentials.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         String body = "[" + "\"" + encodedCredentials + "\"" + "," + useCookie + "]";
 
         connection.setDoOutput(true);
@@ -1569,7 +1577,8 @@ public final class GreyCat {
         if (200 > status || 300 <= status) {
             throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
         }
-        java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(connection.getInputStream()));
+        java.io.BufferedReader br = new java.io.BufferedReader(
+                new java.io.InputStreamReader(connection.getInputStream()));
         StringBuilder builder = new StringBuilder();
         String line;
         while ((line = br.readLine()) != null) {
@@ -1579,7 +1588,7 @@ public final class GreyCat {
         this.token = response.substring(1, response.length() - 1);
     }
 
-    @SuppressWarnings({"unused"})
+    @SuppressWarnings({ "unused" })
     public java.lang.Object create(String name, java.lang.Object[] parameters) {
         final Type t = types_by_name.get(name);
         if (t == null) {
@@ -1644,8 +1653,7 @@ public final class GreyCat {
         b.append("abi");
         return new Stream(
                 this,
-                new java.io.BufferedInputStream(new java.io.FileInputStream(new java.net.URL(b.toString()).getFile()))
-        );
+                new java.io.BufferedInputStream(new java.io.FileInputStream(new java.net.URL(b.toString()).getFile())));
     }
 
     private Stream getAbi(String runtime_url) throws java.io.IOException {
