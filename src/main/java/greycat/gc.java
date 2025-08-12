@@ -4205,7 +4205,6 @@ public final class gc {
 	}
 	public static final class std extends GreyCat.Library {
 		public static final java.lang.String name = "std";
-		GreyCat.Type[] mapped = null;
 
 		public java.lang.String name() {
 			return name;
