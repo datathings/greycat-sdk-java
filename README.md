@@ -47,3 +47,22 @@
   ```json
   TODO
   ```
+  
+## Clean
+
+```bash
+rm -rf bin/ files/ gcdata/ lib/
+```
+
+## Test
+
+- In a first terminal:
+  ```bash
+  GREYCAT_CORE= greycat codegen java
+  greycat install
+  greycat serve
+  ```
+- In a second terminal:
+  ```bash
+  mvn clean test-compile org.codehaus.mojo:exec-maven-plugin:3.5.1:java -Dexec.mainClass=greycat.Client -Dexec.classpathScope=test
+  ```
