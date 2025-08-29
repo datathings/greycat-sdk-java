@@ -701,6 +701,14 @@ public final class GreyCat {
          */
         public int[] generated_offsets = null;
 
+        java.lang.Object[] map_attributes(java.lang.Object[] attributes) {
+            java.lang.Object[] mapped_attributes = new java.lang.Object[generated_offsets.length];
+            for (int offset = 0; offset < generated_offsets.length; ++offset) {
+                mapped_attributes[generated_offsets[offset]] = attributes[offset];
+            }
+            return mapped_attributes;
+        }
+
         static final Loader error_loader = (type, stream) -> {
             throw new IllegalArgumentException("wrong state");
         };
