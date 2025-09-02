@@ -691,9 +691,9 @@ public final class GreyCat {
         public final Attribute[] attributes;
         public final java.util.Map<String, Integer> attribute_off_by_name = new java.util.HashMap<>();
         public final GreyCat greycat;
-        public final GreyCat.Factory factory;
-        public final GreyCat.Loader loader;
-        public final Enum[] enum_values;
+        public GreyCat.Factory factory;
+        public GreyCat.Loader loader;
+        public Enum[] enum_values;
         public java.lang.Object[] static_values;
 
         /**
@@ -777,14 +777,18 @@ public final class GreyCat {
         };
 
         private static final GreyCat.Factory monomorphic_factory = (type, parameters) -> {
-            GreyCat.Type genericType = type.greycat.types[type.generic_abi_type];
+            final GreyCat.Type genericType = type.greycat.types[type.generic_abi_type];
             return genericType.factory.build(genericType, parameters);
+        };
+
+        private static final GreyCat.Loader monomorphic_loader = (type, stream) -> {
+            final GreyCat.Type genericType = type.greycat.types[type.generic_abi_type];
+            return genericType.loader.load(type, stream);
         };
 
         public Type(int offset, String name, int generic_abi_type, int g1_abi_type_desc, int g2_abi_type_desc,
                     int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract,
-                    boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, Factory factory,
-                    Loader loader, GreyCat greycat) {
+                    boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, GreyCat greycat) {
             this.offset = offset;
             this.name = name;
             this.generic_abi_type = generic_abi_type;
@@ -803,22 +807,25 @@ public final class GreyCat {
                 attribute_off_by_name.put(typeAttributes[i].name, i);
             }
             this.greycat = greycat;
-            if (0 == generic_abi_type) {
-                this.factory = factory;
+        }
+
+        private void resolve_factory(java.util.Map<java.lang.String, Factory> factories) {
+            if (0 == generic_abi_type && factories.containsKey(name)) {
+                factory = factories.get(name);
             } else {
-                this.factory = monomorphic_factory;
+                factory = monomorphic_factory;
             }
             if (offset == mapped_type_off) {
                 /* this is a program type, so let init all needed fields */
                 /* for enum, create all values */
                 if (this.is_enum) {
-                    this.enum_values = new Enum[typeAttributes.length];
-                    for (int enumOffset = 0; enumOffset < typeAttributes.length; enumOffset++) {
-                        final java.lang.Object[] attributes = {enumOffset, typeAttributes[enumOffset].name, null};
+                    this.enum_values = new Enum[attributes.length];
+                    for (int enumOffset = 0; enumOffset < attributes.length; enumOffset++) {
+                        final java.lang.Object[] enum_attributes = {enumOffset, attributes[enumOffset].name, null};
                         if (this.factory == null) {
-                            this.enum_values[enumOffset] = new Enum(this, attributes);
+                            this.enum_values[enumOffset] = new Enum(this, enum_attributes);
                         } else {
-                            this.enum_values[enumOffset] = (Enum) this.factory.build(this, attributes);
+                            this.enum_values[enumOffset] = (Enum) this.factory.build(this, enum_attributes);
                         }
                     }
                 } else {
@@ -827,14 +834,22 @@ public final class GreyCat {
             } else {
                 this.enum_values = null;
             }
-            if (loader != null) {
-                this.loader = loader;
-            } else if (this.is_native) {
-                this.loader = error_loader;
-            } else if (this.is_enum) {
-                this.loader = enum_loader;
+        }
+
+        private void resolve_loader(java.util.Map<java.lang.String, Loader> loaders) {
+            if (0 != generic_abi_type) {
+                this.loader = monomorphic_loader;
             } else {
-                this.loader = object_loader;
+                Loader loader = loaders.getOrDefault(name, null);
+                if (null != loader) {
+                    this.loader = loader;
+                } else if (is_native) {
+                    this.loader = error_loader;
+                } else if (is_enum) {
+                    this.loader = enum_loader;
+                } else {
+                    this.loader = object_loader;
+                }
             }
         }
 
@@ -1280,24 +1295,18 @@ public final class GreyCat {
                 typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset,
                         mappedAttOffset, sbiType, nullable, mapped);
             }
-            Factory factory;
-            Loader loader;
-            if (0 == generic_abi_type) {
-                factory = factories.get(fqn);
-                loader = loaders.get(fqn);
-            } else {
-                java.lang.String superFqn = types[generic_abi_type].name;
-                factory = factories.get(superFqn);
-                loader = loaders.get(superFqn);
-            }
             Type abiType = new Type(i, fqn, generic_abi_type, g1_abi_type_desc, g2_abi_type_desc, mappedAbiTypeOffset,
                     maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isAmbiguous, isEnum, isNative,
-                    typeAttributes, factory, loader, this);
+                    typeAttributes, this);
             /* only the program related abi type (last version) is mapped to himself */
             if (abiType.mapped_type_off == i && !fqn.isEmpty()) {
                 types_by_name.put(abiType.name, abiType);
             }
             types[i] = abiType;
+        }
+        for (Type abiType : types) {
+            abiType.resolve_factory(factories);
+            abiType.resolve_loader(loaders);
         }
         // step 3: create all functions
         final long functionsBytes = abiStream.read_i64();
