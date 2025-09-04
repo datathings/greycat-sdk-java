@@ -4771,9 +4771,6 @@ public final class gc {
 			mapped[10] = greycat.types_by_name.get(core.field.name);
 			mapped[11] = greycat.types_by_name.get(core.Tensor.name);
 			mapped[12] = greycat.types_by_name.get(core.time.name);
-			if(this.mapped[12] != null){
-				this.mapped[12].static_values = new java.lang.Object[]{greycat.createTime(-9223372036854775808L),greycat.createTime(9223372036854775807L)};
-			}
 			mapped[13] = greycat.types_by_name.get(core.SortOrder.name);
 			if(this.mapped[13] != null){
 				this.mapped[13].resolveGeneratedOffsetWithValues("asc", null,"desc", null);
@@ -4798,9 +4795,6 @@ public final class gc {
 			}
 			mapped[20] = greycat.types_by_name.get(core.nodeIndex.name);
 			mapped[21] = greycat.types_by_name.get(core.MathConstants.name);
-			if(this.mapped[21] != null){
-				this.mapped[21].static_values = new java.lang.Object[]{java.lang.Double.longBitsToDouble(4613303445314885481L),java.lang.Double.longBitsToDouble(4609176140021203710L),java.lang.Double.longBitsToDouble(4601495173785380110L),java.lang.Double.longBitsToDouble(4604418534313441775L),java.lang.Double.longBitsToDouble(4612367379483415830L),java.lang.Double.longBitsToDouble(4614256656552045848L),java.lang.Double.longBitsToDouble(4609753056924675352L),java.lang.Double.longBitsToDouble(4605249457297304856L),java.lang.Double.longBitsToDouble(4599405781057128579L),java.lang.Double.longBitsToDouble(4603909380684499075L),java.lang.Double.longBitsToDouble(4607760587169110893L),java.lang.Double.longBitsToDouble(4609047870845172685L),java.lang.Double.longBitsToDouble(4604544271217802189L)};
-			}
 			mapped[22] = greycat.types_by_name.get(core.Buffer.name);
 			mapped[23] = greycat.types_by_name.get(core.t4f.name);
 			mapped[24] = greycat.types_by_name.get(core.DurationUnit.name);
@@ -4810,9 +4804,6 @@ public final class gc {
 			mapped[25] = greycat.types_by_name.get(core.nodeList.name);
 			mapped[26] = greycat.types_by_name.get(core.Table.name);
 			mapped[27] = greycat.types_by_name.get(core.geo.name);
-			if(this.mapped[27] != null){
-				this.mapped[27].static_values = new java.lang.Object[]{greycat.createGeo(java.lang.Double.longBitsToDouble(-4587686678796158022L),java.lang.Double.longBitsToDouble(-4582834833316020224L)),greycat.createGeo(java.lang.Double.longBitsToDouble(4635685358058617786L),java.lang.Double.longBitsToDouble(4640537203538755584L))};
-			}
 			mapped[28] = greycat.types_by_name.get(core.ErrorCode.name);
 			if(this.mapped[28] != null){
 				this.mapped[28].resolveGeneratedOffsetWithValues("none", 0L,"interrupted", 1L,"await", 2L,"timeout", 6L,"forbidden", 7L,"runtime_error", 8L);
@@ -4939,9 +4930,6 @@ public final class gc {
 			mapped[67] = greycat.types_by_name.get(io.CsvAnalysisConfig.name);
 			if(this.mapped[67] != null){
 				this.mapped[67].resolveGeneratedOffsets("header_lines","separator","string_delimiter","decimal_separator","thousands_separator","row_limit","enumerable_limit","date_check_limit","date_formats");
-			}
-			if(this.mapped[67] != null){
-				this.mapped[67].static_values = new java.lang.Object[]{100L,100L};
 			}
 			mapped[68] = greycat.types_by_name.get(io.Smtp.name);
 			if(this.mapped[68] != null){
