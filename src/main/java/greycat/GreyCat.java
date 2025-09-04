@@ -812,6 +812,8 @@ public final class GreyCat {
         private void resolve_factory(java.util.Map<java.lang.String, Factory> factories) {
             if (0 == generic_abi_type && factories.containsKey(name)) {
                 factory = factories.get(name);
+            } else if (is_enum) {
+                factory = Enum::new;
             } else {
                 factory = monomorphic_factory;
             }
