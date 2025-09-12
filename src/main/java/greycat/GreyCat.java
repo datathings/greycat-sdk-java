@@ -654,21 +654,37 @@ public final class GreyCat {
             public final int mappedAnyOffset;
             public final int mappedAttOffset;
             public final byte sbiType;
+            public final byte precision;
             public final boolean nullable;
             public final boolean mapped;
 
             public Attribute(String name, int abiType, int progTypeOffset, int mappedAnyOffset, int mappedAttOffset,
-                             byte sbiType, boolean nullable, boolean mapped) {
+                             byte sbiType, byte precision, boolean nullable, boolean mapped) {
                 this.name = name;
                 this.abiType = abiType;
                 this.progTypeOffset = progTypeOffset;
                 this.mappedAnyOffset = mappedAnyOffset;
                 this.mappedAttOffset = mappedAttOffset;
                 this.sbiType = sbiType;
+                this.precision = precision;
                 this.nullable = nullable;
                 this.mapped = mapped;
             }
         }
+
+        private static final double[] f64_u64_dividers = new double[]{
+                1.0,
+                10.0,
+                100.0,
+                1000.0,
+                10000.0,
+                100000.0,
+                1000000.0,
+                10000000.0,
+                100000000.0,
+                1000000000.0,
+                10000000000.0,
+        };
 
         public final int offset;
         public final String name;
@@ -761,7 +777,11 @@ public final class GreyCat {
                         break;
                     }
                     default: {
-                        loadedField = Stream.PRIMITIVE_LOADERS[loadType].load(stream);
+                        if (PrimitiveType.FLOAT == loadType && 0 != att.precision) {
+                            loadedField = ((double) stream.read_vu64()) / f64_u64_dividers[att.precision];
+                        } else {
+                            loadedField = Stream.PRIMITIVE_LOADERS[loadType].load(stream);
+                        }
                         break;
                     }
                 }
@@ -1046,7 +1066,11 @@ public final class GreyCat {
                         stream.write_vi64((long) value);
                         break;
                     case PrimitiveType.FLOAT:
-                        stream.write_f64((double) value);
+                        if (0 == field.precision) {
+                            stream.write_f64((double) value);
+                        } else {
+                            stream.write_vu64((int) (((double) value) * Type.f64_u64_dividers[field.precision]));
+                        }
                         break;
                     case PrimitiveType.NODE:
                     case PrimitiveType.NODE_TIME:
@@ -1295,7 +1319,7 @@ public final class GreyCat {
                 final boolean nullable = 0 != (attFlags & 1);
                 final boolean mapped = 0 != (attFlags & (1 << 1));
                 typeAttributes[enumOffset] = new Type.Attribute(name, abiType, progTypeOffset, mappedAnyOffset,
-                        mappedAttOffset, sbiType, nullable, mapped);
+                        mappedAttOffset, sbiType, precision, nullable, mapped);
             }
             Type abiType = new Type(i, fqn, generic_abi_type, g1_abi_type_desc, g2_abi_type_desc, mappedAbiTypeOffset,
                     maskedAbiTypeOffset, nullableNbBytes, isMasked, isAbstract, isAmbiguous, isEnum, isNative,
