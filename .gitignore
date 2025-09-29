@@ -4,8 +4,8 @@ target/
 lib/*
 bin
 
-/src/main/java/ai/greycat/project_lib.java
-/src/test/java/ai/greycat/Sandbox.java
+/src/main/java/greycat/project_types.java
+/src/test/java/greycat/Debug.java
 
 /gcdata/
 /out.gcb
