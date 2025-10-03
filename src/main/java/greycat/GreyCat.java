@@ -889,6 +889,7 @@ public final class GreyCat {
         public void resolveGeneratedOffsetWithValues(java.lang.Object... name_values) {
             this.generated_offsets = new int[name_values.length / 2];
             for (int i = 0; i < name_values.length; i += 2) {
+                System.out.println(name + ": " + name_values[i].toString());
                 Integer resolved = attribute_off_by_name.get(name_values[i].toString());
                 if (resolved == null) {
                     throw new IllegalArgumentException("unmapped generated field, please re-generate this code!");
