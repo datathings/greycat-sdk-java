@@ -1154,13 +1154,36 @@ public final class GreyCat {
     private final int abi_magic;
     private final int abi_version;
 
-    public GreyCat(String url, String username, String password, Boolean use_cookie, Boolean set_default,
-                   Library... libraries) throws Exception {
+    private interface LoginInfo {
+    }
+
+    private final static class CredentialsInfo implements LoginInfo {
+        private final String username, password;
+
+        private CredentialsInfo(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+    }
+
+    private final static class TokenInfo implements LoginInfo {
+        private final String token;
+
+        private TokenInfo(String token) {
+            this.token = token;
+        }
+    }
+
+    private GreyCat(String url, LoginInfo loginInfo, Boolean use_cookie, Boolean set_default, Library... libraries) throws Exception {
+
         this.runtime_url = url;
         this.token = null;
 
-        if (username != null && password != null) {
-            login(username, password, use_cookie);
+        if (loginInfo instanceof TokenInfo) {
+            tokenLogin(((TokenInfo) loginInfo).token, use_cookie);
+        } else if (loginInfo instanceof CredentialsInfo) {
+            CredentialsInfo credentialsInfo = (CredentialsInfo) loginInfo;
+            login(credentialsInfo.username, credentialsInfo.password, use_cookie);
         }
 
         for (Library lib : libraries) {
@@ -1452,6 +1475,15 @@ public final class GreyCat {
         }
     }
 
+    public GreyCat(String url, String username, String password, Boolean use_cookie, Boolean set_default,
+                   Library... libraries) throws Exception {
+        this(url, null != username && null != password ? new CredentialsInfo(username, password) : null, use_cookie, set_default, libraries);
+    }
+
+    public GreyCat(String url, String token, Boolean use_cookie, Boolean set_default, Library... libraries) throws Exception {
+        this(url, null != token ? new TokenInfo(token) : null, use_cookie, set_default, libraries);
+    }
+
     public java.lang.Object call(String fqn, java.lang.Object... parameters) throws java.io.IOException {
         if (!is_remote) {
             throw new RuntimeException("Remote Call are not available on this GreyCat handle");
@@ -1550,6 +1582,41 @@ public final class GreyCat {
         if (status < 200 || status >= 300) {
             throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
         }
+    }
+
+    public void tokenLogin(String token, Boolean useCookie) throws Exception {
+        if (null == useCookie) {
+            useCookie = false;
+        }
+
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
+                this.runtime_url + "/runtime::User::login").openConnection();
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept", "application/json");
+
+        String body = "[" + "\"" + token + "\"" + "," + useCookie + "]";
+
+        connection.setDoOutput(true);
+        java.io.OutputStream os = connection.getOutputStream();
+        java.io.PrintStream b = new java.io.PrintStream(os);
+        b.print(body);
+        b.close();
+
+        int status = connection.getResponseCode();
+        if (200 > status || 300 <= status) {
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
+        }
+        java.io.BufferedReader br = new java.io.BufferedReader(
+                new java.io.InputStreamReader(connection.getInputStream()));
+        StringBuilder builder = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            builder.append(line);
+        }
+        String response = builder.toString();
+        this.token = response.substring(1, response.length() - 1);
     }
 
     public void login(String username, String password, Boolean useCookie) throws Exception {
