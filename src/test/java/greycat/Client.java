@@ -9,6 +9,8 @@ public class Client {
 
         GreyCat greycat = new GreyCat(url, username, password, null, null);
         greycat.putFile("pom.xml", new java.io.File("pom.xml"));
+        System.out.println(greycat.getFile("pom.xml", null, null));
+        greycat.deleteFile("pom.xml");
 
         gc.core.Array<Object> gcb = (gc.core.Array<Object>) greycat.call("project::get_gcb");
         java.util.Iterator<Object> gcbIt = gcb.iterator();

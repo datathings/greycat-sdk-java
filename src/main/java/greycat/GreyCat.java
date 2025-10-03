@@ -1626,6 +1626,76 @@ public final class GreyCat {
         }
     }
 
+    public void deleteFile(String path) throws java.io.IOException {
+        if (!this.is_remote) {
+            throw new RuntimeException("Remote Call is not available on this GreyCat handle");
+        }
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
+                this.runtime_url + "/files/" + path).openConnection();
+        connection.setDoOutput(true);
+
+        if (this.token != null) {
+            connection.setRequestProperty("Authorization", this.token);
+        }
+
+        connection.setRequestMethod("DELETE");
+        connection.connect();
+        int status = connection.getResponseCode();
+        if (status < 200 || status >= 300) {
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
+        }
+    }
+
+    public java.net.HttpURLConnection getFileConnection(String path, Integer offset, Integer max) throws java.io.IOException {
+        if (!this.is_remote) {
+            throw new RuntimeException("Remote Call is not available on this GreyCat handle");
+        }
+        StringBuilder paramsBuilder = new StringBuilder();
+        if (null != offset) {
+            paramsBuilder.append(0 == paramsBuilder.length() ? '?' : '&').append("offset=").append(offset);
+        }
+        if (null != max) {
+            paramsBuilder.append(0 == paramsBuilder.length() ? '?' : '&').append("max=").append(max);
+        }
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(
+                this.runtime_url + "/files/" + path + paramsBuilder.toString()).openConnection();
+        connection.setDoOutput(true);
+
+        if (this.token != null) {
+            connection.setRequestProperty("Authorization", this.token);
+        }
+
+        connection.setRequestMethod("GET");
+        connection.connect();
+        int status = connection.getResponseCode();
+        if (status < 200 || status >= 300) {
+            throw new java.io.IOException("HTTP " + status + ": " + connection.getResponseMessage());
+        }
+        return connection;
+    }
+
+    public java.lang.Object getFile(String path, Integer offset, Integer max) throws java.io.IOException {
+        java.net.HttpURLConnection connection = getFileConnection(path, offset, max);
+        if (path.endsWith(".gcb")) {
+            java.io.BufferedInputStream is = new java.io.BufferedInputStream(connection.getInputStream());
+            GreyCat.Stream stream = new GreyCat.Stream(this, is);
+            stream.readAbiHeader();
+            java.lang.Object result = new GreyCat.AbiReader(stream).read();
+            is.close();
+            return result;
+        }
+        java.io.InputStream is = connection.getInputStream();
+        java.io.ByteArrayOutputStream os = new java.io.ByteArrayOutputStream();
+        byte[] buf = new byte[4096];
+        for (int n = is.read(buf); n > -1; n = is.read(buf)) {
+            os.write(buf, 0, n);
+        }
+        String result = new String(os.toByteArray());
+        os.close();
+        is.close();
+        return result;
+    }
+
     public void tokenLogin(String token, Boolean useCookie) throws Exception {
         if (null == useCookie) {
             useCookie = false;
