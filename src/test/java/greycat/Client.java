@@ -12,6 +12,7 @@ public class Client {
         System.out.println(greycat.getFile("pom.xml", null, null));
         greycat.deleteFile("pom.xml");
 
+        @SuppressWarnings("unchecked")
         gc.core.Array<Object> gcb = (gc.core.Array<Object>) greycat.call("project::get_gcb");
         java.util.Iterator<Object> gcbIt = gcb.iterator();
         while (gcbIt.hasNext()) {
