@@ -58,7 +58,7 @@ rm -rf bin/ files/ gcdata/ lib/
 
 - In a first terminal:
   ```bash
-  GREYCAT_CORE= greycat codegen java
+  GREYCAT_CORE=true greycat codegen java
   greycat install
   greycat serve
   ```
