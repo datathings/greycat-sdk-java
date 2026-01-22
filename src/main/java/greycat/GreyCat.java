@@ -659,7 +659,7 @@ public final class GreyCat {
             public final boolean mapped;
 
             public Attribute(String name, int abiType, int progTypeOffset, int mappedAnyOffset, int mappedAttOffset,
-                             byte sbiType, byte precision, boolean nullable, boolean mapped) {
+                    byte sbiType, byte precision, boolean nullable, boolean mapped) {
                 this.name = name;
                 this.abiType = abiType;
                 this.progTypeOffset = progTypeOffset;
@@ -672,7 +672,7 @@ public final class GreyCat {
             }
         }
 
-        private static final double[] f64_u64_dividers = new double[]{
+        private static final double[] f64_u64_dividers = new double[] {
                 1.0,
                 10.0,
                 100.0,
@@ -692,7 +692,7 @@ public final class GreyCat {
         public final int g1_abi_type_desc;
         public final int g2_abi_type_desc;
         public final int mapped_type_off;
-        @SuppressWarnings({"unused", "FieldCanBeLocal"})
+        @SuppressWarnings({ "unused", "FieldCanBeLocal" })
         public final int masked_type_off;
         public final int nullable_nb_bytes;
         public final boolean is_masked;
@@ -807,8 +807,8 @@ public final class GreyCat {
         };
 
         public Type(int offset, String name, int generic_abi_type, int g1_abi_type_desc, int g2_abi_type_desc,
-                    int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract,
-                    boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, GreyCat greycat) {
+                int mapped_type_off, int masked_type_off, int nullable_nb_bytes, boolean is_masked, boolean is_abstract,
+                boolean is_ambiguous, boolean is_enum, boolean is_native, Attribute[] typeAttributes, GreyCat greycat) {
             this.offset = offset;
             this.name = name;
             this.generic_abi_type = generic_abi_type;
@@ -843,7 +843,7 @@ public final class GreyCat {
                 if (this.is_enum) {
                     this.enum_values = new Enum[attributes.length];
                     for (int enumOffset = 0; enumOffset < attributes.length; enumOffset++) {
-                        final java.lang.Object[] enum_attributes = {enumOffset, attributes[enumOffset].name, null};
+                        final java.lang.Object[] enum_attributes = { enumOffset, attributes[enumOffset].name, null };
                         if (this.factory == null) {
                             this.enum_values[enumOffset] = new Enum(this, enum_attributes);
                         } else {
@@ -880,7 +880,8 @@ public final class GreyCat {
             for (int i = 0; i < attributeNames.length; i++) {
                 Integer resolved = attribute_off_by_name.get(attributeNames[i]);
                 if (resolved == null) {
-                    throw new IllegalArgumentException("unmapped generated field, please re-generate this code!");
+                    throw new IllegalArgumentException(
+                            "unmapped generated field, please re-generate this code!");
                 }
                 generated_offsets[i] = resolved;
             }
@@ -997,12 +998,12 @@ public final class GreyCat {
             this.attributes = attributes;
         }
 
-        @SuppressWarnings({"unused"})
+        @SuppressWarnings({ "unused" })
         public final java.lang.Object getAttribute(String attributeName) {
             return getAttribute(type.attribute_off_by_name.get(attributeName));
         }
 
-        @SuppressWarnings({"unused"})
+        @SuppressWarnings({ "unused" })
         public final void setAttribute(String attributeName, java.lang.Object value) {
             setAttribute(type.attribute_off_by_name.get(attributeName), value);
         }
@@ -1222,7 +1223,8 @@ public final class GreyCat {
         }
     }
 
-    private GreyCat(String url, LoginInfo loginInfo, Boolean use_cookie, Boolean set_default, Library... libraries) throws Exception {
+    private GreyCat(String url, LoginInfo loginInfo, Boolean use_cookie, Boolean set_default, Library... libraries)
+            throws Exception {
 
         this.runtime_url = url;
         this.token = null;
@@ -1518,11 +1520,13 @@ public final class GreyCat {
     }
 
     public GreyCat(String url, String username, String password, Boolean use_cookie, Boolean set_default,
-                   Library... libraries) throws Exception {
-        this(url, null != username && null != password ? new CredentialsInfo(username, password) : null, use_cookie, set_default, libraries);
+            Library... libraries) throws Exception {
+        this(url, null != username && null != password ? new CredentialsInfo(username, password) : null, use_cookie,
+                set_default, libraries);
     }
 
-    public GreyCat(String url, String token, Boolean use_cookie, Boolean set_default, Library... libraries) throws Exception {
+    public GreyCat(String url, String token, Boolean use_cookie, Boolean set_default, Library... libraries)
+            throws Exception {
         this(url, null != token ? new TokenInfo(token) : null, use_cookie, set_default, libraries);
     }
 
@@ -1646,7 +1650,8 @@ public final class GreyCat {
         }
     }
 
-    public java.net.HttpURLConnection getFileConnection(String path, Integer offset, Integer max) throws java.io.IOException {
+    public java.net.HttpURLConnection getFileConnection(String path, Integer offset, Integer max)
+            throws java.io.IOException {
         if (!this.is_remote) {
             throw new RuntimeException("Remote Call is not available on this GreyCat handle");
         }
@@ -1769,7 +1774,7 @@ public final class GreyCat {
         this.token = response.substring(1, response.length() - 1);
     }
 
-    @SuppressWarnings({"unused"})
+    @SuppressWarnings({ "unused" })
     public java.lang.Object create(String name, java.lang.Object[] parameters) {
         final Type t = types_by_name.get(name);
         if (t == null) {
