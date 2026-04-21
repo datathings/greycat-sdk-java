@@ -269,59 +269,22 @@ public final class GreyCat {
         }
 
         int read_vu32() throws java.io.IOException {
-            byte current;
             int value = 0;
-            is.mark(5);
-            byte[] bytes = new byte[5];
-            if (-1 == is.read(bytes, 0, 5)) {
-                throw new java.io.IOException();
+            for (int shift = 0; shift < 32; shift += 7) {
+                int b = is.read();
+                if (b < 0) {
+                    throw new java.io.EOFException();
+                }
+                value |= (b & 0x7f) << shift;
+                if ((b & 0x80) == 0) {
+                    return value;
+                }
             }
-
-            current = bytes[0];
-            value |= Byte.toUnsignedLong(current) & 0x7f;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(1);
-                return value;
-            }
-
-            current = bytes[1];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 7;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(2);
-                return value;
-            }
-
-            current = bytes[2];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 14;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(3);
-                return value;
-            }
-
-            current = bytes[3];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 21;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(4);
-                return value;
-            }
-
-            current = bytes[4];
-            value |= (Byte.toUnsignedLong(current)) << 28;
-            return value;
+            throw new java.io.IOException("vu32 overflow");
         }
 
         long read_i64() throws java.io.IOException {
-            if (is.read(tmp, 0, 8) == -1) {
-                throw new java.io.IOException();
-            }
+            readFully(tmp, 0, 8);
             return ((long) tmp[7] << 56) +
                     (((long) tmp[6] << 56) >>> 8) +
                     (((long) tmp[5] << 56) >>> 16) +
@@ -338,88 +301,22 @@ public final class GreyCat {
         }
 
         long read_vu64() throws java.io.IOException {
-            byte current;
             long value = 0;
-            is.mark(9);
-            byte[] bytes = new byte[9];
-            if (-1 == is.read(bytes, 0, 9)) {
-                throw new java.io.IOException();
+            for (int shift = 0; shift < 56; shift += 7) {
+                int b = is.read();
+                if (b < 0) {
+                    throw new java.io.EOFException();
+                }
+                value |= ((long) (b & 0x7f)) << shift;
+                if ((b & 0x80) == 0) {
+                    return value;
+                }
             }
-
-            current = bytes[0];
-            value |= Byte.toUnsignedLong(current) & 0x7f;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(1);
-                return value;
+            int b = is.read();
+            if (b < 0) {
+                throw new java.io.EOFException();
             }
-
-            current = bytes[1];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 7;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(2);
-                return value;
-            }
-
-            current = bytes[2];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 14;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(3);
-                return value;
-            }
-
-            current = bytes[3];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 21;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(4);
-                return value;
-            }
-
-            current = bytes[4];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 28;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(5);
-                return value;
-            }
-
-            current = bytes[5];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 35;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(6);
-                return value;
-            }
-
-            current = bytes[6];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 42;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(7);
-                return value;
-            }
-
-            current = bytes[7];
-            value |= (Byte.toUnsignedLong(current) & 0x7f) << 49;
-            if (0 == (current & 0x80)) {
-                is.reset();
-                // noinspection ResultOfMethodCallIgnored
-                is.skip(8);
-                return value;
-            }
-
-            current = bytes[8];
-            value |= (Byte.toUnsignedLong(current)) << 56;
+            value |= ((long) (b & 0xff)) << 56;
             return value;
         }
 
@@ -429,10 +326,19 @@ public final class GreyCat {
 
         byte[] read_i8_array(final int len) throws java.io.IOException {
             byte[] newArr = new byte[len];
-            if (is.read(newArr, 0, len) == -1) {
-                throw new java.io.IOException();
-            }
+            readFully(newArr, 0, len);
             return newArr;
+        }
+
+        private void readFully(byte[] buf, int off, int len) throws java.io.IOException {
+            int read = 0;
+            while (read < len) {
+                int n = is.read(buf, off + read, len - read);
+                if (n < 0) {
+                    throw new java.io.EOFException();
+                }
+                read += n;
+            }
         }
 
         String read_string(int len) throws java.io.IOException {
@@ -1282,29 +1188,29 @@ public final class GreyCat {
         }
         this.abi_magic = abiStream.read_i16();
         this.abi_version = abiStream.read_i32();
-        long crc = abiStream.read_i64();
+        abiStream.read_i64(); // crc
 
         // step 1: create all symbols
-        final long symbolsBytes = abiStream.read_i64();
+        abiStream.read_i64(); // bytes_len
         final int symbolsCount = abiStream.read_i32();
         symbols = new String[symbolsCount + 1];
         symbols[0] = null;
-        for (int offset = 1; offset < (symbolsCount + 1); ++offset) {
+        for (int offset = 1; offset < symbols.length; offset++) {
             String symbol = abiStream.read_string(abiStream.read_vu32());
             symbols[offset] = symbol;
             symbols_off_by_value.put(symbol, offset);
         }
         // step 2: create all types
-        final long typesBytes = abiStream.read_i64();
+        abiStream.read_i64(); // bytes_len
         final int typesSize = abiStream.read_i32();
         types = new Type[typesSize];
-        final int attributesSize = abiStream.read_i32();
+        abiStream.read_i32(); // nb_attrs
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < typesSize; i++) {
             /* build type qualified name */
             final String moduleName = symbols[abiStream.read_vu32()];
             final String typeName = symbols[abiStream.read_vu32()];
-            final String libName = symbols[abiStream.read_vu32()];
+            abiStream.read_vu32(); // lib_name
             builder.setLength(0);
             if (moduleName != null) {
                 builder.append(moduleName);
@@ -1315,8 +1221,8 @@ public final class GreyCat {
             int generic_abi_type = abiStream.read_vu32();
             int g1_abi_type_desc = abiStream.read_vu32();
             int g2_abi_type_desc = abiStream.read_vu32();
-            int parent_type_id = abiStream.read_vu32();
-            int companion_type_id = abiStream.read_vu32();
+            abiStream.read_vu32(); // parent_type_id
+            abiStream.read_vu32(); // companion_type_id
             int attributesLen = abiStream.read_vu32();
             abiStream.read_vu32();/* unused field */
             abiStream.read_vu32();/* unused field */
@@ -1329,7 +1235,7 @@ public final class GreyCat {
             boolean isEnum = 0 != (flags & (1 << 2));
             boolean isMasked = 0 != (flags & (1 << 3));
             boolean isAmbiguous = 0 != (flags & (1 << 4));
-            boolean isVolatile = 0 != (flags & (1 << 5));
+            // boolean isVolatile = 0 != (flags & (1 << 5));
             final Type.Attribute[] typeAttributes = new Type.Attribute[attributesLen];
             for (int enumOffset = 0; enumOffset < attributesLen; ++enumOffset) {
                 final String name = symbols[abiStream.read_vu32()];
@@ -1359,14 +1265,14 @@ public final class GreyCat {
             abiType.resolve_loader(loaders);
         }
         // step 3: create all functions
-        final long functionsBytes = abiStream.read_i64();
+        abiStream.read_i64(); // bytes_len
         final int functionSizes = abiStream.read_i32();
         for (int i = 0; i < functionSizes; i++) {
             /* build type qualified name */
             final String moduleName = symbols[abiStream.read_vu32()];
             final String typeName = symbols[abiStream.read_vu32()];
             final String functionName = symbols[abiStream.read_vu32()];
-            final String libName = symbols[abiStream.read_vu32()];
+            abiStream.read_vu32(); // lib_name
             builder.setLength(0);
             if (moduleName != null) {
                 builder.append(moduleName);
