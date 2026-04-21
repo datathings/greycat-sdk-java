@@ -4,8 +4,8 @@ public class Client {
 
     public static void main(String... args) throws Exception {
         String url = "http://localhost:8080";
-        String username = "admin";
-        String password = "changeme";
+        String username = "root"; // CHANGEME
+        String password = "oiqmyktncaapulhu"; // CHANGEME
 
         GreyCat greycat = new GreyCat(url, username, password, null, null);
         greycat.putFile("pom.xml", new java.io.File("pom.xml"));
@@ -20,5 +20,7 @@ public class Client {
             System.out.println(o);
             System.out.println(greycat.call("project::display", o));
         }
+
     }
+
 }
