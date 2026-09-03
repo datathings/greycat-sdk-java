@@ -4,12 +4,13 @@ target/
 lib/*
 bin
 
-/src/main/java/greycat/project_types.java
+/src/main/java/greycat/gc.java
 /src/test/java/greycat/Debug.java
 
 /gcdata/
 /out.gcb
 files
+/dist
 
 .classpath
 .project
