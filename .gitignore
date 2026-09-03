@@ -4,7 +4,7 @@ target/
 lib/*
 bin
 
-/src/main/java/greycat/project_types.java
+/src/main/java/greycat/gc.java
 /src/test/java/greycat/Debug.java
 
 /gcdata/
@@ -14,5 +14,6 @@ files
 .classpath
 .project
 .settings
+/dist
 
 runtime__Runtime__abi.bin
