@@ -10,6 +10,7 @@ bin
 /gcdata/
 /out.gcb
 files
+/dist
 
 .classpath
 .project
